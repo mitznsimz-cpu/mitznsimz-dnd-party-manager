@@ -11,13 +11,13 @@ No install, no account. It runs entirely in your browser and keeps everything on
 - **Import from D&D Beyond** – pick your characters' D&D Beyond PDFs and the party is built for you: stats, saves, skills, attacks, features with their action types and uses, spells and slots, equipment, coins and backstory. Pick a character's new PDF after a level-up and review just what changed.
 - **Campaigns** – one page lists your campaigns; each has its own party, purse, journal, notes and portraits. Duplicate, archive, export or delete (with a Recently deleted bin).
 - **Party at a glance** – a card per character: HP with damage / heal / temp, death saves, conditions with rules text, concentration, saving throws, attacks (with attacks per Attack action), bonus actions and reactions, limited uses as tappable pips, and spell slots.
-- **Stat blocks** – open any character's full stat block, monster-style: abilities, skills, senses, actions, bonus actions, reactions, special and limited uses, traits, spellcasting, equipment, notes and backstory. On a laptop they open in a side panel; several can be open at once.
-- **Details everywhere** – tap a spell, item, feature or condition for its details, with **Use** / **Cast** buttons that spend the right slot, charge or use. Spells and items are looked up on [Open5e](https://open5e.com).
+- **Character sheets** – open any character's full sheet: abilities, skills, senses, actions, bonus actions, reactions, special and limited uses, traits, spellcasting, equipment, notes and backstory. On a laptop they open in a side panel; several can be open at once.
+- **Details everywhere** – tap a spell, item, feature or condition for its details in a pop-up you can drag anywhere (it doesn't block the page), with **Use** / **Cast** buttons that spend the right slot, charge or use. Spells and items are looked up on [Open5e](https://open5e.com).
 - **Homebrew** – add or edit features, actions, limited uses, attacks, spells and items (with their own actions and charges) for anything your character sheet doesn't export properly.
 - **Rests** – short rest with hit-dice spending (type your roll), long rest for the whole party in one click.
 - **Party purse** – one shared purse with per-person shares and spending notes.
 - **Party checks** – every save and skill for the whole party side by side, best highlighted.
-- **Journal** – a combat log tagged by character and round, with ★ memorable moments, plus shared party notes. Exports to Markdown for session write-ups.
+- **Journal** – a floating panel you can keep open, move and resize while you play: a combat log tagged by character and round, with ★ memorable moments, plus shared party notes. Exports to Markdown for session write-ups.
 - **Level-ups without losing anything** – import an updated character and review the changes. Sheet data updates; your HP, used slots, notes, journal, portraits and homebrew are kept.
 - **Undo** – Ctrl/Cmd+Z for anything.
 

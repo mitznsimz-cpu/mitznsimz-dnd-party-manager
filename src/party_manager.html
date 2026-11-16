@@ -227,6 +227,22 @@ html[data-theme="light"] .seg button.on{background:var(--accent);color:var(--bg)
 /* ---------- modal ---------- */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:none;align-items:flex-start;justify-content:center;padding:6vh 12px;overflow:auto}
 .scrim.open{display:flex}
+/* floating pop-ups: no dimming and no blocking, so the sheets stay usable behind them */
+.scrim.float{background:transparent;pointer-events:none}
+.scrim.float .modal{pointer-events:auto;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.modal.moved,.jpanel.moved{position:fixed;margin:0}
+@media (min-width:600px){.modal .mhead,.jpanel .jhead{cursor:move;touch-action:none;user-select:none}}
+.mhead.dragging,.jhead.dragging{cursor:grabbing}
+/* the floating journal */
+.jpanel{position:fixed;z-index:45;right:16px;bottom:16px;width:440px;height:560px;min-width:300px;min-height:200px;max-width:96vw;max-height:92vh;resize:both;overflow:hidden;
+  display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--gold);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.jpanel.min{height:auto!important;min-height:0;resize:none}
+.jpanel.min .tabs,.jpanel.min .jbody{display:none}
+.jpanel .jhead{display:flex;align-items:center;gap:6px;padding:7px 10px;border-bottom:1px solid var(--line)}
+.jpanel .jhead h2{font-size:16px;font-weight:600;color:var(--gold2);flex:1;letter-spacing:.03em}
+.jpanel .jbody{flex:1;overflow:auto;padding:10px 12px}
+.jpanel .jcompose{position:sticky;top:-10px;z-index:1;background:var(--panel);padding:2px 0 8px;margin-top:-2px}
+@media (max-width:600px){.jpanel{left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:62vh;border-radius:12px 12px 0 0;resize:none}}
 .modal{background:var(--panel);border:1px solid var(--gold);border-radius:12px;width:min(620px,100%);box-shadow:var(--shadow);display:flex;flex-direction:column;max-height:88vh}
 .modal.wide{width:min(1000px,100%)}
 .mhead{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
@@ -353,7 +369,7 @@ body:not(.home) .honly{display:none!important}
   <button class="ponly" data-act="shortRest">Short Rest</button>
   <button class="ponly" data-act="longRest">Long Rest</button>
   <button class="ponly" data-act="expandAll" id="expandBtn">Expand all</button>
-  <span class="seg ponly" title="Where stat blocks open"><button data-act="sbmode" data-v="auto">Auto</button><button data-act="sbmode" data-v="side">Side</button><button data-act="sbmode" data-v="below">Below</button></span>
+  <span class="seg ponly" title="Where character sheets open"><button data-act="sbmode" data-v="auto">Auto</button><button data-act="sbmode" data-v="side">Side</button><button data-act="sbmode" data-v="below">Below</button></span>
   <span class="seg ponly" title="Ruleset used for Open5e lookups and condition rules"><button data-act="ruleset" data-v="2014">2014</button><button data-act="ruleset" data-v="2024">2024</button></span>
   <button class="ponly" data-act="undo" id="undoBtn" title="Undo (Ctrl+Z)">Undo</button>
   <button data-act="theme" id="themeBtn" title="Switch between Night and Day">☀ Day</button>
@@ -366,6 +382,7 @@ body:not(.home) .honly{display:none!important}
 <div class="foot">⚔ Created by <a href="https://mitznsimz.com" target="_blank" rel="noopener noreferrer">MitzNSimz</a>: miniatures and tools for Dungeon Masters · Party Manager v<span id="ver"></span> · <a href="https://ko-fi.com/mitznsimz" target="_blank" rel="noopener noreferrer">☕ Support on Ko-fi</a> · your data stays in this browser</div>
 
 <div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
+<section class="jpanel" id="journal" hidden aria-label="Journal"></section>
 <div class="toasts" id="toasts"></div>
 <input type="file" id="fileImg" accept="image/*" hidden>
 <input type="file" id="fileJson" accept=".pdf,.json,application/pdf,application/json" multiple hidden>
@@ -376,7 +393,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.6.0';
+const APP_VERSION = '0.7.0';
 const STORAGE_NS = /*NS*/'dev_';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -462,7 +479,7 @@ function loadUI(id){
 function saveUI(){
   if (!IDX.current) return;
   lsSet(kUI(IDX.current), {open:UI.open, collapsed:UI.collapsed, spellView:UI.spellView, invView:UI.invView, journalTab:UI.journalTab});
-  lsSet(K_UI, {sbMode:UI.sbMode});
+  lsSet(K_UI, Object.assign(lsGet(K_UI, {}) || {}, {sbMode: UI.sbMode}));   // keep the other device-wide layout keys
 }
 
 function normaliseChar(c){
@@ -564,7 +581,7 @@ function openCampaign(id){
   const st = lsGet(kState(id), null);
   if (!st){ toast('That campaign\'s data is missing', true); return; }
   S = st; P = lsGet(kImg(id), {}); IDX.current = id; saveIndex();
-  undoStack.length = 0; loadUI(id); upgrade(); VIEW = 'party'; closeModal(); window.scrollTo(0,0); renderAll();
+  undoStack.length = 0; loadUI(id); upgrade(); VIEW = 'party'; closeModal(); window.scrollTo(0,0); $('#journal').innerHTML = ''; renderAll();
 }
 function goHome(){ flushSave(); VIEW = 'home'; closeModal(); window.scrollTo(0,0); renderAll(); }
 let saveTimer = null;
@@ -754,13 +771,13 @@ function cardHTML(c){
     <div class="cbody">
       ${hpHTML(c)}${deathHTML(c)}${condHTML(c)}${savesHTML(c)}${attacksHTML(c)}${quickHTML(c)}${usesHTML(c)}${slotsHTML(c)}
     </div>
-    <button class="sbtoggle" data-act="toggle" data-cid="${c.id}">${open ? (sideMode() ? '◀ Close stat block' : '▲ Hide stat block') : (sideMode() ? 'Stat block ▶' : '▼ Stat block')}</button>
+    <button class="sbtoggle" data-act="toggle" data-cid="${c.id}">${open ? (sideMode() ? '◀ Close character sheet' : '▲ Hide character sheet') : (sideMode() ? 'Character sheet ▶' : '▼ Character sheet')}</button>
     ${open && !sideMode() ? statBlockHTML(c) : ''}
   </article>`;
 }
 
 /* =====================================================================
-   RENDER — stat block
+   RENDER — character sheet (internally: statBlockHTML)
    ===================================================================== */
 const addLinks = (c, list) => `<div class="addrow">${list.map(([act, label, preset]) => `<span data-act="${act}" data-cid="${c.id}" ${preset ? `data-v="${preset}"` : ''}>${label}</span>`).join('')}</div>`;
 const profMark = p => ({prof:'●', expert:'◆', half:'◐', other:'•'}[p] || '');
@@ -879,7 +896,7 @@ function renderDock(side){
   if (!side || !open.length){ dock.innerHTML = ''; return; }
   const keep = dock.scrollTop;
   dock.innerHTML = `<div class="dnav">${open.length > 1 ? open.map(c => `<span class="chip" data-act="dockjump" data-cid="${c.id}">${esc(c.name.split(' ')[0])}</span>`).join('') : ''}
-      <span class="grow"></span><button class="small ghost" data-act="dockclose" title="Close all stat blocks">Close all ✕</button></div>
+      <span class="grow"></span><button class="small ghost" data-act="dockclose" title="Close all character sheets">Close all ✕</button></div>
     ${open.map(c => `<div class="dblk" id="dock-${c.id}"><div class="dhd">${portraitHTML(c)}<div class="grow"><div class="cname">${esc(c.name)}</div>
         <div class="csub">${esc(classLine(c))} · HP ${c.hp.current}/${c.hp.max}${c.hp.temp ? ` (+${c.hp.temp})` : ''}</div></div>
         <button class="ghost" data-act="toggle" data-cid="${c.id}" title="Close">✕</button></div>${statBlockHTML(c)}</div>`).join('')}`;
@@ -976,7 +993,7 @@ function addCharModal(){
   const others = allOtherChars(IDX.current);
   UI._others = others;
   openModal(() => `${mhead('Add a character')}<div class="mbody"><div class="list">
-      <button data-act="newchar" style="text-align:left"><b>Create a new character</b><div class="small muted">Fill in the core stats yourself, for homebrew or anything not on D&amp;D Beyond. Add attacks, features, spells and items afterwards from the stat block.</div></button>
+      <button data-act="newchar" style="text-align:left"><b>Create a new character</b><div class="small muted">Fill in the core stats yourself, for homebrew or anything not on D&amp;D Beyond. Add attacks, features, spells and items afterwards from the character sheet.</div></button>
       <button data-act="importchar" style="text-align:left"><b>Import D&amp;D Beyond PDFs</b><div class="small muted">Pick one or more character-sheet PDFs (or a character .json). Characters already in the party are offered as updates instead.</div></button>
     </div>
     ${others.length ? `<h3>Copy from another campaign</h3>${pickerHTML(others)}
@@ -1038,7 +1055,7 @@ function charForm(cid){
          ${f('castDc','Spell save DC', sc && sc.dc, 'number', {hint:'blank = 8 + prof + modifier'})}${f('castAtk','Spell attack', sc && sc.attack, 'number', {hint:'blank = prof + modifier'})}`}
     <div class="fld wide"><span>Spell slots by level (1st – 9th)</span><div class="row9">${[1,2,3,4,5,6,7,8,9].map(l => { const s = c && c.spellSlots.find(x => x.level === l); return `<input id="ff_sl_${l}" type="number" min="0" placeholder="${ORD(l)}" value="${s ? s.max : ''}">`; }).join('')}</div></div>
     ${f('pactN','Pact slots (count)', c && c.pactSlots ? c.pactSlots.max : '', 'number')}${f('pactL','Pact slot level', c && c.pactSlots ? c.pactSlots.level : '', 'number')}
-  </div></div><div class="mfoot"><span class="grow small dim">${c ? 'A later sheet update will show its changes to these for you to approve.' : 'Attacks, features, spells and kit are added from the stat block afterwards.'}</span><button data-act="mclose">Cancel</button><button class="pri" data-act="savechar" data-cid="${cid || ''}">${c ? 'Save' : 'Create'}</button></div>`, true);
+  </div></div><div class="mfoot"><span class="grow small dim">${c ? 'A later sheet update will show its changes to these for you to approve.' : 'Attacks, features, spells and kit are added from the character sheet afterwards.'}</span><button data-act="mclose">Cancel</button><button class="pri" data-act="savechar" data-cid="${cid || ''}">${c ? 'Save' : 'Create'}</button></div>`, true);
 }
 function readCharForm(cid){
   const g = id => { const el = document.getElementById('ff_' + id); return el ? (el.type === 'checkbox' ? el.checked : el.value.trim()) : ''; };
@@ -1103,6 +1120,8 @@ function renderAll(){
   $('#home').hidden = VIEW !== 'home'; $('#layout').hidden = VIEW === 'home';
   $('#ver').textContent = APP_VERSION;
   if (VIEW === 'home') renderHome(); else { renderHeader(); renderGrid(); lastSide = sideMode(); }
+  if (VIEW === 'party' && UIG.journal && UIG.journal.open){ if ($('#journal').hidden) { renderJournal(true); $('#journal').hidden = false; } else renderJournal(false); }
+  else $('#journal').hidden = true;
   document.documentElement.style.setProperty('--toph', $('.top').offsetHeight + 'px');
   if (UI.modal) UI.modal();
 }
@@ -1110,10 +1129,62 @@ function renderAll(){
 /* =====================================================================
    MODALS
    ===================================================================== */
-function openModal(renderFn, wide){
-  UI.modal = () => { $('#modal').className = 'modal' + (wide ? ' wide' : ''); $('#modal').innerHTML = renderFn(); };
-  UI.modal(); $('#scrim').classList.add('open');
+/* ---------- moveable pop-ups and panels, with the Encounter Tracker's rules:
+   drag by the header only (bodies scroll), pointer events for mouse/touch/pen,
+   no dragging on phones, keep some of it on screen, double-click the header to reset ---------- */
+const DRAG_MIN_VW = 600, DRAG_EDGE = 48;
+function clampPos(el, left, top){
+  const r = el.getBoundingClientRect();
+  return {left: Math.min(Math.max(left, DRAG_EDGE - r.width), window.innerWidth - DRAG_EDGE), top: Math.min(Math.max(top, 0), window.innerHeight - DRAG_EDGE)};
 }
+function placeAt(el, pos){
+  if (!pos || window.innerWidth < DRAG_MIN_VW){ el.classList.remove('moved'); el.style.left = el.style.top = el.style.right = el.style.bottom = ''; return; }
+  el.classList.add('moved'); el.style.right = el.style.bottom = 'auto';
+  const c = clampPos(el, pos.left, pos.top); el.style.left = c.left + 'px'; el.style.top = c.top + 'px';
+}
+function makeDraggable(el, handleSel, opts){
+  // a drag only starts once the pointer has moved a few pixels, so clicks and double-clicks on the header still work
+  let pend = null, on = false, sx, sy, sl, st, handle = null;
+  el.addEventListener('pointerdown', e => {
+    const h = e.target.closest(handleSel);
+    if (!h || !el.contains(h) || window.innerWidth < DRAG_MIN_VW || e.button > 0) return;
+    if (e.target.closest('button, a, input, select, textarea, label')) return;     // let controls work
+    if (opts.enabled && !opts.enabled()) return;
+    const r = el.getBoundingClientRect();
+    pend = {id: e.pointerId}; handle = h; sx = e.clientX; sy = e.clientY; sl = r.left; st = r.top;
+  });
+  window.addEventListener('pointermove', e => {
+    if (pend && !on && Math.hypot(e.clientX - sx, e.clientY - sy) > 4){
+      on = true; handle.classList.add('dragging'); document.body.style.userSelect = 'none';
+      try { el.setPointerCapture(pend.id); } catch(err){}
+    }
+    if (on){ e.preventDefault(); placeAt(el, {left: sl + e.clientX - sx, top: st + e.clientY - sy}); }
+  });
+  const end = () => {
+    const was = on; pend = null; on = false; document.body.style.userSelect = '';
+    if (!was) return;
+    handle && handle.classList.remove('dragging');
+    const r = el.getBoundingClientRect(); opts.onMove && opts.onMove({left: Math.round(r.left), top: Math.round(r.top)});
+  };
+  window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end);
+  el.addEventListener('dblclick', e => { if (e.target.closest(handleSel) && !e.target.closest('button, input')){ placeAt(el, null); opts.onMove && opts.onMove(null); } });
+  // a position chosen on a big window must not strand the panel on a smaller one
+  window.addEventListener('resize', () => { if (el.classList.contains('moved')){ const r = el.getBoundingClientRect(); placeAt(el, {left: r.left, top: r.top}); } });
+}
+const UIG = lsGet(K_UI, {}) || {};           // device-wide layout: where pop-ups and the journal sit
+function saveUIG(){ lsSet(K_UI, Object.assign(lsGet(K_UI, {}) || {}, {popPos: UIG.popPos || null, journal: UIG.journal || null})); }
+makeDraggable($('#modal'), '.mhead', {enabled: () => $('#scrim').classList.contains('float'), onMove: pos => { UIG.popPos = pos; saveUIG(); }});
+
+function openModal(renderFn, wide, opts){
+  const float = !!(opts && opts.float);
+  UI.modal = () => { $('#modal').className = 'modal' + (wide ? ' wide' : '') + ($('#modal').classList.contains('moved') ? ' moved' : ''); $('#modal').innerHTML = renderFn(); };
+  UI.modal();
+  $('#scrim').classList.add('open'); $('#scrim').classList.toggle('float', float);
+  $('#journal').style.zIndex = '';   // a newly opened pop-up starts in front
+  placeAt($('#modal'), float ? UIG.popPos : null);   // reference pop-ups reopen where you last put them
+}
+/** Reference pop-ups (spells, items, features…) float: they don't dim or block the page. */
+const floatModal = (fn, wide) => openModal(fn, wide, {float: true});
 /** Focus the first field of a just-opened dialog, unless something in it already has focus. */
 function focusFirst(sel){
   if ($('#modal').contains(document.activeElement)) return;
@@ -1124,7 +1195,7 @@ const mhead = (t, sub) => `<div class="mhead"><h2>${t}${sub ? ` <span class="sma
 
 /* --- feature / resource detail --- */
 function featModal(cid, fid){
-  openModal(() => {
+  floatModal(() => {
     const c = charById(cid), f = c.features.find(x => x.id === fid); if (!f) return mhead('Not found');
     const r = f.res ? resById(c, f.res) : null;
     const left = r && r.max != null ? r.max - r.used : null;
@@ -1145,7 +1216,7 @@ function featModal(cid, fid){
     </div>`; });
 }
 function resModal(cid, rid){
-  openModal(() => {
+  floatModal(() => {
     const c = charById(cid), r = resById(c, rid); if (!r) return mhead('Not found');
     return `${mhead(esc(r.name), esc(c.name))}<div class="mbody lookup">
       <div class="meta"><span class="k">Uses</span><span class="row">${pipsHTML(c, r, 'res', r.id)}</span><span class="k">Recharge</span><span>${esc(r.reset)}</span></div>
@@ -1154,7 +1225,7 @@ function resModal(cid, rid){
     </div><div class="mfoot">${editBtn('editres', `data-cid="${cid}" data-rid="${rid}"`)}<span class="grow"></span><button class="small" data-act="resn" data-d="-1" data-cid="${cid}" data-rid="${rid}">Regain one</button><button class="pri" data-act="resn" data-d="1" data-cid="${cid}" data-rid="${rid}">Use one</button></div>`; });
 }
 function atkModal(cid, i){
-  openModal(() => {
+  floatModal(() => {
     const c = charById(cid), a = c.attacks[i];
     const item = c.inventory.find(x => x.name.toLowerCase() === a.name.toLowerCase());
     const sp = c.spells.find(x => x.name.toLowerCase() === a.name.toLowerCase());
@@ -1164,7 +1235,7 @@ function atkModal(cid, i){
     </div><div class="mfoot">${editBtn('editatk', `data-cid="${cid}" data-i="${i}"`)}</div>`; });
 }
 function iactModal(cid, iid, aid){
-  openModal(() => {
+  floatModal(() => {
     const c = charById(cid), it = c.inventory.find(x => x.id === iid), a = it && (it.actions||[]).find(x => x.id === aid);
     if (!a) return mhead('Not found');
     const r = a.res ? resById(c, a.res) : null, left = r && r.max != null ? r.max - r.used : null;
@@ -1304,7 +1375,7 @@ function editItemAction(cid, iid, aid){
 const editBtn = (act, attrs) => `<button class="small" data-act="${act}" ${attrs}>✎ Edit</button>`;
 
 function condInfoModal(cid, name){
-  openModal(() => {
+  floatModal(() => {
     const c = charById(cid);
     if (name === 'Exhaustion') return `${mhead('Exhaustion ' + c.exhaustion, esc(c.name))}<div class="mbody lookup">
       ${S.ruleset === '2024' ? `<p>Each level gives −${2*c.exhaustion} to D20 Tests (total) and −${5*c.exhaustion} ft speed. Level 6 is death. A long rest removes one level.</p>`
@@ -1326,7 +1397,7 @@ function condModal(cid){
     </div><div class="mfoot"><button class="pri" data-act="mclose">Done</button></div>`; });
 }
 function castModal(cid, sid){
-  openModal(() => {
+  floatModal(() => {
     const c = charById(cid), s = c.spells.find(x => x.id === sid);
     const opts = [];
     if (s.level === 0) opts.push(`<button data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="free">Cast (cantrip)</button>`);
@@ -1342,7 +1413,7 @@ function castModal(cid, sid){
       <label class="row small" style="margin-top:10px"><input type="checkbox" id="castLog"> Add to journal</label></div>`; });
 }
 function checksModal(){
-  openModal(() => {
+  floatModal(() => {
     const cs = S.characters;
     const row = (label, vals, profs) => { const best = Math.max(...vals);
       return `<tr><td>${label}</td>${vals.map((v,i) => `<td class="${v === best ? 'best' : ''} ${profs[i] ? 'p' : ''}">${sgn(v)}</td>`).join('')}</tr>`; };
@@ -1355,7 +1426,7 @@ function checksModal(){
       </tbody></table><div class="small dim" style="margin-top:6px">Gold = best in the party · dotted = proficient</div></div>`; }, true);
 }
 function purseModal(){
-  openModal(() => {
+  floatModal(() => {
     const n = S.characters.length || 1, gp = COINS.reduce((t,k) => t + S.purse[k]*COIN_GP[k], 0);
     return `${mhead('Party purse')}<div class="mbody">
       <div class="coins">${COINS.map(k => `<div class="coin"><div class="k">${k.toUpperCase()}</div><div class="v">${S.purse[k].toLocaleString()}</div><div class="each">${Math.floor(S.purse[k]/n).toLocaleString()} each</div></div>`).join('')}</div>
@@ -1393,25 +1464,58 @@ function entryHTML(e){
       <button class="ghost small" data-act="jdel" data-eid="${e.id}" title="Delete (undo available)">🗑</button></div>
     <div class="jt">${esc(e.text)}</div></div>`;
 }
-function journalModal(){
-  openModal(() => {
-    const tab = UI.journalTab;
-    const sessions = [...new Set(S.log.map(e => e.session))].sort((a,b) => b-a);
-    const cur = S.log.filter(e => e.session === S.session);
-    const body = tab === 'log' ? `
-      <div class="row" style="margin-bottom:6px"><b>Session ${S.session}</b><span class="grow"></span>
-        <button class="small" data-act="newsession">Start session ${S.session + 1}</button>
-        <button class="small gold" data-act="exportmd">Export for blog (.md)</button><button class="small gold" data-act="copymd">Copy for blog</button></div>
-      <div class="tagpick" style="margin-bottom:6px">${S.characters.map(c => `<button class="${UI.tags.includes(c.id)?'on':''}" data-act="jtag" data-cid="${c.id}">${esc(c.name.split(' ')[0])}</button>`).join('')}
-        <input type="number" id="jround" placeholder="round" min="1" style="width:76px" value="${UI.round||''}"></div>
-      <textarea id="jtext" rows="3" placeholder="What happened? e.g. the bard lands the killing blow with a fiddle solo… (Ctrl+Enter to add)"></textarea>
-      <div class="row" style="margin:6px 0 12px"><label class="row small"><input type="checkbox" id="jstar"> ★ memorable</label><span class="grow"></span><button class="pri" data-act="jadd">Add entry</button></div>
-      ${cur.length ? cur.slice().reverse().map(entryHTML).join('') : '<div class="empty">No entries for this session yet.</div>'}
-      ${sessions.filter(s => s !== S.session).length ? `<div class="small dim">Earlier sessions: ${sessions.filter(s => s !== S.session).map(s => `S${s} (${S.log.filter(e => e.session === s).length})`).join(', ')}. All are included in the export.</div>` : ''}`
-    : `<textarea data-note="shared" rows="18" placeholder="Shared party notes: quests, NPCs, places, loot to sell, rumours…">${esc(S.sharedNotes)}</textarea>`;
-    return `${mhead('Journal')}<nav class="tabs"><button class="${tab==='log'?'on':''}" data-act="jtab" data-v="log">Combat log</button><button class="${tab==='shared'?'on':''}" data-act="jtab" data-v="shared">Party notes</button></nav>
-      <div class="mbody">${body}</div>`; }, true);
+/* The journal is a floating panel, not a dialog: it stays open while you use the sheets.
+   Its compose box is rendered once, so typing survives everything else re-rendering. */
+function journalOpen(){ return !$('#journal').hidden; }
+function toggleJournal(force){
+  const show = force !== undefined ? force : !journalOpen();
+  UIG.journal = Object.assign(UIG.journal || {}, {open: show}); saveUIG();
+  if (!show){ $('#journal').hidden = true; return; }
+  renderJournal(true);
+  $('#journal').hidden = false;
+  if (!UIG.journal.min) setTimeout(() => $('#jtext') && $('#jtext').focus(), 0);
 }
+function renderJournal(full){
+  const J = $('#journal'), g = UIG.journal || {};
+  if (VIEW !== 'party' || !S){ J.hidden = true; return; }
+  if (full || !J.firstChild){
+    J.classList.toggle('min', !!g.min);
+    if (g.w && g.h && window.innerWidth >= DRAG_MIN_VW){ J.style.width = g.w + 'px'; J.style.height = g.h + 'px'; }
+    J.innerHTML = `<div class="jhead"><h2>Journal</h2><span class="small muted" id="jsess"></span>
+        <button class="ghost small" data-act="jmin" title="Minimise">${g.min ? '▢' : '—'}</button><button class="ghost small" data-act="jclose" title="Close (the journal keeps everything)">✕</button></div>
+      <nav class="tabs"><button class="${UI.journalTab !== 'shared' ? 'on' : ''}" data-act="jtab" data-v="log">Combat log</button><button class="${UI.journalTab === 'shared' ? 'on' : ''}" data-act="jtab" data-v="shared">Party notes</button></nav>
+      <div class="jbody">${UI.journalTab === 'shared'
+        ? `<textarea data-note="shared" rows="18" style="height:calc(100% - 4px)" placeholder="Shared party notes: quests, NPCs, places, loot to sell, rumours…">${esc(S.sharedNotes)}</textarea>`
+        : `<div class="jcompose">
+            <div class="tagpick" id="jtags" style="margin-bottom:6px"></div>
+            <textarea id="jtext" rows="3" placeholder="What happened? e.g. the bard lands the killing blow with a fiddle solo… (Ctrl+Enter to add)"></textarea>
+            <div class="row" style="margin-top:6px"><input type="number" id="jround" placeholder="round" min="1" style="width:76px" value="${esc(UI.round || '')}">
+              <label class="row small"><input type="checkbox" id="jstar"> ★ memorable</label><span class="grow"></span><button class="pri" data-act="jadd">Add entry</button></div>
+          </div>
+          <div class="row" style="margin:6px 0 8px"><span class="grow"></span><button class="small" data-act="newsession" id="jnewsess"></button>
+            <button class="small gold" data-act="exportmd">Export (.md)</button><button class="small gold" data-act="copymd">Copy for blog</button></div>
+          <div id="jlist"></div>`}</div>`;
+    placeAt(J, g.pos);
+  }
+  // the parts that change as you play
+  $('#jsess').textContent = `Session ${S.session}`;
+  if (UI.journalTab === 'shared') return;
+  $('#jtags').innerHTML = S.characters.map(c => `<button class="${UI.tags.includes(c.id) ? 'on' : ''}" data-act="jtag" data-cid="${c.id}">${esc(c.name.split(' ')[0])}</button>`).join('');
+  $('#jnewsess').textContent = `Start session ${S.session + 1}`;
+  const sessions = [...new Set(S.log.map(e => e.session))].sort((a,b) => b-a), cur = S.log.filter(e => e.session === S.session);
+  $('#jlist').innerHTML = (cur.length ? cur.slice().reverse().map(entryHTML).join('') : '<div class="empty">No entries for this session yet.</div>')
+    + (sessions.filter(s => s !== S.session).length ? `<div class="small dim">Earlier sessions: ${sessions.filter(s => s !== S.session).map(s => `S${s} (${S.log.filter(e => e.session === s).length})`).join(', ')}. All are included in the export.</div>` : '');
+}
+// remember the journal's size after a resize from its corner
+if (window.ResizeObserver) new ResizeObserver(() => {
+  const J = $('#journal'); if (J.hidden || J.classList.contains('min') || window.innerWidth < DRAG_MIN_VW) return;
+  const r = J.getBoundingClientRect(); if (!r.width) return;
+  UIG.journal = Object.assign(UIG.journal || {}, {w: Math.round(r.width), h: Math.round(r.height)}); clearTimeout(UIG._rt); UIG._rt = setTimeout(saveUIG, 300);
+}).observe($('#journal'));
+// whichever floating window you last touched comes to the front
+$('#journal').addEventListener('pointerdown', () => { $('#journal').style.zIndex = 55; });
+$('#modal').addEventListener('pointerdown', () => { $('#journal').style.zIndex = ''; });
+makeDraggable($('#journal'), '.jhead', {onMove: pos => { UIG.journal = Object.assign(UIG.journal || {}, {pos}); saveUIG(); }});
 function markdownLog(){
   const bySession = {};
   S.log.forEach(e => (bySession[e.session] = bySession[e.session] || []).push(e));
@@ -1645,7 +1749,7 @@ function o5ItemHTML(d){
 function spellModal(cid, sid){
   const c = charById(cid), s = c.spells.find(x => x.id === sid);
   const st = {data: undefined, err: null};
-  openModal(() => `${mhead(esc(s.name), esc(c.name))}<div class="mbody lookup">
+  floatModal(() => `${mhead(esc(s.name), esc(c.name))}<div class="mbody lookup">
     <div class="meta"><span class="k">Level</span><span>${s.level ? ORD(s.level) + ' level' : 'Cantrip'}${s.ritual ? ' · ritual' : ''}${s.concentration ? ' · concentration' : ''}</span>
       <span class="k">Casting time</span><span>${esc(fmtTime(s.time))}</span><span class="k">Range</span><span>${esc(s.range)}</span><span class="k">Duration</span><span>${esc(s.duration)}</span>
       ${s.saveAtk && s.saveAtk !== '--' ? `<span class="k">Save / attack</span><span>${esc(s.saveAtk)}</span>` : ''}
@@ -1659,13 +1763,13 @@ function spellModal(cid, sid){
 function itemModal(cid, iid){
   const c = charById(cid), it = c.inventory.find(x => x.id === iid);
   const st = {data: undefined, err: null, done: false};
-  openModal(() => `${mhead(esc(it.name), esc(c.name))}<div class="mbody lookup">
+  floatModal(() => `${mhead(esc(it.name), esc(c.name))}<div class="mbody lookup">
     <div class="meta"><span class="k">Carried</span><span>×${it.qty}${it.weight ? ' · ' + esc(it.weight) : ''}${it.attuned ? ' · attuned' : ''}${it.custom ? ' <span class="tag hb">yours</span>' : it.edited ? ' <span class="tag hb">edited</span>' : ''}</span>
       ${it.res && resById(c, it.res) ? `<span class="k">Charges</span><span class="row">${pipsHTML(c, resById(c, it.res), 'res', it.res)}</span>` : ''}</div>
     ${it.desc ? `<div class="desc">${md(it.desc)}</div>` : ''}
     ${!st.done ? '<div class="empty">Looking up on Open5e…</div>' : st.err ? (it.desc ? '' : `<div class="empty">Open5e unavailable (${esc(st.err)}).</div>`) : (st.data || !it.desc ? o5ItemHTML(st.data) : '')}
     <h3>Actions from this item</h3>
-    ${(it.actions||[]).length ? `<div class="list">${it.actions.map(a => `<div class="li"><div class="nm" data-act="iactinfo" data-cid="${cid}" data-iid="${iid}" data-aid="${a.id}">⚔ ${esc(a.name)} <span class="tag">${ACT_LABEL[a.act]}</span>${a.res ? ' <span class="tag a">charges</span>' : ''}<div class="meta">${esc(a.text.slice(0,90))}</div></div></div>`).join('')}</div>` : '<div class="empty">None yet. Add any action, bonus action or reaction this item gives, and it appears in the stat block and on the card.</div>'}
+    ${(it.actions||[]).length ? `<div class="list">${it.actions.map(a => `<div class="li"><div class="nm" data-act="iactinfo" data-cid="${cid}" data-iid="${iid}" data-aid="${a.id}">⚔ ${esc(a.name)} <span class="tag">${ACT_LABEL[a.act]}</span>${a.res ? ' <span class="tag a">charges</span>' : ''}<div class="meta">${esc(a.text.slice(0,90))}</div></div></div>`).join('')}</div>` : '<div class="empty">None yet. Add any action, bonus action or reaction this item gives, and it appears on the character sheet and on the card.</div>'}
     <div class="addrow"><span data-act="addiact" data-cid="${cid}" data-iid="${iid}">+ Add an action, bonus action or reaction</span></div>
     <h3>My notes</h3><textarea data-note="item" data-cid="${cid}" data-iid="${iid}" rows="4" placeholder="Charges, what it does, where you found it…">${esc(it.notes)}</textarea>
     <div class="row" style="margin-top:8px">
@@ -2206,9 +2310,11 @@ document.addEventListener('click', e => {
       if (+d.d < 0 && S.purse[k] < n){ toast(`Only ${S.purse[k]} ${k} in the purse`, true); return; }
       mutate(() => { S.purse[k] += n * +d.d; if (note) logEntry([], `${+d.d > 0 ? 'Gained' : 'Spent'} ${n} ${k}: ${note}`); }); break; }
     case 'checks': checksModal(); break;
-    case 'journal': journalModal(); break;
-    case 'jtab': UI.journalTab = d.v; saveUI(); UI.modal(); break;
-    case 'jtag': { const i = UI.tags.indexOf(d.cid); i >= 0 ? UI.tags.splice(i,1) : UI.tags.push(d.cid); const txt = $('#jtext').value; UI.round = $('#jround').value; UI.modal(); $('#jtext').value = txt; $('#jtext').focus(); break; }
+    case 'journal': toggleJournal(); break;
+    case 'jclose': toggleJournal(false); break;
+    case 'jmin': UIG.journal = Object.assign(UIG.journal || {}, {min: !(UIG.journal && UIG.journal.min)}); saveUIG(); renderJournal(true); break;
+    case 'jtab': UI.journalTab = d.v; saveUI(); renderJournal(true); break;
+    case 'jtag': { const k = UI.tags.indexOf(d.cid); k >= 0 ? UI.tags.splice(k, 1) : UI.tags.push(d.cid); renderJournal(false); $('#jtext') && $('#jtext').focus(); break; }
     case 'jadd': addJournal(); break;
     case 'jstar': mutate(() => { const en = S.log.find(x => x.id === d.eid); en.star = !en.star; }); break;
     case 'jdel': mutate(() => S.log = S.log.filter(x => x.id !== d.eid)); toast('Entry deleted (Undo to restore)'); break;
@@ -2285,7 +2391,7 @@ document.addEventListener('click', e => {
         mutate(() => { const c2 = normaliseChar(Object.assign({schema:'mnz-party/1', id: uniqueId(S, slug(v.name)), xp:0, hp:{max: hpMax || 10},
           attacks:[], resources:[], spells:[], features:[], inventory:[], notes:{}, custom:true}, v)); nid = c2.id; S.characters.push(c2); UI.open[c2.id] = true; });
         saveUI(); renderAll();
-        toast(`${esc(v.name)} added. Use the stat block's + links to add attacks, features, spells and kit.`);
+        toast(`${esc(v.name)} added. Use the character sheet's + links to add attacks, features, spells and kit.`);
       }
       break; }
     case 'docopyin': { const picks = [...document.querySelectorAll('[data-pick]:checked')].map(el => UI._others[+el.dataset.pick]);
@@ -2313,8 +2419,9 @@ function addJournal(){
   const txt = $('#jtext').value.trim(); if (!txt){ $('#jtext').focus(); return; }
   UI.round = $('#jround').value;
   const star = $('#jstar').checked;
-  mutate(() => { logEntry(UI.tags.slice(), txt); S.log[S.log.length-1].star = star; });
-  UI.tags = []; UI.modal(); $('#jtext').focus();
+  const tags = UI.tags.slice(); UI.tags = [];
+  mutate(() => { logEntry(tags, txt); S.log[S.log.length - 1].star = star; });
+  $('#jtext').value = ''; $('#jstar').checked = false; $('#jtext').focus();   // the compose box stays; only the list re-rendered
 }
 $('#scrim').addEventListener('click', e => { if (e.target.id === 'scrim') closeModal(); });
 
