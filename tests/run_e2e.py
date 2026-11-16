@@ -162,6 +162,18 @@ with sync_playwright() as pw:
     pg.reload(); pg.wait_for_timeout(300)
     check('reload reopens the last campaign', ev(pg, 'VIEW') == 'party' and ev(pg, 'S.name') == 'Test Party')
 
+    # ---- appearance (same choices as the Encounter Tracker)
+    attr = lambda k: ev(pg, f"document.documentElement.getAttribute('{k}')")
+    first = attr('data-theme')
+    pg.click('#themeBtn')
+    check('Day/Night button switches the theme', attr('data-theme') != first)
+    pg.click('header [data-act="appearance"]'); pg.click('#modal [data-act="setlook"][data-v="blue"]'); pg.click('#modal [data-act="setlook"][data-k="font"]')
+    check('accent and legible font apply', attr('data-accent') == 'blue' and attr('data-font') == 'legible')
+    pg.keyboard.press('Escape'); pg.reload(); pg.wait_for_timeout(300)
+    check('appearance is remembered', attr('data-theme') != first and attr('data-accent') == 'blue' and attr('data-font') == 'legible')
+    pg.click('header [data-act="appearance"]'); pg.click('#modal [data-act="setlook"][data-v="gold"]'); pg.click('#modal [data-act="setlook"][data-k="font"]'); pg.keyboard.press('Escape')
+    check('gold accent clears the attribute', attr('data-accent') is None and attr('data-font') is None)
+
     # ---- layout
     ev(pg, "UI.sbMode='auto'; S.characters.forEach(c=>UI.open[c.id]=false); UI.open['" + FIGHTER + "']=true; renderAll()")
     check('stat blocks open in the side panel on wide screens', pg.locator('#dock .dblk').count() == 1 and pg.locator('#grid .sb').count() == 0)
