@@ -247,6 +247,22 @@ table.mx tr.grp td{background:var(--panel2);color:var(--muted);font-size:11px;te
 .card.addtile{align-items:center;justify-content:center;border-style:dashed;min-height:180px;cursor:pointer;color:var(--muted);font:600 16px var(--serif)}
 .card.addtile:hover{border-color:var(--gold);color:var(--gold2)}
 .cmenu{margin-left:auto;align-self:flex-start}
+.reorder{display:flex;align-items:center;gap:0;align-self:flex-start;flex:none}
+.drag-handle{cursor:grab;opacity:.3;color:var(--muted);user-select:none;padding:2px 3px;font-size:14px;line-height:1}
+.drag-handle:hover{opacity:.8;color:var(--gold)}
+.mv{background:none;border:none;color:var(--muted);padding:2px 4px;font-size:11px;opacity:.55;line-height:1}
+.mv:hover:not(:disabled){opacity:1;color:var(--gold);border:none}
+.mv:disabled{opacity:.15;cursor:default}
+.mv .v{display:none}
+@media (max-width:720px){.mv .h{display:none}.mv .v{display:inline}}
+/* on phones the button bar wraps to several rows: let it scroll away instead of covering half the screen */
+@media (max-width:720px){.top{position:static}}
+@media (pointer:coarse){.drag-handle{display:none}.mv{min-width:30px;min-height:30px}}
+.card.dragging{opacity:.4;border-style:dashed}
+.card.drop-before{box-shadow:-4px 0 0 var(--gold),var(--shadow)}
+.card.drop-after{box-shadow:4px 0 0 var(--gold),var(--shadow)}
+.grid.one-col .card.drop-before{box-shadow:0 -4px 0 var(--gold),var(--shadow)}
+.grid.one-col .card.drop-after{box-shadow:0 4px 0 var(--gold),var(--shadow)}
 body.home .ponly{display:none!important}
 body:not(.home) .honly{display:none!important}
 .pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
@@ -311,7 +327,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.5.1';
 const STORAGE_NS = /*NS*/'';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -627,13 +643,21 @@ function slotsHTML(c){
   if (c.pactSlots) groups.push(`<span class="slotgrp"><span class="lv" title="Pact Magic, ${ORD(c.pactSlots.level)} level, short rest">Pact</span>${pipsHTML(c, c.pactSlots, 'slot', 'pact')}</span>`);
   return groups.length ? `<div><div class="sect">Spell slots</div><div class="slots">${groups.join('')}</div></div>` : '';
 }
+/** Drag handle (mouse) and move buttons (touch), as in the Encounter Tracker. */
+function reorderHTML(c){
+  if (S.characters.length < 2) return '';
+  const i = S.characters.indexOf(c), last = S.characters.length - 1;
+  return `<span class="reorder"><span class="drag-handle" draggable="true" data-drag="${c.id}" title="Drag to reorder">⠿</span>
+    <button class="mv" data-act="movechar" data-cid="${c.id}" data-d="-1" ${i === 0 ? 'disabled' : ''} title="Move earlier" aria-label="Move ${esc(c.name)} earlier"><span class="h">◀</span><span class="v">▲</span></button>
+    <button class="mv" data-act="movechar" data-cid="${c.id}" data-d="1" ${i === last ? 'disabled' : ''} title="Move later" aria-label="Move ${esc(c.name)} later"><span class="h">▶</span><span class="v">▼</span></button></span>`;
+}
 function cardHTML(c){
   const open = !!UI.open[c.id];
   const sc = (c.spellcasting||[])[0];
   return `<article class="card ${c.hp.current === 0 ? 'down' : ''} ${open && sideMode() ? 'sbon' : ''}" data-cid="${c.id}">
     <div class="chead">${portraitHTML(c)}
       <div class="grow" style="min-width:0">
-        <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="cname grow">${esc(c.name)}</div><button class="ghost small cmenu" data-act="charmenu" data-cid="${c.id}" title="Edit, update, copy or remove">⋯</button></div>
+        <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="cname grow">${esc(c.name)}</div>${reorderHTML(c)}<button class="ghost small cmenu" data-act="charmenu" data-cid="${c.id}" title="Edit, update, copy or remove">⋯</button></div>
         <div class="csub">${esc(classLine(c))} · ${esc(c.species)}</div>
         <div class="stats">
           <div class="stat ac" title="Armour Class"><div class="k">AC</div><div class="v">${c.ac}</div></div>
@@ -2161,6 +2185,9 @@ document.addEventListener('click', e => {
     case 'newchar': charForm(null); break;
     case 'importchar': jsonMode = 'merge'; $('#fileJson').click(); break;
     case 'charmenu': charMenuModal(d.cid); break;
+    case 'movechar': { const i = S.characters.findIndex(x => x.id === d.cid), j = i + +d.d;
+      if (i < 0 || j < 0 || j >= S.characters.length) break;
+      mutate(() => { const [x] = S.characters.splice(i, 1); S.characters.splice(j, 0, x); }); break; }
     case 'editcore': charForm(d.cid); break;
     case 'updatechar': UI._updateTarget = d.cid; jsonMode = 'update'; $('#fileJson').click(); break;
     case 'savechar': {
@@ -2205,6 +2232,42 @@ function addJournal(){
   UI.tags = []; UI.modal(); $('#jtext').focus();
 }
 $('#scrim').addEventListener('click', e => { if (e.target.id === 'scrim') closeModal(); });
+
+/* ---------- drag to reorder: drop on a card's left/right half (top/bottom in one column) ---------- */
+let dragCid = null;
+const oneCol = () => getComputedStyle($('#grid')).gridTemplateColumns.split(' ').length < 2;
+function dropSide(card, e){ const r = card.getBoundingClientRect(); return oneCol() ? (e.clientY < r.top + r.height / 2 ? 'before' : 'after') : (e.clientX < r.left + r.width / 2 ? 'before' : 'after'); }
+function clearDropMarks(){ document.querySelectorAll('.card.drop-before,.card.drop-after').forEach(x => x.classList.remove('drop-before', 'drop-after')); }
+$('#grid').addEventListener('dragstart', e => {
+  const h = e.target.closest && e.target.closest('[data-drag]'); if (!h) return;
+  dragCid = h.dataset.drag;
+  const card = h.closest('.card');
+  try { e.dataTransfer.setData('text/plain', dragCid); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setDragImage(card, 30, 30); } catch(err){}
+  $('#grid').classList.toggle('one-col', oneCol());
+  // add the class after the browser has taken its drag snapshot
+  setTimeout(() => card.classList.add('dragging'), 0);
+  h.addEventListener('dragend', () => { dragCid = null; clearDropMarks(); document.querySelectorAll('.card.dragging').forEach(x => x.classList.remove('dragging')); }, {once: true});
+});
+$('#grid').addEventListener('dragover', e => {
+  if (!dragCid) return;
+  const card = e.target.closest('.card[data-cid]'); if (!card || card.dataset.cid === dragCid) { clearDropMarks(); return; }
+  e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+  const side = dropSide(card, e);
+  if (!card.classList.contains('drop-' + side)){ clearDropMarks(); card.classList.add('drop-' + side); }
+});
+$('#grid').addEventListener('dragleave', e => { if (!e.relatedTarget || !$('#grid').contains(e.relatedTarget)) clearDropMarks(); });
+$('#grid').addEventListener('drop', e => {
+  if (!dragCid) return;
+  const card = e.target.closest('.card[data-cid]'); e.preventDefault(); clearDropMarks();
+  const from = dragCid; dragCid = null;
+  if (!card || card.dataset.cid === from) { renderGrid(); return; }
+  const side = dropSide(card, e), to = card.dataset.cid;
+  mutate(() => {
+    const i = S.characters.findIndex(x => x.id === from); const [x] = S.characters.splice(i, 1);
+    const j = S.characters.findIndex(y => y.id === to);
+    S.characters.splice(side === 'before' ? j : j + 1, 0, x);
+  });
+});
 document.addEventListener('focusin', e => { if (e.target.dataset && e.target.dataset.note) snap(); });
 document.addEventListener('input', e => {
   const t = e.target, d = t.dataset; if (!d || !d.note) return;
