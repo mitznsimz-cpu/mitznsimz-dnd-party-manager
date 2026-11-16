@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MitzNSimz Party Manager</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%277%27%20fill%3D%27%231E1B16%27/%3E%3Cpath%20d%3D%27M16%203%20L27%206.6%20V15.2%20C27%2021.8%2022.4%2026.3%2016%2029.3%20C9.6%2026.3%205%2021.8%205%2015.2%20V6.6%20Z%27%20fill%3D%27%23C9A227%27%20stroke%3D%27%238a6818%27%20stroke-width%3D%270.8%27%20stroke-linejoin%3D%27round%27/%3E%3Cg%20fill%3D%27%231E1B16%27%3E%3Cellipse%20cx%3D%2716%27%20cy%3D%2719.2%27%20rx%3D%275.4%27%20ry%3D%274.2%27/%3E%3Ccircle%20cx%3D%2710.6%27%20cy%3D%2713.8%27%20r%3D%272%27/%3E%3Ccircle%20cx%3D%2714.1%27%20cy%3D%2710.7%27%20r%3D%272%27/%3E%3Ccircle%20cx%3D%2717.9%27%20cy%3D%2710.7%27%20r%3D%272%27/%3E%3Ccircle%20cx%3D%2721.4%27%20cy%3D%2713.8%27%20r%3D%272%27/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFPklEQVR4AaxWW2xUVRRd5/YxdlqmUGGEobQGAsZAVPjgESkQjCjlkZgQTCShShNMDPDT+CkJRL/UDxKNfhjBRPhAE6MmAi2CEQWjLRQISlu0tR1KWyhMh2nneed41pm5M3de7TR4M+ueffZee+/Vfe+ZqQHbNVNddR73oQWeOWfUOlw33y3/F3jcw8mah1SLmbaWSAmonTtn84zKshsQOCiE2KRWt534SLaAO1nzIHuwl1VPC1gwz/2SUSJ+EBAeKzDVKhRhwWyAoK22RX2E6sFelgijrrp6ljDk0WKyDQHUqbk0rjTw5pYSNDU6NGjTxxg5xdQSJfisttZVY8BZ1gSIeShwlZYAC+dKbF+TaLpniwOvbKzEC2tdePZppwZt+hijGHKZw9wCZdUTFh7DLN9tSCFWZ5PKS4HF84EdDYmmzVsrsH1DJTY+78LSJU7MrFaErCT6GCOHXOZQDGuwFmtmpYC91cQyBcyqlNirxtu8rQKbGyqxYY0LSxZVoNqV2zS7oLUnlznMZQ3W2tsoMKtKWhS9CojVhppFvd4lb57HBRY/6cCi+sfgmlF802R6zsIarLVkYQU8NSIzLlBvZHqK240H4xi+b6bItOlLOaZhTFvA2d9DaH7Xh33v+/Hx1wEN2vQxNo3emjptAad/C8OMJ0Z54UoEBCvRxxjt6aBoAf1DMcRiEvNnq3OZ7PBETQmI5FbHyCHX8k21TimABfd/6EPLkYdofs+HdSvKsK3BgXXLy/HWDqcGbe1TMXLIPfCBD1El+JEFXO6KYOhe4vhMhICbvSZ2Nzqxf2clnqov06BNH2PksOmdUYkrKpf2ZJhyAp456ZGzUL0nc0+fhexYdq7Fs685Ajg2IRJ/MYm17lIceNWJVctKsevlCjyzqAQnzwbVI/Gj6dADjZYjfu1jjBxymcNc1tBQJSOmuulN+pYrQL3h/kAmseE5B1peq0KNS+DtjwL46scQ+odMcNwEbfoYm10tNLdB5aTbAGPjcfVOJE6P3Z8jIBQGQuFMAUyIRiW+PB3E/bHcGOMEYyfOBEEu93aEIxLBiN2TsHMEjIwBow9iiajt3j1g4oG/cHOLetcn0aemY+2tlTXv+qxdes0RYMaBQfUGj09kiugZyNynS+RaPf2Z3MB4DLfVSYrn0Z8jgOU6ekx09WbO68WVDkz2+848gpz1Kxw0U+juDaOjO/3bkQooI68A7z2BW/1RhCPppCqngTe2OVXK5B9yyLVYobCJW2p6t0dzX0By8gpgoO1yHO3XgjRT2LTKgfXLy1L7bIMxcuz+jutBtHao52p32uyCAnwB4KfOGP71qq8/W8K+nVX4/J1qtOyqRNOWxzRo08eYjYq+gRDOX4mpI2j3ZtoFBZDW+bfEdxfC6OnNnMQM9ThWLyvH1rUVGrTpY46FbpXD3Kv/5HnzLJJaDUgMq7Xg5+drcRxvC+PaXxMFOdmBq4p7vDWMC9cLj17nqN6GhOzUm0luN3olTp4L45eOAEKhwkWDKvZr+0PN/bNPTlIxEWJv9U8pphQAdXV5gWOnojh7MQDvYOZ7ocLw3g7h3KUAjp6KoVtx6ZsK6lx0GpF49FNA5vmOyk0fGwe+aDNxoi2E85f88N4Ja5y/6FePKYRjrSbGin5S0sfextCQry8eF3ty2xX2/HFT4pPvTRw/PaFBu71LFk7IE5Ey/jp761PgvTPyTdyUjRJyMA83r0uqfu3dAKHMvJx8TvZgr4HB0W8Z1wJoeIfunno4Hl2qTsVhKWWrWkfof1TofImRZM3D7MFe2g/gPwAAAP//sBwfYgAAAAZJREFUAwDqqzJxEP9taAAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<style>
+:root{
+  --bg:#141012; --bg2:#1d1719; --panel:#241c1f; --panel2:#2d2427; --line:#3d3034;
+  --text:#efe6d8; --muted:#a8998a; --dim:#76695e;
+  --red:#a3212b; --red2:#c8323d; --redbg:#3a1518;
+  --gold:#d4af37; --gold2:#f0cf63; --goldbg:#3a3015;
+  --green:#4f9a5b; --greenbg:#17301c; --blue:#4a86c5; --bluebg:#162a3d; --purple:#9a6ad0;
+  --r:10px; --shadow:0 6px 24px rgba(0,0,0,.45);
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 var(--sans)}
+button{font:inherit;color:inherit;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--gold)}
+button.pri{background:var(--red);border-color:var(--red2)}
+button.pri:hover{background:var(--red2)}
+button.gold{background:var(--goldbg);border-color:var(--gold);color:var(--gold2)}
+button.ghost{background:transparent;border-color:transparent}
+button.ghost:hover{border-color:var(--line)}
+button:disabled{opacity:.4;cursor:default}
+button.small{padding:2px 8px;font-size:12px}
+input,textarea,select{font:inherit;color:var(--text);background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:5px 8px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+textarea{width:100%;resize:vertical;min-height:70px}
+h1,h2,h3{font-family:var(--serif);margin:0}
+.muted{color:var(--muted)} .dim{color:var(--dim)} .small{font-size:12px}
+.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+.link{cursor:pointer} .link:hover{color:var(--gold2);text-decoration:underline}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 14px;background:linear-gradient(180deg,#22181a,#1a1315);border-bottom:2px solid var(--red)}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand h1{font-size:20px;color:var(--gold2);letter-spacing:.5px}
+.brand .sub{font-size:12px;color:var(--muted)}
+.purse-chip{display:flex;gap:8px;align-items:center;background:var(--goldbg);border:1px solid var(--gold);color:var(--gold2);border-radius:20px;padding:4px 12px;font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:transparent;padding:4px 9px}
+.seg button.on{background:var(--red);color:#fff}
+
+/* ---------- grid ---------- */
+.layout{display:flex;align-items:flex-start}
+.layout .grid{flex:1;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:12px;align-items:start}
+.layout.side .grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.dock{display:none;width:clamp(400px,32vw,520px);flex:none;position:sticky;top:var(--toph,52px);height:calc(100vh - var(--toph,52px));overflow:auto;border-left:2px solid var(--red);background:#1a1315}
+.layout.side .dock.has{display:block}
+.dock .dnav{position:sticky;top:0;z-index:2;display:flex;gap:4px;flex-wrap:wrap;align-items:center;padding:8px 10px;background:#22181a;border-bottom:1px solid var(--line)}
+.dock .dnav .chip.on{border-color:var(--gold);color:var(--gold2)}
+.dock .dblk{border-bottom:2px solid var(--line)}
+.dock .dhd{display:flex;align-items:center;gap:8px;padding:8px 12px;background:linear-gradient(135deg,#2d2023,#241c1f)}
+.dock .dhd .portrait{width:38px;height:38px;font-size:15px;border-radius:8px}
+.dock .dhd .cname{font-size:16px}
+.card.sbon{border-color:var(--gold)}
+@media (max-width:1400px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:720px){.grid{grid-template-columns:1fr;padding:8px}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow)}
+.card.down{border-color:var(--red2);box-shadow:0 0 0 1px var(--red2),var(--shadow)}
+.chead{display:flex;gap:10px;padding:10px;background:linear-gradient(135deg,#2d2023,#241c1f)}
+.portrait{width:64px;height:64px;flex:none;border-radius:10px;border:2px solid var(--gold);background:#3a2a2d center/cover no-repeat;display:flex;align-items:center;justify-content:center;font:600 22px var(--serif);color:var(--gold2);cursor:pointer;padding:0;overflow:hidden}
+.portrait:hover{border-color:var(--gold2)}
+.cname{font:600 17px var(--serif);color:var(--gold2);line-height:1.15}
+.csub{font-size:12px;color:var(--muted)}
+.stats{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:1px 6px;text-align:center;min-width:40px}
+.stat .k{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat .v{font:600 14px var(--sans);font-variant-numeric:tabular-nums}
+.stat.ac{border-color:var(--gold)}
+.stat.dc{border-color:var(--purple)}
+.stat.atk{border-color:var(--red)}
+.cbody{padding:8px 10px 10px;display:flex;flex-direction:column;gap:8px}
+.sect{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+
+/* hp */
+.hpbar{position:relative;height:26px;border-radius:7px;background:var(--bg2);border:1px solid var(--line);overflow:hidden}
+.hpfill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#2f6b39,var(--green));transition:width .2s}
+.hpfill.mid{background:linear-gradient(90deg,#8a6a1d,#c79a2b)}
+.hpfill.low{background:linear-gradient(90deg,#6d1a20,var(--red2))}
+.hptemp{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(74,134,197,.75),rgba(74,134,197,.75) 4px,rgba(74,134,197,.5) 4px,rgba(74,134,197,.5) 8px)}
+.hptext{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:600 14px var(--sans);text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums}
+.hpctl{display:flex;gap:5px}
+.hpctl input{width:60px;text-align:center}
+.hpctl button{flex:1;padding:5px 4px}
+.b-dmg{background:var(--redbg);border-color:var(--red)}
+.b-heal{background:var(--greenbg);border-color:var(--green)}
+.b-tmp{background:var(--bluebg);border-color:var(--blue)}
+.deathsaves{display:flex;gap:12px;align-items:center;background:var(--redbg);border:1px solid var(--red);border-radius:7px;padding:5px 8px;font-size:12px}
+.pip{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted);display:inline-block;cursor:pointer;vertical-align:middle;background:transparent;padding:0;flex:none}
+.pip.on{background:var(--gold);border-color:var(--gold)}
+.pip.used{background:transparent;border-color:var(--dim)}
+.pip.avail{background:var(--gold);border-color:var(--gold2)}
+.pip.s.on{background:var(--green);border-color:var(--green)}
+.pip.f.on{background:var(--red2);border-color:var(--red2)}
+.pips{display:inline-flex;gap:3px;align-items:center}
+
+/* chips */
+.conds{display:flex;flex-wrap:wrap;gap:4px;align-items:center;min-height:22px}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:12px;padding:1px 8px;font-size:12px;border:1px solid var(--line);background:var(--panel2);cursor:pointer;white-space:nowrap}
+.chip:hover{border-color:var(--gold)}
+.chip.cond{background:#3b2030;border-color:#7a3a5c}
+.chip.conc{background:var(--bluebg);border-color:var(--blue)}
+.chip.exh{background:#3a2a10;border-color:#a0752a}
+.chip.add{border-style:dashed;color:var(--muted);background:transparent}
+.chip .x{opacity:.6;padding-left:2px} .chip .x:hover{opacity:1;color:#fff}
+.chip.item{background:#2a2216}
+.chip.act-bonus{border-color:#4f7a3a} .chip.act-reaction{border-color:#7a5a2a} .chip.act-action{border-color:#7a2a33}
+.qa{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;align-items:start;font-size:12px}
+.qa .lab{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;padding-top:3px}
+.qa .chips{display:flex;flex-wrap:wrap;gap:3px}
+
+/* card tables */
+.saves{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}
+.sv{background:var(--bg2);border:1px solid var(--line);border-radius:6px;text-align:center;padding:1px 0}
+.sv .k{font-size:10px;color:var(--muted)}
+.sv .v{font-weight:600;font-variant-numeric:tabular-nums}
+.sv.prof{border-color:var(--gold)} .sv.prof .k{color:var(--gold)}
+.atks{display:grid;grid-template-columns:1fr auto auto;gap:1px 8px;font-size:12.5px;align-items:baseline}
+.atks .hit{color:var(--gold2);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.atks .dmg{color:var(--muted);white-space:nowrap}
+.uses{display:flex;flex-direction:column;gap:3px}
+.userow{display:flex;align-items:center;gap:6px;font-size:12.5px}
+.userow .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.userow .rs{font-size:9.5px;color:var(--dim);text-transform:uppercase}
+.userow input{width:56px;padding:1px 4px;font-size:12px}
+.slots{display:flex;flex-wrap:wrap;gap:4px 12px}
+.slotgrp{display:flex;align-items:center;gap:3px;font-size:12px}
+.slotgrp .lv{color:var(--muted);min-width:24px}
+.sbtoggle{margin:0 10px 10px;background:linear-gradient(180deg,#2f2224,#271d20);border-color:var(--red);color:var(--gold2);font-family:var(--serif)}
+
+/* ---------- stat block ---------- */
+.sb{border-top:3px solid var(--red);background:#1f1719;padding:10px 12px 14px;font-size:13px}
+.sb .ital{font-style:italic;color:var(--muted);margin-bottom:4px}
+.sb .rule{height:2px;margin:8px 0;background:linear-gradient(90deg,var(--red),transparent)}
+.sb .ln{margin:2px 0}
+.sb .ln b{color:var(--gold2)}
+.sb table.ab{width:100%;border-collapse:collapse;text-align:center;font-variant-numeric:tabular-nums}
+.sb table.ab th{font-size:11px;color:var(--gold2);font-weight:700}
+.sb table.ab td{padding:1px 0}
+.sb table.ab tr.sv td{font-size:11.5px;color:var(--muted)}
+.sb table.ab tr.sv td.p{color:var(--gold2)}
+.sb .sh{display:flex;align-items:center;gap:6px;cursor:pointer;margin:12px 0 4px;padding-bottom:2px;border-bottom:1px solid var(--red);font:600 15px var(--serif);color:var(--gold2);user-select:none}
+.sb .sh .car{font-size:11px;color:var(--muted);width:10px}
+.sb .sh .cnt{font:12px var(--sans);color:var(--muted);margin-left:auto}
+.sb .ent{margin:4px 0 6px}
+.sb .ent .en{font-weight:700;font-style:italic;cursor:pointer}
+.sb .ent .en:hover{color:var(--gold2);text-decoration:underline}
+.sb .ent .src{font-size:11px;color:var(--dim)}
+.sb .ent .pips{margin-left:6px}
+.sb .skg{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;font-size:12.5px}
+.sb .sk{display:flex;gap:5px;align-items:center}
+.sb .sk .mk{width:12px;text-align:center;color:var(--gold)}
+.sb .sk .v{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
+.sb .sk.none{color:var(--muted)} .sb .sk.none .v{font-weight:400}
+.list{display:flex;flex-direction:column;gap:2px}
+.li{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:6px;background:var(--bg2);border:1px solid transparent}
+.li:hover{border-color:var(--line)}
+.li .nm{flex:1;min-width:0;cursor:pointer}
+.li .nm:hover{color:var(--gold2)}
+.li .meta{font-size:11px;color:var(--muted)}
+.tag{font-size:10px;border-radius:4px;padding:0 4px;border:1px solid var(--line);color:var(--muted)}
+.tag.c{border-color:var(--blue);color:#8fb8e6}
+.tag.r{border-color:var(--purple);color:#c4a5ea}
+.tag.a{border-color:var(--gold);color:var(--gold2)}
+.tag.m{border-color:#a0752a;color:#e0b060}
+.lvhead{font:600 12.5px var(--serif);color:var(--gold);margin:8px 0 3px;display:flex;align-items:center;gap:6px}
+.qty{display:flex;align-items:center;gap:2px}
+.qty button{padding:0 6px;line-height:18px}
+.qty span{min-width:28px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ---------- modal ---------- */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:none;align-items:flex-start;justify-content:center;padding:6vh 12px;overflow:auto}
+.scrim.open{display:flex}
+.modal{background:var(--panel);border:1px solid var(--gold);border-radius:12px;width:min(620px,100%);box-shadow:var(--shadow);display:flex;flex-direction:column;max-height:88vh}
+.modal.wide{width:min(1000px,100%)}
+.mhead{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.mhead h2{font-size:18px;color:var(--gold2);flex:1}
+.mbody{padding:12px 14px;overflow:auto}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
+.mbody h3{font-size:14px;color:var(--gold2);margin:12px 0 6px}
+.condgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.condgrid button{text-align:left}
+.condgrid button.on{background:#3b2030;border-color:#c0508a}
+.tabs{display:flex;gap:2px;padding:6px 14px 0;border-bottom:1px solid var(--line)}
+.tabs button{border:0;border-radius:7px 7px 0 0;background:transparent;color:var(--muted);padding:6px 10px}
+.tabs button.on{background:var(--panel2);color:var(--gold2)}
+table.mx{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+table.mx th,table.mx td{padding:4px 8px;border-bottom:1px solid var(--line);text-align:center}
+table.mx th:first-child,table.mx td:first-child{text-align:left}
+table.mx thead th{position:sticky;top:0;background:var(--panel);color:var(--gold2);font-family:var(--serif)}
+table.mx td.best{color:var(--gold2);font-weight:700}
+table.mx td.p{text-decoration:underline dotted var(--gold)}
+table.mx tr.grp td{background:var(--panel2);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.6px;text-align:left}
+.coins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.coin{background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:8px;text-align:center}
+.coin .k{font-size:12px;color:var(--gold)}
+.coin .v{font:600 22px var(--sans);font-variant-numeric:tabular-nums}
+.coin .each{font-size:11px;color:var(--dim)}
+.journal-entry{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin-bottom:6px}
+.journal-entry.star{border-color:var(--gold)}
+.journal-entry .jm{font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.journal-entry .jt{white-space:pre-wrap;margin-top:3px}
+.tagpick{display:flex;flex-wrap:wrap;gap:4px}
+.tagpick button{border-radius:14px;padding:2px 10px;font-size:12px}
+.tagpick button.on{background:var(--red);border-color:var(--red2);color:#fff}
+.lookup .meta{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:13px;margin-bottom:8px}
+.lookup .meta .k{color:var(--muted)}
+.lookup .desc p{margin:0 0 8px}
+.lookup .desc table{border-collapse:collapse;margin:6px 0;font-size:12px}
+.lookup .desc td,.lookup .desc th{border:1px solid var(--line);padding:2px 6px}
+.src2{font-size:11px;color:var(--dim);margin-top:8px}
+.diff .dgrp h3{font-size:14px;color:var(--gold2);margin:6px 0}
+.diff label{display:flex;gap:8px;align-items:flex-start;padding:4px 6px;border-radius:6px;background:var(--bg2);margin-bottom:3px;cursor:pointer}
+.diff .old{color:var(--muted);text-decoration:line-through}
+.diff .new{color:var(--gold2)}
+.diff .add{color:#8fd19a}
+.diff .rem{color:#e58a92}
+.toasts{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--gold);border-radius:9px;padding:8px 14px;box-shadow:var(--shadow);pointer-events:auto;max-width:90vw}
+.toast.warn{border-color:var(--red2);background:var(--redbg)}
+.empty{color:var(--dim);font-style:italic;padding:6px}
+.homeview{padding:16px 14px;max-width:1500px;margin:0 auto}
+.homeview h2{color:var(--gold2);font-size:22px;margin:4px 0 12px}
+.homeview h3{color:var(--muted);font:600 13px var(--sans);text-transform:uppercase;letter-spacing:.6px;margin:22px 0 8px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.ccard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+.ccard.cur{border-color:var(--gold)}
+.ccard.arch{opacity:.7}
+.ccard .ct{font:600 18px var(--serif);color:var(--gold2);cursor:pointer}
+.ccard .ct:hover{text-decoration:underline}
+.ccard .faces{display:flex;gap:6px;flex-wrap:wrap}
+.ccard .face{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:2px 10px 2px 2px;font-size:12px}
+.ccard .face .portrait{width:28px;height:28px;border-radius:50%;font-size:11px;border-width:1px;cursor:default}
+.ccard .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.ccard.new{align-items:center;justify-content:center;border-style:dashed;min-height:150px;cursor:pointer;color:var(--muted)}
+.ccard.new:hover{border-color:var(--gold);color:var(--gold2)}
+.card.addtile{align-items:center;justify-content:center;border-style:dashed;min-height:180px;cursor:pointer;color:var(--muted);font:600 16px var(--serif)}
+.card.addtile:hover{border-color:var(--gold);color:var(--gold2)}
+.cmenu{margin-left:auto;align-self:flex-start}
+body.home .ponly{display:none!important}
+body:not(.home) .honly{display:none!important}
+.pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.pickgrid label{display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:6px 8px;cursor:pointer}
+.form .sub{grid-column:1/-1;color:var(--gold2);font:600 13px var(--serif);border-bottom:1px solid var(--red);margin-top:6px;padding-bottom:2px}
+.form .row6{grid-column:1/-1;display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.form .row9{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+.form .sk3{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px}
+.form .sk3 label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text)}
+.form .sk3 select{flex:none;width:100px;padding:2px 4px;font-size:12px}
+.form .sk3 span{flex:1}
+@media (max-width:700px){.form .row9{grid-template-columns:repeat(5,1fr)}.form .sk3{grid-template-columns:1fr 1fr}.form .row6{grid-template-columns:repeat(3,1fr)}}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.fld{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);min-width:0}
+.fld input,.fld select{width:100%;min-width:0}
+.fld.chk input{width:auto}
+.form .row6 .row input{width:auto}
+.fld.wide{grid-column:1/-1}
+.fld.chk{flex-direction:row;align-items:center;gap:6px}
+.fld input,.fld select,.fld textarea{color:var(--text);font-size:14px}
+.fld small{font-size:11px}
+.addrow{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 2px}
+.addrow span{font-size:12px;color:var(--muted);cursor:pointer;border-bottom:1px dashed var(--dim)}
+.addrow span:hover{color:var(--gold2);border-color:var(--gold)}
+.tag.hb{border-color:#4f9a5b;color:#8fd19a}
+@media (max-width:560px){.form{grid-template-columns:1fr}}
+.foot{padding:10px 14px 20px;color:var(--dim);font-size:12px;text-align:center}
+.foot a{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="ponly ghost" data-act="home" title="All campaigns">◀ Campaigns</button>
+  <div class="brand"><h1>Party Manager</h1><span class="sub">MitzNSimz<span class="ponly"> · <span id="partyName"></span></span></span></div>
+  <button class="honly pri" data-act="newcamp">+ New campaign</button>
+  <button class="honly" data-act="homedata">Backup &amp; import</button>
+  <button class="ponly purse-chip" data-act="purse" title="Party purse"></button>
+  <button class="ponly" data-act="checks" title="Compare saves and skills across the party">Party Checks</button>
+  <button class="ponly" data-act="journal" title="Combat log and party notes">Journal</button>
+  <button class="ponly" data-act="shortRest">Short Rest</button>
+  <button class="ponly" data-act="longRest">Long Rest</button>
+  <button class="ponly" data-act="expandAll" id="expandBtn">Expand all</button>
+  <span class="seg ponly" title="Where stat blocks open"><button data-act="sbmode" data-v="auto">Auto</button><button data-act="sbmode" data-v="side">Side</button><button data-act="sbmode" data-v="below">Below</button></span>
+  <span class="seg ponly" title="Ruleset used for Open5e lookups and condition rules"><button data-act="ruleset" data-v="2014">2014</button><button data-act="ruleset" data-v="2024">2024</button></span>
+  <button class="ponly" data-act="undo" id="undoBtn" title="Undo (Ctrl+Z)">Undo</button>
+  <button class="ponly" data-act="menu" title="Campaign data and settings">Data</button>
+</header>
+
+<section class="homeview" id="home" hidden></section>
+<div class="layout" id="layout"><main class="grid" id="grid"></main><aside class="dock" id="dock"></aside></div>
+<div class="foot">⚔ Created by <a href="https://mitznsimz.com" target="_blank" rel="noopener noreferrer">MitzNSimz</a>: miniatures and tools for Dungeon Masters · Party Manager v<span id="ver"></span> · <a href="https://ko-fi.com/mitznsimz" target="_blank" rel="noopener noreferrer">☕ Support on Ko-fi</a> · your data stays in this browser</div>
+
+<div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+<input type="file" id="fileImg" accept="image/*" hidden>
+<input type="file" id="fileJson" accept=".json,application/json" hidden>
+
+<script>
+'use strict';
+/* =====================================================================
+   MitzNSimz Party Manager — prototype
+   Single file, vanilla JS, no build. Data lives in localStorage.
+   ===================================================================== */
+const APP_VERSION = '0.4.0';
+const STORAGE_NS = /*NS*/'';   // build sets '' for production, 'dev_' for the dev copy
+const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
+const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
+const K_O5E   = STORAGE_NS + 'mnzpm_o5e_cache_v1';
+const K_UI    = STORAGE_NS + 'mnzpm_ui_v1';
+const O5E = 'https://api.open5e.com';
+
+const SEED = /*SEED*/null;
+
+const ABILS = ['str','dex','con','int','wis','cha'];
+const ABN = {str:'STR',dex:'DEX',con:'CON',int:'INT',wis:'WIS',cha:'CHA'};
+const ABFULL = {str:'Strength',dex:'Dexterity',con:'Constitution',int:'Intelligence',wis:'Wisdom',cha:'Charisma'};
+const SKN = {acrobatics:'Acrobatics',animalHandling:'Animal Handling',arcana:'Arcana',athletics:'Athletics',deception:'Deception',history:'History',insight:'Insight',intimidation:'Intimidation',investigation:'Investigation',medicine:'Medicine',nature:'Nature',perception:'Perception',performance:'Performance',persuasion:'Persuasion',religion:'Religion',sleightOfHand:'Sleight of Hand',stealth:'Stealth',survival:'Survival'};
+const CONDITIONS = ['Blinded','Charmed','Deafened','Frightened','Grappled','Incapacitated','Invisible','Paralyzed','Petrified','Poisoned','Prone','Restrained','Stunned','Unconscious'];
+const COND_RULES = {
+  Blinded:'Can\'t see, and automatically fails any ability check that requires sight. Attack rolls against it have advantage; its own attack rolls have disadvantage.',
+  Charmed:'Can\'t attack the charmer or target it with harmful abilities or magical effects. The charmer has advantage on ability checks to interact socially with it.',
+  Deafened:'Can\'t hear, and automatically fails any ability check that requires hearing.',
+  Frightened:'Disadvantage on ability checks and attack rolls while the source of its fear is in line of sight. Can\'t willingly move closer to the source.',
+  Grappled:'Speed becomes 0 and can\'t benefit from bonuses to speed. Ends if the grappler is incapacitated, or if an effect moves it out of the grappler\'s reach.',
+  Incapacitated:'Can\'t take actions or reactions.',
+  Invisible:'Can\'t be seen without magic or a special sense; counts as heavily obscured for hiding. Attack rolls against it have disadvantage; its attack rolls have advantage.',
+  Paralyzed:'Incapacitated; can\'t move or speak. Automatically fails Strength and Dexterity saves. Attack rolls against it have advantage, and any hit from within 5 feet is a critical hit.',
+  Petrified:'Turned to a solid substance with its gear. Incapacitated, can\'t move or speak, unaware of its surroundings. Attack rolls against it have advantage. Automatically fails Strength and Dexterity saves. Resistance to all damage; poison and disease are suspended.',
+  Poisoned:'Disadvantage on attack rolls and ability checks.',
+  Prone:'Can only crawl unless it stands up (costs half its speed). Disadvantage on its attack rolls. Attacks against it have advantage from within 5 feet, otherwise disadvantage.',
+  Restrained:'Speed becomes 0. Attack rolls against it have advantage; its attack rolls have disadvantage. Disadvantage on Dexterity saves.',
+  Stunned:'Incapacitated; can\'t move, and can speak only falteringly. Automatically fails Strength and Dexterity saves. Attack rolls against it have advantage.',
+  Unconscious:'Incapacitated; can\'t move or speak, unaware of its surroundings. Drops what it\'s holding and falls prone. Automatically fails Strength and Dexterity saves. Attack rolls against it have advantage, and any hit from within 5 feet is a critical hit.',
+};
+const EXH_2014 = ['', 'Disadvantage on ability checks', 'Speed halved', 'Disadvantage on attack rolls and saving throws', 'Hit point maximum halved', 'Speed reduced to 0', 'Death'];
+const ACT_LABEL = {action:'Action', bonus:'Bonus action', reaction:'Reaction', special:'Special', passive:'Passive trait'};
+const ORD = n => n + (['th','st','nd','rd'][(n%100-20)%10] || ['th','st','nd','rd'][n%100] || 'th');
+const COINS = ['pp','gp','ep','sp','cp'];
+const COIN_GP = {pp:10,gp:1,ep:.5,sp:.1,cp:.01};
+const fmtTime = t => String(t||'').replace(/^1A\b/,'Action').replace(/^1BA\b/,'Bonus action').replace(/^1R\b/,'Reaction').replace(/(\d+)m\b/,'$1 min').replace(/(\d+)h\b/,'$1 hr');
+
+/* ---------- utils ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sgn = n => (n >= 0 ? '+' : '') + n;
+const uid = () => Math.random().toString(36).slice(2, 10);
+const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const clone = o => JSON.parse(JSON.stringify(o));
+function toast(msg, warn){
+  const t = document.createElement('div'); t.className = 'toast' + (warn ? ' warn' : ''); t.innerHTML = msg;
+  $('#toasts').appendChild(t); while ($('#toasts').children.length > 4) $('#toasts').firstChild.remove();
+  setTimeout(() => t.remove(), warn ? 6000 : 3200);
+}
+function download(name, text, type){
+  try {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type: type || 'application/json'}));
+    a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  } catch(e){ toast('Download blocked here: use Copy instead', true); }
+}
+function copyText(text, what){
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+    .then(() => toast(`${what} copied to the clipboard`)).catch(() => toast('Copy was blocked by the browser', true));
+}
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+let S, P = {};          // S = party state, P = portraits {charId: dataURL}
+const UI = {open:{}, collapsed:{}, spellView:{}, invView:{}, journalTab:'log', sbMode:'auto', tags:[], round:'', modal:null};
+const undoStack = [];
+/* ---------- storage: an index of campaigns, then one state + one portrait key per campaign ---------- */
+const K_INDEX = STORAGE_NS + 'mnzpm_index_v1';
+const kState = id => STORAGE_NS + 'mnzpm_c_' + id;
+const kImg   = id => STORAGE_NS + 'mnzpm_img_' + id;
+const kUI    = id => K_UI + '_' + id;
+let IDX = {list:[], current:null};
+let VIEW = 'home';
+function lsGet(k, d){ try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : d; } catch(e){ return d; } }
+function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ toast('Could not save: browser storage is full. Export a backup.', true); return false; } }
+function saveIndex(){ lsSet(K_INDEX, IDX); }
+const campById = id => IDX.list.find(x => x.id === id);
+function loadUI(id){
+  Object.assign(UI, {open:{}, collapsed:{}, spellView:{}, invView:{}, journalTab:'log'});
+  const g = lsGet(K_UI, {}); if (g.sbMode) UI.sbMode = g.sbMode;     // layout choice is global
+  Object.assign(UI, lsGet(kUI(id), {}), {modal:null, tags:[]});
+}
+function saveUI(){
+  if (!IDX.current) return;
+  lsSet(kUI(IDX.current), {open:UI.open, collapsed:UI.collapsed, spellView:UI.spellView, invView:UI.invView, journalTab:UI.journalTab});
+  lsSet(K_UI, {sbMode:UI.sbMode});
+}
+
+function normaliseChar(c){
+  c.hp = Object.assign({current:c.hp.max, temp:0}, c.hp);
+  c.deathSaves = c.deathSaves || {successes:0, failures:0};
+  c.conditions = c.conditions || [];
+  c.exhaustion = c.exhaustion || 0;
+  c.concentration = c.concentration || null;
+  c.myNotes = c.myNotes || (c.notes && c.notes.session) || '';
+  c.spells = (c.spells||[]).map(s => {
+    s.id = s.id || slug(s.name + '-' + s.source);
+    if (s.prepared === undefined || s.prepared === null) s.prepared = c.preparedLimit ? !!s.alwaysPrepared : true;
+    return s;
+  });
+  c.inventory = (c.inventory||[]).map(i => { i.id = i.id || slug(i.name); i.notes = i.notes || ''; i.actions = i.actions || []; return i; });
+  c.resources = (c.resources||[]).map(r => Object.assign({used:0}, r));
+  c.features = (c.features||[]).map(f => Object.assign({id: slug(f.name), act:'passive', src:''}, f));
+  c.spellSlots = (c.spellSlots||[]).map(s => Object.assign({used:0}, s));
+  c.hitDice = (c.hitDice||[]).map(h => Object.assign({used:0}, h));
+  return c;
+}
+function fromSeed(seed){
+  const s = clone(seed);
+  // Each sheet carries an equal share of the party fund, so the purse is the sum.
+  s.purse = {pp:0,gp:0,ep:0,sp:0,cp:0};
+  s.characters.forEach(c => { if (c.coins) COINS.forEach(k => s.purse[k] += c.coins[k]||0); delete c.coins; });
+  s.characters = s.characters.map(normaliseChar);
+  s.sharedNotes = s.sharedNotes || ''; s.log = s.log || []; s.session = s.session || 1; s.ruleset = s.ruleset || '2014';
+  s.appVersion = APP_VERSION;
+  return s;
+}
+/** Bring saved state from older versions up to date without touching session data. */
+function upgrade(){
+  if (S.appVersion === APP_VERSION) return;
+  if (SEED && (!S.appVersion || S.appVersion < '0.2.0')){
+    // v0.2 adds detailed features (action type, uses, full text). Features are sheet-owned, so take them from the seed.
+    S.characters.forEach(c => { const sc = SEED.characters.find(x => x.id === c.id); if (sc) c.features = clone(sc.features); });
+  }
+  // Fill any sheet fields added in later versions (e.g. attacksPerAction in 0.2.1)
+  if (SEED) S.characters.forEach(c => { const sc = SEED.characters.find(x => x.id === c.id); if (!sc) return;
+    ['attacksPerAction','bonusAttack'].forEach(k => { if (c[k] === undefined && sc[k] !== undefined) c[k] = clone(sc[k]); });
+    (sc.inventory||[]).forEach(si => { const it = (c.inventory||[]).find(x => x.name === si.name);
+      if (it && si.actions && !(it.actions && it.actions.length)) it.actions = clone(si.actions); }); });
+  S.characters = S.characters.map(normaliseChar);
+  S.appVersion = APP_VERSION; save();
+}
+const emptyState = name => ({schema:'mnz-party/1', name: name || 'New campaign', ruleset:'2014', characters:[], purse:{pp:0,gp:0,ep:0,sp:0,cp:0}, sharedNotes:'', log:[], session:1, appVersion:APP_VERSION});
+/** First run of 0.4: the single saved party (or the seed) becomes the first campaign. Old keys stay as a safety copy. */
+function bootStorage(){
+  IDX = lsGet(K_INDEX, null);
+  if (IDX) return;
+  IDX = {list:[], current:null};
+  let st = lsGet(K_STATE, null); const img = lsGet(K_IMG, {});
+  if (!st && SEED) st = fromSeed(SEED);
+  if (st){
+    const id = 'c' + uid();
+    if (!st.name || st.name === 'Party') st.name = 'My campaign';
+    lsSet(kState(id), st); lsSet(kImg(id), img);
+    const oldUI = lsGet(K_UI, null); if (oldUI) lsSet(kUI(id), oldUI);
+    IDX.list.push({id, name: st.name, created: Date.now(), updated: Date.now()});
+    IDX.current = id;
+  }
+  saveIndex();
+}
+function openCampaign(id){
+  const st = lsGet(kState(id), null);
+  if (!st){ toast('That campaign\'s data is missing', true); return; }
+  S = st; P = lsGet(kImg(id), {}); IDX.current = id; saveIndex();
+  undoStack.length = 0; loadUI(id); upgrade(); VIEW = 'party'; closeModal(); window.scrollTo(0,0); renderAll();
+}
+function goHome(){ flushSave(); VIEW = 'home'; closeModal(); window.scrollTo(0,0); renderAll(); }
+let saveTimer = null;
+function flushSave(){
+  clearTimeout(saveTimer);
+  if (!S || !IDX.current) return;
+  lsSet(kState(IDX.current), S);
+  const e = campById(IDX.current); if (e){ e.updated = Date.now(); e.name = S.name; saveIndex(); }
+}
+function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(flushSave, 150); }
+function savePortraits(){ if (IDX.current) lsSet(kImg(IDX.current), P); }
+window.addEventListener('beforeunload', () => { if (VIEW === 'party') flushSave(); });
+function snap(){ undoStack.push(JSON.stringify(S)); if (undoStack.length > 40) undoStack.shift(); }
+function undo(){
+  if (!undoStack.length) return;
+  S = JSON.parse(undoStack.pop()); save(); renderAll(); toast('Undone');
+}
+function mutate(fn){ snap(); fn(); save(); renderAll(); }
+const charById = id => S.characters.find(c => c.id === id);
+
+/* =====================================================================
+   RULES HELPERS
+   ===================================================================== */
+const initials = n => n.split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+const classLine = c => c.classes.map(k => `${k.name} ${k.level}`).join(' / ');
+const subLine = c => c.classes.map(k => k.subclass).filter(Boolean).join(' / ');
+const resById = (c, id) => c.resources.find(r => r.id === id);
+const SIDE_MIN = 1100;
+let lastSide = null;   // layout mode at the last render, so a resize across the breakpoint re-renders
+const sideMode = () => UI.sbMode === 'side' || (UI.sbMode === 'auto' && window.innerWidth >= SIDE_MIN);
+const NUMW = ['zero','one','two','three','four'];
+const actOfSpell = s => /^1BA/.test(s.time) ? 'bonus' : /^1R/.test(s.time) ? 'reaction' : 'action';
+const usableSpells = c => c.spells.filter(s => s.prepared || s.level === 0);
+/** Actions granted by carried items: [{item, a}] */
+const itemActs = (c, act) => c.inventory.filter(i => i.qty > 0 && (i.actions||[]).length).flatMap(i => i.actions.filter(a => !act || a.act === act).map(a => ({item: i, a})));
+
+function damage(c, n){
+  if (!(n > 0)) return;
+  const wasZero = c.hp.current === 0;
+  let rest = n;
+  if (c.hp.temp > 0){ const t = Math.min(c.hp.temp, rest); c.hp.temp -= t; rest -= t; }
+  c.hp.current = Math.max(0, c.hp.current - rest);
+  if (wasZero){
+    c.deathSaves.failures = Math.min(3, c.deathSaves.failures + 1);
+    toast(`${esc(c.name)} takes damage while down: <b>death save failure</b> (${c.deathSaves.failures}/3)`, true);
+  } else if (c.hp.current === 0){
+    if (!c.conditions.includes('Unconscious')) c.conditions.push('Unconscious');
+    toast(`<b>${esc(c.name)} is down!</b>`, true);
+    if (c.concentration){ toast(`${esc(c.name)} loses concentration on ${esc(c.concentration)}`, true); c.concentration = null; }
+  }
+  if (c.concentration && c.hp.current > 0){
+    const dc = Math.max(10, Math.floor(n/2));
+    toast(`${esc(c.name)}: concentration check (${esc(c.concentration)}) <b>DC ${dc}</b>, CON save ${sgn(c.abilities.con.save)}`, true);
+  }
+}
+function heal(c, n){
+  if (!(n > 0)) return;
+  if (c.hp.current === 0){ c.conditions = c.conditions.filter(x => x !== 'Unconscious'); c.deathSaves = {successes:0, failures:0}; }
+  c.hp.current = Math.min(c.hp.max, c.hp.current + n);
+}
+function shortRestChar(c){
+  c.resources.forEach(r => { if (r.reset === 'short' || r.reset === 'turn') r.used = 0; });
+  if (c.pactSlots) c.pactSlots.used = 0;
+}
+function longRestChar(c){
+  shortRestChar(c);
+  c.resources.forEach(r => { if (r.reset === 'long' || r.reset === 'dawn') r.used = 0; });
+  c.spellSlots.forEach(s => s.used = 0);
+  c.hp.current = c.hp.max; c.hp.temp = 0;
+  c.deathSaves = {successes:0, failures:0};
+  c.conditions = c.conditions.filter(x => x !== 'Unconscious');
+  c.concentration = null;
+  let regain = Math.max(1, Math.floor(c.hitDice.reduce((n,h) => n + h.max, 0) / 2));
+  [...c.hitDice].sort((a,b) => parseInt(b.die.slice(1)) - parseInt(a.die.slice(1))).forEach(h => { const r = Math.min(regain, h.used); h.used -= r; regain -= r; });
+  if (c.exhaustion > 0) c.exhaustion--;
+}
+
+/* =====================================================================
+   RENDER — shared bits
+   ===================================================================== */
+function portraitHTML(c){
+  const img = P[c.id];
+  return `<button class="portrait" data-act="portrait" data-cid="${c.id}" title="Click to upload a portrait"
+    ${img ? `style="background-image:url('${img}')"` : ''}>${img ? '' : esc(initials(c.name))}</button>`;
+}
+/** Pips for any counter {max, used}. kind = slot|res; ref identifies it. */
+function pipsHTML(c, obj, kind, ref){
+  if (obj.max == null) return `<input type="number" min="0" placeholder="max" style="width:56px;padding:1px 4px;font-size:12px" data-resmax="${ref}" data-cid="${c.id}" title="Max not on the sheet: set it here">`;
+  if (obj.max > 8) return `<span class="qty"><button data-act="resn" data-d="1" data-cid="${c.id}" data-rid="${ref}" title="Use one">−</button><span>${obj.max - obj.used}/${obj.max}</span><button data-act="resn" data-d="-1" data-cid="${c.id}" data-rid="${ref}" title="Regain one">+</button></span>`;
+  return `<span class="pips">${Array.from({length:obj.max}, (_, i) => {
+    const used = i >= obj.max - obj.used;
+    return `<button class="pip ${used ? 'used' : 'avail'}" data-act="pip" data-kind="${kind}" data-ref="${ref}" data-cid="${c.id}" data-i="${i}" title="${used ? 'Used' : 'Available'}: click to toggle"></button>`;
+  }).join('')}</span>`;
+}
+const resetTag = r => ({short:'SR', long:'LR', dawn:'dawn', turn:'turn', none:''}[r.reset] || '');
+
+/* =====================================================================
+   RENDER — card summary
+   ===================================================================== */
+function hpHTML(c){
+  const pct = c.hp.max ? Math.max(0, Math.min(100, c.hp.current / c.hp.max * 100)) : 0;
+  const tpct = c.hp.max ? Math.min(100 - pct, c.hp.temp / c.hp.max * 100) : 0;
+  const cls = pct <= 25 ? 'low' : pct <= 50 ? 'mid' : '';
+  return `<div class="hpbar"><div class="hpfill ${cls}" style="width:${pct}%"></div><div class="hptemp" style="left:${pct}%;width:${tpct}%"></div>
+      <div class="hptext">${c.hp.current} / ${c.hp.max}${c.hp.temp ? ` &nbsp;+${c.hp.temp} temp` : ''}</div></div>
+    <div class="hpctl">
+      <input type="number" min="0" inputmode="numeric" placeholder="amt" data-hpin="${c.id}" aria-label="HP amount">
+      <button class="b-dmg" data-act="hp" data-op="dmg" data-cid="${c.id}">Damage</button>
+      <button class="b-heal" data-act="hp" data-op="heal" data-cid="${c.id}">Heal</button>
+      <button class="b-tmp" data-act="hp" data-op="temp" data-cid="${c.id}">Temp</button>
+    </div>`;
+}
+function deathHTML(c){
+  if (c.hp.current > 0) return '';
+  const pips = (k, cl) => [0,1,2].map(i => `<button class="pip ${cl} ${c.deathSaves[k] > i ? 'on' : ''}" data-act="death" data-k="${k}" data-i="${i}" data-cid="${c.id}"></button>`).join('');
+  return `<div class="deathsaves"><b>Death saves</b><span>✓ ${pips('successes','s')}</span><span>✗ ${pips('failures','f')}</span></div>`;
+}
+function condHTML(c){
+  const chips = c.conditions.map(x => `<span class="chip cond" data-act="condinfo" data-cid="${c.id}" data-v="${esc(x)}" title="Click for rules">${esc(x)}<span class="x" data-act="rmcond" data-cid="${c.id}" data-v="${esc(x)}" title="Remove">✕</span></span>`);
+  if (c.exhaustion) chips.push(`<span class="chip exh" data-act="condinfo" data-cid="${c.id}" data-v="Exhaustion">Exhaustion ${c.exhaustion}</span>`);
+  if (c.concentration) chips.push(`<span class="chip conc" data-act="concinfo" data-cid="${c.id}" title="Concentrating">◉ ${esc(c.concentration)}<span class="x" data-act="dropconc" data-cid="${c.id}" title="Drop concentration">✕</span></span>`);
+  chips.push(`<span class="chip add" data-act="cond" data-cid="${c.id}">+ Condition</span>`);
+  return `<div class="conds">${chips.join('')}</div>`;
+}
+function savesHTML(c){
+  return `<div><div class="sect">Saving throws</div><div class="saves">${ABILS.map(a => { const x = c.abilities[a];
+    return `<div class="sv ${x.saveProf ? 'prof' : ''}" title="${ABFULL[a]} save${x.saveProf ? ' (proficient)' : ''}"><div class="k">${ABN[a]}</div><div class="v">${sgn(x.save)}</div></div>`; }).join('')}</div></div>`;
+}
+function attacksHTML(c){
+  if (!(c.attacks||[]).length) return '';
+  const per = c.attacksPerAction ? ` · ${c.attacksPerAction} per Attack action${c.bonusAttack ? ` · +1 bonus: ${esc(c.bonusAttack)}` : ''}` : '';
+  return `<div><div class="sect">Attacks<span style="text-transform:none;letter-spacing:0">${per}</span></div><div class="atks">${c.attacks.map((a, i) =>
+    `<span class="link" data-act="atkinfo" data-cid="${c.id}" data-i="${i}" title="${esc(a.notes||'')}">${esc(a.name)}</span><span class="hit">${esc(a.hit)}</span><span class="dmg">${esc(a.damage)}</span>`).join('')}</div></div>`;
+}
+/** Limited uses: every resource, labelled by its feature where one exists, with pips. */
+function usesHTML(c){
+  if (!c.resources.length) return '';
+  const rows = c.resources.map(r => {
+    const f = c.features.find(x => x.res === r.id && !/^Channel Divinity:/.test(x.name)) || null;
+    return `<div class="userow" title="${esc(r.notes||'')}"><span class="nm link" data-act="${f ? 'featinfo' : 'resinfo'}" data-cid="${c.id}" data-${f ? 'fid' : 'rid'}="${f ? f.id : r.id}">${esc(r.name)}${r.die ? ` <span class="dim">${esc(r.die)}</span>` : ''}</span><span class="rs">${resetTag(r)}</span>${pipsHTML(c, r, 'res', r.id)}</div>`;
+  });
+  return `<div><div class="sect">Limited uses</div><div class="uses">${rows.join('')}</div></div>`;
+}
+/** Bonus actions and reactions at a glance: features + usable spells with that casting time. */
+function quickHTML(c){
+  const line = (act, label) => {
+    const fs = c.features.filter(f => f.act === act).map(f => `<span class="chip act-${act}" data-act="featinfo" data-cid="${c.id}" data-fid="${f.id}">${esc(f.name.replace(/ \(.*\)$/,''))}</span>`);
+    const ss = usableSpells(c).filter(s => actOfSpell(s) === act && act !== 'action').map(s => `<span class="chip act-${act}" data-act="spellinfo" data-cid="${c.id}" data-sid="${s.id}">✦ ${esc(s.name)}</span>`);
+    const is = itemActs(c, act).map(({item, a}) => `<span class="chip item act-${act}" data-act="iactinfo" data-cid="${c.id}" data-iid="${item.id}" data-aid="${a.id}" title="From ${esc(item.name)}">⚔ ${esc(a.name)}</span>`);
+    const all = fs.concat(is, ss);
+    return all.length ? `<span class="lab">${label}</span><span class="chips">${all.join('')}</span>` : '';
+  };
+  const html = line('action','Action') + line('bonus','Bonus') + line('reaction','Reaction') + line('special','Special');
+  return html ? `<div class="qa">${html}</div>` : '';
+}
+function slotsHTML(c){
+  const groups = c.spellSlots.filter(s => s.max).map(s => `<span class="slotgrp"><span class="lv">${ORD(s.level)}</span>${pipsHTML(c, s, 'slot', s.level)}</span>`);
+  if (c.pactSlots) groups.push(`<span class="slotgrp"><span class="lv" title="Pact Magic, ${ORD(c.pactSlots.level)} level, short rest">Pact</span>${pipsHTML(c, c.pactSlots, 'slot', 'pact')}</span>`);
+  return groups.length ? `<div><div class="sect">Spell slots</div><div class="slots">${groups.join('')}</div></div>` : '';
+}
+function cardHTML(c){
+  const open = !!UI.open[c.id];
+  const sc = (c.spellcasting||[])[0];
+  return `<article class="card ${c.hp.current === 0 ? 'down' : ''} ${open && sideMode() ? 'sbon' : ''}" data-cid="${c.id}">
+    <div class="chead">${portraitHTML(c)}
+      <div class="grow" style="min-width:0">
+        <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="cname grow">${esc(c.name)}</div><button class="ghost small cmenu" data-act="charmenu" data-cid="${c.id}" title="Edit, update, copy or remove">⋯</button></div>
+        <div class="csub">${esc(classLine(c))} · ${esc(c.species)}</div>
+        <div class="stats">
+          <div class="stat ac" title="Armour Class"><div class="k">AC</div><div class="v">${c.ac}</div></div>
+          <div class="stat" title="Initiative"><div class="k">Init</div><div class="v">${sgn(c.initiative)}</div></div>
+          <div class="stat" title="Speed"><div class="k">Spd</div><div class="v">${c.speed.walk}</div></div>
+          <div class="stat" title="Passive Perception"><div class="k">PP</div><div class="v">${c.passive.perception}</div></div>
+          ${c.attacksPerAction ? `<div class="stat atk" title="Attacks per Attack action${c.bonusAttack ? '\nBonus action: ' + esc(c.bonusAttack) : ''}"><div class="k">Attacks</div><div class="v">${c.attacksPerAction}${c.bonusAttack ? '<span class="small muted">+1</span>' : ''}</div></div>` : ''}
+          ${sc ? `<div class="stat dc" title="${esc((c.spellcasting||[]).map(s => `${s.class}: DC ${s.dc}, attack ${sgn(s.attack)}`).join('\n'))}"><div class="k">Spell DC</div><div class="v">${(c.spellcasting||[]).map(s => s.dc).join('/')}</div></div>` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="cbody">
+      ${hpHTML(c)}${deathHTML(c)}${condHTML(c)}${savesHTML(c)}${attacksHTML(c)}${quickHTML(c)}${usesHTML(c)}${slotsHTML(c)}
+    </div>
+    <button class="sbtoggle" data-act="toggle" data-cid="${c.id}">${open ? (sideMode() ? '◀ Close stat block' : '▲ Hide stat block') : (sideMode() ? 'Stat block ▶' : '▼ Stat block')}</button>
+    ${open && !sideMode() ? statBlockHTML(c) : ''}
+  </article>`;
+}
+
+/* =====================================================================
+   RENDER — stat block
+   ===================================================================== */
+const addLinks = (c, list) => `<div class="addrow">${list.map(([act, label, preset]) => `<span data-act="${act}" data-cid="${c.id}" ${preset ? `data-v="${preset}"` : ''}>${label}</span>`).join('')}</div>`;
+const profMark = p => ({prof:'●', expert:'◆', half:'◐', other:'•'}[p] || '');
+function section(c, key, title, body, count){
+  const shut = !!UI.collapsed[c.id + ':' + key];
+  return `<div class="sh" data-act="sect" data-cid="${c.id}" data-k="${key}"><span class="car">${shut ? '▶' : '▼'}</span>${title}${count != null ? `<span class="cnt">${count}</span>` : ''}</div>${shut ? '' : body}`;
+}
+function featEntry(c, f){
+  const r = f.res ? resById(c, f.res) : null;
+  return `<div class="ent"><span class="en" data-act="featinfo" data-cid="${c.id}" data-fid="${f.id}">${esc(f.name)}.</span>
+    ${r ? `<span class="dim small">(${r.max ?? '?'}/${resetTag(r) || 'use'})</span>${pipsHTML(c, r, 'res', r.id)}` : ''}
+    ${esc(f.text)} <span class="src">${esc(f.src)}</span>${f.custom ? ' <span class="tag hb">yours</span>' : f.edited ? ' <span class="tag hb">edited</span>' : ''}</div>`;
+}
+function sbSpells(c){
+  const view = UI.spellView[c.id] || (c.preparedLimit ? 'prepared' : 'all');
+  const lim = c.preparedLimit;
+  const prepCount = c.spells.filter(s => s.prepared && !s.alwaysPrepared && s.level > 0).length;
+  let list = c.spells;
+  if (view === 'prepared') list = usableSpells(c);
+  if (view === 'conc') list = list.filter(s => s.concentration);
+  const byLvl = {};
+  list.forEach(s => (byLvl[s.level] = byLvl[s.level] || []).push(s));
+  const slotFor = l => { const s = c.spellSlots.find(x => x.level === l); return s ? pipsHTML(c, s, 'slot', s.level) : ''; };
+  const body = Object.keys(byLvl).sort((a,b) => a-b).map(l => `<div class="lvhead">${+l === 0 ? 'Cantrips (at will)' : ORD(+l) + ' level'} ${+l > 0 ? slotFor(+l) : ''}${c.pactSlots && +l === c.pactSlots.level ? ` <span class="small muted">pact</span>${pipsHTML(c, c.pactSlots, 'slot', 'pact')}` : ''}</div>
+    <div class="list">${byLvl[l].map(s => `<div class="li">
+        ${lim && s.level > 0 ? `<input type="checkbox" ${s.prepared ? 'checked' : ''} ${s.alwaysPrepared ? 'disabled title="Always prepared"' : 'title="Prepared"'} data-act="prep" data-cid="${c.id}" data-sid="${s.id}">` : ''}
+        <div class="nm" data-act="spellinfo" data-cid="${c.id}" data-sid="${s.id}">${esc(s.name)}
+          ${s.concentration ? '<span class="tag c">C</span>' : ''}${s.ritual ? ' <span class="tag r">R</span>' : ''}${s.alwaysPrepared ? ' <span class="tag a">domain</span>' : ''}
+          <div class="meta">${esc([fmtTime(s.time), s.range, s.saveAtk && s.saveAtk !== '--' ? s.saveAtk : '', s.source !== c.classes[0].name ? s.source : ''].filter(Boolean).join(' · '))}</div></div>
+        ${s.level > 0 || s.concentration ? `<button class="small" data-act="cast" data-cid="${c.id}" data-sid="${s.id}">Cast</button>` : ''}
+      </div>`).join('')}</div>`).join('');
+  return `<div class="row" style="margin:2px 0 4px">
+      <span class="seg">${[['all','All'],['prepared', lim ? 'Prepared' : 'Known'],['conc','Concentration']].map(([k,l]) => `<button class="${view===k?'on':''}" data-act="spellview" data-cid="${c.id}" data-v="${k}">${l}</button>`).join('')}</span>
+      ${lim ? `<span class="small" style="color:${prepCount > lim ? 'var(--red2)' : 'var(--muted)'}">Prepared ${prepCount}/${lim} + domain</span>` : ''}</div>
+    <div class="ln">${(c.spellcasting||[]).map(s => `<b>${esc(s.class)}</b>: ${ABFULL[s.ability]}, save DC ${s.dc}, attack ${sgn(s.attack)}`).join('<br>')}</div>
+    ${body || '<div class="empty">No spells in this view.</div>'}`;
+}
+function sbInventory(c){
+  const view = UI.invView[c.id] || 'all';
+  let list = c.inventory;
+  if (view === 'magic') list = list.filter(i => i.magic || i.attuned);
+  if (view === 'consumable') list = list.filter(i => i.consumable);
+  return `<div class="row" style="margin:2px 0 4px">
+      <span class="seg">${[['all','All'],['magic','Magic'],['consumable','Consumables']].map(([k,l]) => `<button class="${view===k?'on':''}" data-act="invview" data-cid="${c.id}" data-v="${k}">${l}</button>`).join('')}</span>
+      <span class="small muted">Attuned ${c.inventory.filter(i => i.attuned).length}/3</span></div>
+    <div class="list">${list.map(i => `<div class="li">
+        <div class="nm" data-act="iteminfo" data-cid="${c.id}" data-iid="${i.id}">${esc(i.name)}
+          ${i.attuned ? '<span class="tag a">attuned</span>' : ''}${i.magic && !i.attuned ? ' <span class="tag m">magic</span>' : ''}
+          ${i.custom ? ' <span class="tag hb">yours</span>' : ''}${(i.actions||[]).length ? ` <span class="tag">⚔ ${i.actions.length}</span>` : ''}
+          ${i.notes || i.desc ? `<div class="meta">${esc((i.notes || i.desc).slice(0,70))}</div>` : ''}</div>
+        <span class="qty"><button data-act="qty" data-d="-1" data-cid="${c.id}" data-iid="${i.id}" title="Use / remove one">−</button><span>${i.qty}</span><button data-act="qty" data-d="1" data-cid="${c.id}" data-iid="${i.id}">+</button></span>
+      </div>`).join('') || '<div class="empty">Nothing here.</div>'}</div>
+    <div class="addrow"><span data-act="additemfull" data-cid="${c.id}">+ Homebrew item with description…</span></div>
+    <div class="row" style="margin-top:4px"><input class="grow" data-newitem="${c.id}" placeholder="Quick add item…" style="min-width:0"><input data-newqty="${c.id}" type="number" value="1" min="1" style="width:52px"><button class="small pri" data-act="additem" data-cid="${c.id}">Add</button></div>`;
+}
+function statBlockHTML(c){
+  const d = c.defenses || {};
+  const profSaves = ABILS.filter(a => c.abilities[a].saveProf).map(a => `${ABFULL[a]} ${sgn(c.abilities[a].save)}`).join(', ');
+  const n = c.notes || {};
+  const byAct = act => c.features.filter(f => f.act === act);
+  const multi = c.attacksPerAction ? `<div class="ent"><span class="en" style="cursor:default">${c.attacksPerAction > 1 ? 'Multiattack' : 'Attack'}.</span> ${esc(c.name.split(' ')[0])} makes ${NUMW[c.attacksPerAction] || c.attacksPerAction} weapon attack${c.attacksPerAction > 1 ? 's' : ''} when taking the Attack action${c.bonusAttack ? `, and can make one more as a bonus action: ${esc(c.bonusAttack)}` : ''}.</div>` : '';
+  const atkEntries = multi + (c.attacks||[]).map((a, i) => `<div class="ent"><span class="en" data-act="atkinfo" data-cid="${c.id}" data-i="${i}">${esc(a.name)}.</span> <i>Attack:</i> <b>${esc(a.hit)}</b> to hit. <i>Hit:</i> ${esc(a.damage)}.${a.notes ? ` <span class="dim">${esc(a.notes)}</span>` : ''}</div>`).join('');
+  const reactSpells = usableSpells(c).filter(s => actOfSpell(s) === 'reaction').map(s => `<div class="ent"><span class="en" data-act="spellinfo" data-cid="${c.id}" data-sid="${s.id}">✦ ${esc(s.name)}.</span> <span class="dim">Spell (${s.level ? ORD(s.level) + ' level' : 'cantrip'}).</span></div>`).join('');
+  const bonusSpells = usableSpells(c).filter(s => actOfSpell(s) === 'bonus').map(s => `<div class="ent"><span class="en" data-act="spellinfo" data-cid="${c.id}" data-sid="${s.id}">✦ ${esc(s.name)}.</span> <span class="dim">Spell (${s.level ? ORD(s.level) + ' level' : 'cantrip'}).</span></div>`).join('');
+  const others = c.resources.filter(r => !c.features.some(f => f.res === r.id) && !itemActs(c).some(x => x.a.res === r.id));
+  const itemEnt = act => itemActs(c, act).map(({item, a}) => { const r = a.res ? resById(c, a.res) : null;
+    return `<div class="ent"><span class="en" data-act="iactinfo" data-cid="${c.id}" data-iid="${item.id}" data-aid="${a.id}">⚔ ${esc(item.name)}: ${esc(a.name)}.</span>
+      ${r ? `<span class="dim small">(${r.max ?? '?'}/${resetTag(r) || 'use'})</span>${pipsHTML(c, r, 'res', r.id)}` : ''} ${esc(a.text)} <span class="src">item</span></div>`; }).join('');
+  return `<div class="sb">
+    <div class="ital">${esc(c.size || '')} ${esc(c.species)}, ${esc((c.alignment||'').toLowerCase())} · ${esc(subLine(c))} · ${esc(c.background)}</div>
+    <div class="rule"></div>
+    <div class="ln"><b>Armour Class</b> ${c.ac}</div>
+    <div class="ln"><b>Hit Points</b> ${c.hp.current}/${c.hp.max}${c.hp.temp ? ` (+${c.hp.temp} temp)` : ''} · <b>Hit Dice</b> ${c.hitDice.map(h => `${h.max - h.used}/${h.max}${h.die}`).join(' + ')}</div>
+    <div class="ln"><b>Speed</b> ${c.speed.walk} ft. · <b>Initiative</b> ${sgn(c.initiative)} · <b>Proficiency</b> ${sgn(c.profBonus)}</div>
+    <div class="rule"></div>
+    <table class="ab"><tr>${ABILS.map(a => `<th>${ABN[a]}</th>`).join('')}</tr>
+      <tr>${ABILS.map(a => `<td>${c.abilities[a].score} (${sgn(c.abilities[a].mod)})</td>`).join('')}</tr>
+      <tr class="sv">${ABILS.map(a => `<td class="${c.abilities[a].saveProf ? 'p' : ''}" title="Saving throw">save ${sgn(c.abilities[a].save)}</td>`).join('')}</tr></table>
+    <div class="rule"></div>
+    <div class="ln"><b>Saving Throws</b> ${esc(profSaves || '—')}${(d.saveNotes||[]).length ? ` <span class="dim">(${esc(d.saveNotes.join('; '))})</span>` : ''}</div>
+    ${(d.resistances||[]).length ? `<div class="ln"><b>Damage Resistances</b> ${esc(d.resistances.join('; '))}</div>` : ''}
+    ${(d.immunities||[]).length ? `<div class="ln"><b>Immunities</b> ${esc(d.immunities.join('; '))}</div>` : ''}
+    <div class="ln"><b>Senses</b> ${esc([...(c.senses||[]), `passive Perception ${c.passive.perception}`, `passive Insight ${c.passive.insight}`, `passive Investigation ${c.passive.investigation}`].join(', '))}</div>
+    <div class="ln"><b>Languages</b> ${esc((c.proficiencies||{}).languages || '—')}</div>
+    ${section(c, 'skills', 'Skills', `<div class="skg">${Object.entries(c.skills).map(([k,v]) => `<div class="sk ${v.prof === 'none' ? 'none' : ''}"><span class="mk">${profMark(v.prof)}</span>${SKN[k]} <span class="dim small">${ABN[v.ability]}</span><span class="v">${sgn(v.mod)}</span></div>`).join('')}</div>
+      <div class="small dim" style="margin-top:3px">● proficient · ◆ expertise · ◐ half (Jack of All Trades)</div>`)}
+    ${section(c, 'actions', 'Actions', atkEntries + byAct('action').map(f => featEntry(c, f)).join('') + itemEnt('action') + addLinks(c, [['addatk','+ Attack'],['addfeat','+ Action','action']]))}
+    ${section(c, 'bonus', 'Bonus Actions', byAct('bonus').map(f => featEntry(c, f)).join('') + itemEnt('bonus') + bonusSpells + addLinks(c, [['addfeat','+ Bonus action','bonus']]))}
+    ${section(c, 'reactions', 'Reactions', byAct('reaction').map(f => featEntry(c, f)).join('') + itemEnt('reaction') + reactSpells + addLinks(c, [['addfeat','+ Reaction','reaction']]))}
+    ${section(c, 'special', 'Special &amp; Limited Uses', byAct('special').map(f => featEntry(c, f)).join('') + itemEnt('special') +
+        others.map(r => `<div class="ent"><span class="en" data-act="resinfo" data-cid="${c.id}" data-rid="${r.id}">${esc(r.name)}.</span> <span class="dim small">(${resetTag(r) || 'uses'})</span>${pipsHTML(c, r, 'res', r.id)} ${esc(r.notes||'')}${r.custom ? ' <span class="tag hb">yours</span>' : ''}</div>`).join('')
+        + addLinks(c, [['addfeat','+ Special feature','special'],['addres','+ Limited use / charges']]))}
+    ${section(c, 'traits', 'Traits', byAct('passive').map(f => featEntry(c, f)).join('') + addLinks(c, [['addfeat','+ Trait','passive']]), byAct('passive').length)}
+    ${section(c, 'spells', 'Spellcasting', (c.spells.length ? sbSpells(c) : '<div class="empty">No spells.</div>') + addLinks(c, [['addspell','+ Spell']]), c.spells.length ? usableSpells(c).length + ' ready' : null)}
+    ${section(c, 'inventory', 'Equipment', sbInventory(c), c.inventory.length + ' items')}
+    ${section(c, 'profs', 'Proficiencies', Object.entries(c.proficiencies||{}).filter(([k]) => k !== 'languages').map(([k,v]) => `<div class="ln"><b>${k[0].toUpperCase()+k.slice(1)}</b> ${esc(v)}</div>`).join(''))}
+    ${section(c, 'notes', 'My Notes', `<textarea data-note="char" data-cid="${c.id}" rows="5" placeholder="Anything about ${esc(c.name.split(' ')[0])} you want to remember…">${esc(c.myNotes)}</textarea>`)}
+    ${section(c, 'bio', 'Personality &amp; Backstory', ['personality','ideals','bonds','flaws','backstory'].map(k => `<div class="small muted" style="margin-top:6px">${k[0].toUpperCase()+k.slice(1)}</div><textarea data-note="bio" data-k="${k}" data-cid="${c.id}" rows="${k === 'backstory' ? 6 : 2}">${esc(n[k]||'')}</textarea>`).join('') +
+      `<div class="ln small" style="margin-top:6px"><b>Faith</b> ${esc(n.faith||'—')} · <b>Allies</b> ${esc(n.allies||'—')} · <b>Groups</b> ${esc(n.organizations||'—')} · <b>XP</b> ${(c.xp||0).toLocaleString()}</div>`)}
+  </div>`;
+}
+// Sections that start collapsed so an expanded block stays scannable
+const DEFAULT_SHUT = ['traits','profs','bio','inventory'];
+
+function renderGrid(){
+  const y = window.scrollY, side = sideMode();
+  $('#layout').classList.toggle('side', side);
+  $('#grid').innerHTML = S.characters.map(cardHTML).join('') + `<article class="card addtile" data-act="addchar"><div>+ Add character</div><div class="small muted" style="font-family:var(--sans);font-weight:400">new, from a file, or from another campaign</div></article>`;
+  renderDock(side);
+  window.scrollTo(0, y);
+}
+/** Side panel: every open stat block stacked, with name chips to jump between them. */
+function renderDock(side){
+  const dock = $('#dock'), open = S.characters.filter(c => UI.open[c.id]);
+  dock.classList.toggle('has', side && open.length > 0);
+  if (!side || !open.length){ dock.innerHTML = ''; return; }
+  const keep = dock.scrollTop;
+  dock.innerHTML = `<div class="dnav">${open.length > 1 ? open.map(c => `<span class="chip" data-act="dockjump" data-cid="${c.id}">${esc(c.name.split(' ')[0])}</span>`).join('') : ''}
+      <span class="grow"></span><button class="small ghost" data-act="dockclose" title="Close all stat blocks">Close all ✕</button></div>
+    ${open.map(c => `<div class="dblk" id="dock-${c.id}"><div class="dhd">${portraitHTML(c)}<div class="grow"><div class="cname">${esc(c.name)}</div>
+        <div class="csub">${esc(classLine(c))} · HP ${c.hp.current}/${c.hp.max}${c.hp.temp ? ` (+${c.hp.temp})` : ''}</div></div>
+        <button class="ghost" data-act="toggle" data-cid="${c.id}" title="Close">✕</button></div>${statBlockHTML(c)}</div>`).join('')}`;
+  dock.scrollTop = keep;
+}
+/* =====================================================================
+   CAMPAIGNS HOME
+   ===================================================================== */
+function campCard(e){
+  const st = lsGet(kState(e.id), null) || emptyState(e.name), img = lsGet(kImg(e.id), {});
+  const faces = st.characters.map(c => `<span class="face"><span class="portrait" ${img[c.id] ? `style="background-image:url('${img[c.id]}')"` : ''}>${img[c.id] ? '' : esc(initials(c.name))}</span>${esc(c.name.split(' ')[0])} <span class="dim">${esc(c.classes.map(k => k.name.slice(0,3) + ' ' + k.level).join('/'))}</span></span>`).join('');
+  const when = e.updated ? new Date(e.updated).toLocaleDateString(undefined, {day:'numeric', month:'short', year:'numeric'}) : '';
+  const acts = e.deleted
+    ? `<button class="small" data-act="camprestore" data-id="${e.id}">Restore</button><button class="small b-dmg" data-act="camppurge" data-id="${e.id}">Delete forever</button>`
+    : `<button class="small pri" data-act="campopen" data-id="${e.id}">Open</button>
+       <button class="small" data-act="camprename" data-id="${e.id}">Rename</button>
+       <button class="small" data-act="campdup" data-id="${e.id}">Duplicate</button>
+       <button class="small" data-act="campexport" data-id="${e.id}">Export</button>
+       <button class="small" data-act="camparch" data-id="${e.id}">${e.archived ? 'Unarchive' : 'Archive'}</button>
+       <button class="small ghost" data-act="campdel" data-id="${e.id}" title="Move to Recently deleted">🗑</button>`;
+  return `<div class="ccard ${e.id === IDX.current ? 'cur' : ''} ${e.archived || e.deleted ? 'arch' : ''}">
+    <div class="ct" ${e.deleted ? '' : `data-act="campopen" data-id="${e.id}"`}>${esc(e.name)}</div>
+    <div class="small muted">${st.characters.length} character${st.characters.length === 1 ? '' : 's'} · session ${st.session || 1} · ${st.log.length} journal entr${st.log.length === 1 ? 'y' : 'ies'}${when ? ' · last played ' + when : ''}</div>
+    <div class="faces">${faces || '<span class="empty">No characters yet</span>'}</div>
+    <div class="acts">${acts}</div></div>`;
+}
+function renderHome(){
+  const live = IDX.list.filter(e => !e.archived && !e.deleted).sort((a,b) => (b.updated||0) - (a.updated||0));
+  const arch = IDX.list.filter(e => e.archived && !e.deleted), del = IDX.list.filter(e => e.deleted);
+  $('#home').innerHTML = `<h2>Campaigns</h2>
+    <div class="cgrid">${live.map(campCard).join('')}<div class="ccard new" data-act="newcamp"><div style="font:600 18px var(--serif)">+ New campaign</div><div class="small">Empty, from a file, or with characters from another campaign</div></div></div>
+    ${arch.length ? `<h3>Archived</h3><div class="cgrid">${arch.map(campCard).join('')}</div>` : ''}
+    ${del.length ? `<h3>Recently deleted</h3><div class="cgrid">${del.map(campCard).join('')}</div>` : ''}`;
+}
+/** Every character in every other campaign, for the copy pickers. */
+function allOtherChars(exceptId){
+  return IDX.list.filter(e => e.id !== exceptId && !e.deleted).flatMap(e => { const st = lsGet(kState(e.id), null);
+    return st ? st.characters.map(c => ({camp: e, c})) : []; });
+}
+/** A fresh copy for another campaign: same build, notes and homebrew; session state reset. */
+function freshCopy(c){
+  const x = clone(c);
+  x.hp.current = x.hp.max; x.hp.temp = 0; x.deathSaves = {successes:0, failures:0}; x.conditions = []; x.concentration = null; x.exhaustion = 0;
+  (x.spellSlots||[]).forEach(s => s.used = 0); if (x.pactSlots) x.pactSlots.used = 0;
+  (x.resources||[]).forEach(r => r.used = 0); (x.hitDice||[]).forEach(h => h.used = 0);
+  return x;
+}
+function uniqueId(st, id){ let n = id; while (st.characters.some(c => c.id === n)) n = id + '-' + uid().slice(0,3); return n; }
+function pickerHTML(others){
+  return `<div class="pickgrid">${others.map((o, i) => `<label><input type="checkbox" data-pick="${i}"><span><b>${esc(o.c.name)}</b><div class="small muted">${esc(classLine(o.c))} · ${esc(o.camp.name)}</div></span></label>`).join('')}</div>`;
+}
+function newCampModal(){
+  const others = allOtherChars(null);
+  UI._others = others;
+  openModal(() => `${mhead('New campaign')}<div class="mbody">
+    <label class="fld wide"><span>Campaign name</span><input id="ncName" placeholder="e.g. Tyranny of Dragons"></label>
+    ${others.length ? `<h3>Bring characters from other campaigns (optional)</h3>${pickerHTML(others)}
+      <div class="small dim" style="margin-top:4px">Copies start fresh: full HP, slots and uses reset. Notes and homebrew come along.</div>` : ''}
+  </div><div class="mfoot"><button data-act="newcampfile">Create from a file…</button><span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="docreatecamp">Create</button></div>`);
+  setTimeout(() => $('#ncName') && $('#ncName').focus(), 30);
+}
+function createCampaign(st, portraits){
+  const id = 'c' + uid();
+  st.name = st.name || 'New campaign'; st.appVersion = st.appVersion || APP_VERSION;
+  lsSet(kState(id), st); lsSet(kImg(id), portraits || {});
+  IDX.list.push({id, name: st.name, created: Date.now(), updated: Date.now()}); saveIndex();
+  return id;
+}
+/** Whatever file was picked becomes a campaign state: a campaign export, an old backup, a party file, or one character. */
+function stateFromFile(d, name){
+  if (d.campaign && d.campaign.characters) return {st: d.campaign, portraits: d.portraits || {}};
+  const portraits = d.portraits || {}; d = Object.assign({}, d); delete d.portraits;
+  if (d.characters && d.purse) return {st: d, portraits};
+  if (d.characters){ const st = fromSeed(d); if (name) st.name = name; return {st, portraits}; }
+  if (d.abilities && d.name) return {st: fromSeed({name: name || 'New campaign', characters:[d]}), portraits};
+  return null;
+}
+function campRenameModal(id){
+  const e = campById(id);
+  openModal(() => `${mhead('Rename campaign')}<div class="mbody"><input id="pname" style="width:100%" value="${esc(e.name)}"></div>
+    <div class="mfoot"><button data-act="mclose">Cancel</button><button class="pri" data-act="docamprename" data-id="${id}">Save</button></div>`);
+}
+function homeDataModal(){
+  openModal(() => `${mhead('Backup &amp; import')}<div class="mbody"><div class="list">
+      <button data-act="exportall" style="text-align:left"><b>Export everything</b><div class="small muted">All campaigns, journals and portraits in one .json file.</div></button>
+      <button data-act="importcamp" style="text-align:left"><b>Import a campaign or backup</b><div class="small muted">A campaign export, an "everything" backup, a party file or a single character. Added alongside your campaigns; nothing is overwritten.</div></button>
+    </div><div class="small dim" style="margin-top:10px">Version ${APP_VERSION} · storage namespace "${STORAGE_NS || 'prod'}"</div></div>`);
+}
+
+/* =====================================================================
+   CHARACTERS IN A CAMPAIGN: add, edit core stats, copy, remove
+   ===================================================================== */
+function addCharModal(){
+  const others = allOtherChars(IDX.current);
+  UI._others = others;
+  openModal(() => `${mhead('Add a character')}<div class="mbody"><div class="list">
+      <button data-act="newchar" style="text-align:left"><b>Create a new character</b><div class="small muted">Fill in the core stats yourself, for homebrew or anything not on D&amp;D Beyond. Add attacks, features, spells and items afterwards from the stat block.</div></button>
+      <button data-act="importchar" style="text-align:left"><b>Import a character file</b><div class="small muted">A character or party .json. Characters already in the party are offered as updates instead.</div></button>
+    </div>
+    ${others.length ? `<h3>Copy from another campaign</h3>${pickerHTML(others)}
+      <div class="row" style="margin-top:8px"><span class="grow small dim">Copies start fresh (full HP, uses reset).</span><button class="pri" data-act="docopyin">Copy selected</button></div>` : ''}
+  </div>`);
+}
+function charMenuModal(cid){
+  const c = charById(cid), targets = IDX.list.filter(e => e.id !== IDX.current && !e.deleted);
+  openModal(() => `${mhead(esc(c.name))}<div class="mbody"><div class="list">
+      <button data-act="editcore" data-cid="${cid}" style="text-align:left"><b>✎ Edit core stats</b><div class="small muted">Name, class and level, AC, HP, speed, ability scores, save and skill proficiencies, spell slots.</div></button>
+      <button data-act="updatechar" data-cid="${cid}" style="text-align:left"><b>Update from sheet</b><div class="small muted">Load a new export of this character and review the changes. Your HP, notes and homebrew are kept.</div></button>
+      ${targets.length ? `<div class="row" style="padding:6px 2px"><b>Copy to campaign</b><select id="copyTo">${targets.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select><button class="small" data-act="copyout" data-cid="${cid}">Copy</button></div>` : ''}
+      <button class="b-dmg" data-act="removechar" data-cid="${cid}" style="text-align:left"><b>Remove from this party</b><div class="small muted">Undo is available straight after.</div></button>
+    </div></div>`);
+}
+const SIZE_OPTS = ['Tiny','Small','Medium','Large'].map(x => [x,x]);
+const DIE_OPTS = ['d6','d8','d10','d12'].map(x => [x,x]);
+const PROF_OPTS = [['none','—'],['half','Half'],['prof','Proficient'],['expert','Expertise']];
+const SKILL_AB = {acrobatics:'dex',animalHandling:'wis',arcana:'int',athletics:'str',deception:'cha',history:'int',insight:'wis',intimidation:'cha',investigation:'int',medicine:'wis',nature:'int',perception:'wis',performance:'cha',persuasion:'cha',religion:'int',sleightOfHand:'dex',stealth:'dex',survival:'wis'};
+const pbFor = lvl => 2 + Math.floor((Math.max(1, lvl) - 1) / 4);
+const PROF_ADD = (prof, pb) => ({none:0, half: Math.floor(pb/2), prof: pb, expert: pb*2, other: pb}[prof] || 0);
+/** Core stats form for new and existing characters. Values are worked out from scores + proficiency; extra bonuses already on the sheet are kept. */
+function charForm(cid){
+  const c = cid ? charById(cid) : null;
+  const k1 = c ? c.classes[0] : {name:'', subclass:'', level:1}, k2 = c && c.classes[1] || {name:'', subclass:'', level:''};
+  const sc = c && c.spellcasting && c.spellcasting.length === 1 ? c.spellcasting[0] : null;
+  const multiCast = c && c.spellcasting && c.spellcasting.length > 1;
+  const saveExtra = c ? c.abilities.str.save - c.abilities.str.mod - (c.abilities.str.saveProf ? c.profBonus : 0) : 0;
+  const f = (k, label, v, type, extra) => fieldHTML(Object.assign({k, label, type: type || 'text'}, extra || {}), v);
+  openModal(() => `${mhead(c ? 'Edit core stats' : 'New character', c ? esc(c.name) : '')}<div class="mbody"><div class="form">
+    ${f('name','Name', c && c.name, 'text', {wide:true})}
+    ${f('species','Species', c && c.species)}${f('background','Background', c && c.background)}
+    ${f('alignment','Alignment', c && c.alignment)}${fieldHTML({k:'size', label:'Size', type:'select', options: SIZE_OPTS}, c ? c.size || 'Medium' : 'Medium')}
+    <div class="sub">Class</div>
+    ${f('c1','Class', k1.name)}${f('s1','Subclass', k1.subclass)}${f('l1','Level', k1.level, 'number')}<span></span>
+    ${f('c2','Second class (multiclass)', k2.name)}${f('s2','Subclass', k2.subclass)}${f('l2','Level', k2.level, 'number')}<span></span>
+    <div class="sub">Defence &amp; movement</div>
+    ${f('ac','Armour Class', c && c.ac, 'number')}${f('hpmax','Max HP', c && c.hp.max, 'number')}
+    ${f('speed','Speed (ft)', c ? c.speed.walk : 30, 'number')}${f('init','Initiative bonus', c ? c.initiative : null, 'number', {hint:'blank = DEX modifier'})}
+    ${f('pb','Proficiency bonus', c ? c.profBonus : null, 'number', {hint:'blank = from level'})}${f('hd','Hit dice', c ? c.hitDice.map(h => h.max + h.die).join(' + ') : '', 'text', {ph:'7d8 or 6d10 + 1d8', hint:'blank = total level × the die below'})}
+    ${c ? '' : fieldHTML({k:'die', label:'Hit die (if hit dice left blank)', type:'select', options: DIE_OPTS}, 'd8')}
+    ${f('apa','Attacks per Attack action', c ? c.attacksPerAction || 1 : 1, 'number')}${f('bonusAtk','Bonus-action attack (optional)', c && c.bonusAttack)}
+    <div class="sub">Ability scores &amp; saving throws</div>
+    <div class="row6">${ABILS.map(a => `<div class="fld"><span>${ABN[a]}</span><input id="ff_ab_${a}" type="number" value="${c ? c.abilities[a].score : 10}"><label class="row small"><input type="checkbox" id="ff_sp_${a}" ${c && c.abilities[a].saveProf ? 'checked' : ''}> save prof</label></div>`).join('')}</div>
+    ${f('saveExtra','Extra bonus to all saves', saveExtra || 0, 'number', {hint:'e.g. +1 from a Ring of Protection'})}<span></span>
+    <div class="sub">Skills</div>
+    <div class="sk3">${Object.keys(SKN).map(k => `<label><span>${SKN[k]} <span class="dim">${ABN[c ? c.skills[k].ability : SKILL_AB[k]]}</span></span><select id="ff_sk_${k}">${PROF_OPTS.map(([v,l]) => `<option value="${v}" ${(c ? (c.skills[k].prof === 'other' ? 'prof' : c.skills[k].prof) : 'none') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>`).join('')}</div>
+    ${f('pp','Passive Perception', c && c.passive.perception, 'number', {hint:'blank = 10 + Perception'})}${f('pi','Passive Insight', c && c.passive.insight, 'number')}
+    ${f('pv','Passive Investigation', c && c.passive.investigation, 'number')}${f('senses','Senses', c ? (c.senses||[]).join(', ') : '', 'text', {ph:'Darkvision 60 ft.'})}
+    <div class="sub">Defences &amp; proficiencies</div>
+    ${f('resist','Damage resistances', c ? (c.defenses.resistances||[]).join('; ') : '', 'text', {hint:'separate with ;'})}${f('immune','Immunities', c ? (c.defenses.immunities||[]).join('; ') : '')}
+    ${f('saveNotes','Save notes', c ? (c.defenses.saveNotes||[]).join('; ') : '', 'text', {wide:true, ph:'Advantage vs charmed; …'})}
+    ${f('armor','Armour', c && c.proficiencies.armor)}${f('weapons','Weapons', c && c.proficiencies.weapons)}
+    ${f('tools','Tools', c && c.proficiencies.tools)}${f('languages','Languages', c && c.proficiencies.languages)}
+    <div class="sub">Spellcasting</div>
+    ${multiCast ? `<div class="small muted" style="grid-column:1/-1">${esc(c.spellcasting.map(s => `${s.class}: DC ${s.dc}, ${sgn(s.attack)}`).join(' · '))}. More than one casting class: these update through "Update from sheet".</div>`
+      : `${fieldHTML({k:'castAb', label:'Casting ability', type:'select', options:[['','None'],['int','Intelligence'],['wis','Wisdom'],['cha','Charisma']]}, sc ? sc.ability : '')}
+         ${f('prepLimit','Prepared spell limit', c && c.preparedLimit, 'number', {hint:'only for casters that prepare (cleric, druid, wizard…)'})}
+         ${f('castDc','Spell save DC', sc && sc.dc, 'number', {hint:'blank = 8 + prof + modifier'})}${f('castAtk','Spell attack', sc && sc.attack, 'number', {hint:'blank = prof + modifier'})}`}
+    <div class="fld wide"><span>Spell slots by level (1st – 9th)</span><div class="row9">${[1,2,3,4,5,6,7,8,9].map(l => { const s = c && c.spellSlots.find(x => x.level === l); return `<input id="ff_sl_${l}" type="number" min="0" placeholder="${ORD(l)}" value="${s ? s.max : ''}">`; }).join('')}</div></div>
+    ${f('pactN','Pact slots (count)', c && c.pactSlots ? c.pactSlots.max : '', 'number')}${f('pactL','Pact slot level', c && c.pactSlots ? c.pactSlots.level : '', 'number')}
+  </div></div><div class="mfoot"><span class="grow small dim">${c ? 'A later sheet update will show its changes to these for you to approve.' : 'Attacks, features, spells and kit are added from the stat block afterwards.'}</span><button data-act="mclose">Cancel</button><button class="pri" data-act="savechar" data-cid="${cid || ''}">${c ? 'Save' : 'Create'}</button></div>`, true);
+}
+function readCharForm(cid){
+  const g = id => { const el = document.getElementById('ff_' + id); return el ? (el.type === 'checkbox' ? el.checked : el.value.trim()) : ''; };
+  const n = id => { const v = g(id); return v === '' || v === false ? null : Number(v); };
+  const name = g('name'); if (!name){ toast('Give the character a name'); $('#ff_name').focus(); return null; }
+  const old = cid ? charById(cid) : null;
+  const classes = [{name: g('c1') || 'Adventurer', subclass: g('s1'), level: Math.max(1, n('l1') || 1)}];
+  if (g('c2')) classes.push({name: g('c2'), subclass: g('s2'), level: Math.max(1, n('l2') || 1)});
+  const level = classes.reduce((t,k) => t + k.level, 0);
+  const pb = n('pb') ?? pbFor(level);
+  const abilities = {}, extra = n('saveExtra') || 0;
+  ABILS.forEach(a => { const score = n('ab_' + a) ?? 10, mod = Math.floor((score - 10) / 2), sp = !!g('sp_' + a);
+    abilities[a] = {score, mod, saveProf: sp, save: mod + (sp ? pb : 0) + extra}; });
+  const skills = {};
+  Object.keys(SKN).forEach(k => { const ab = old ? old.skills[k].ability : SKILL_AB[k], prof = g('sk_' + k) || 'none';
+    // keep any extra bonus the sheet had on this skill (items, features) when its proficiency is unchanged
+    const oldProf = old && (old.skills[k].prof === 'other' ? 'prof' : old.skills[k].prof);
+    const keep = old && oldProf === prof ? old.skills[k].mod - old.abilities[ab].mod - PROF_ADD(old.skills[k].prof, old.profBonus) : 0;
+    skills[k] = {mod: abilities[ab].mod + PROF_ADD(prof, pb) + keep, ability: ab, prof}; });
+  let hitDice = [];
+  const hdTxt = g('hd');
+  if (hdTxt) hdTxt.split('+').forEach(part => { const m = part.trim().match(/^(\d+)\s*(d\d+)$/i); if (m) hitDice.push({die: m[2].toLowerCase(), max: +m[1]}); });
+  if (!hitDice.length) hitDice = [{die: g('die') || (old ? old.hitDice[0].die : 'd8'), max: level}];
+  hitDice = hitDice.map(h => { const o = old && old.hitDice.find(x => x.die === h.die); return Object.assign(h, {used: o ? Math.min(h.max, o.used) : 0}); });
+  const slots = [1,2,3,4,5,6,7,8,9].map(l => ({level: l, max: n('sl_' + l) || 0})).filter(s => s.max)
+    .map(s => { const o = old && old.spellSlots.find(x => x.level === s.level); return Object.assign(s, {used: o ? Math.min(s.max, o.used) : 0}); });
+  const pactN = n('pactN'), pactL = n('pactL');
+  const split = s => s ? s.split(';').map(x => x.trim()).filter(Boolean) : [];
+  const out = {
+    name, species: g('species'), background: g('background'), alignment: g('alignment'), size: g('size') || 'Medium',
+    classes, level, profBonus: pb, ac: n('ac') ?? 10, initiative: n('init') ?? abilities.dex.mod, speed: {walk: n('speed') ?? 30},
+    abilities, skills, hitDice, spellSlots: slots,
+    pactSlots: pactN ? {level: pactL || 1, max: pactN, used: old && old.pactSlots ? Math.min(pactN, old.pactSlots.used) : 0, reset:'short'} : null,
+    passive: {perception: n('pp') ?? 10 + skills.perception.mod, insight: n('pi') ?? 10 + skills.insight.mod, investigation: n('pv') ?? 10 + skills.investigation.mod},
+    senses: g('senses') ? g('senses').split(',').map(x => x.trim()).filter(Boolean) : [],
+    defenses: {resistances: split(g('resist')), immunities: split(g('immune')), saveNotes: split(g('saveNotes'))},
+    proficiencies: {armor: g('armor'), weapons: g('weapons'), tools: g('tools'), languages: g('languages')},
+    attacksPerAction: Math.max(1, n('apa') || 1), bonusAttack: g('bonusAtk') || null,
+    hpMax: n('hpmax'),
+  };
+  if (document.getElementById('ff_castAb')){
+    const ab = g('castAb');
+    out.spellcasting = ab ? [{class: classes[0].name, ability: ab, dc: n('castDc') ?? 8 + pb + abilities[ab].mod, attack: n('castAtk') ?? pb + abilities[ab].mod}] : [];
+    out.preparedLimit = n('prepLimit') || undefined;
+  }
+  return out;
+}
+
+function renderHeader(){
+  $('#partyName').textContent = S.name || 'Party';
+  $('#ver').textContent = APP_VERSION;
+  const gp = COINS.reduce((n,k) => n + S.purse[k]*COIN_GP[k], 0);
+  $('.purse-chip').innerHTML = `<span>💰</span><b>${Math.floor(gp).toLocaleString()} gp</b><span class="small">party purse</span>`;
+  document.querySelectorAll('[data-act="ruleset"]').forEach(b => b.classList.toggle('on', b.dataset.v === S.ruleset));
+  $('#undoBtn').disabled = !undoStack.length;
+  $('#expandBtn').textContent = S.characters.length && S.characters.every(c => UI.open[c.id]) ? 'Collapse all' : 'Expand all';
+  document.querySelectorAll('[data-act="sbmode"]').forEach(b => b.classList.toggle('on', b.dataset.v === UI.sbMode));
+  document.documentElement.style.setProperty('--toph', $('.top').offsetHeight + 'px');
+}
+function renderAll(){
+  document.body.classList.toggle('home', VIEW === 'home');
+  $('#home').hidden = VIEW !== 'home'; $('#layout').hidden = VIEW === 'home';
+  $('#ver').textContent = APP_VERSION;
+  if (VIEW === 'home') renderHome(); else { renderHeader(); renderGrid(); lastSide = sideMode(); }
+  document.documentElement.style.setProperty('--toph', $('.top').offsetHeight + 'px');
+  if (UI.modal) UI.modal();
+}
+
+/* =====================================================================
+   MODALS
+   ===================================================================== */
+function openModal(renderFn, wide){
+  UI.modal = () => { $('#modal').className = 'modal' + (wide ? ' wide' : ''); $('#modal').innerHTML = renderFn(); };
+  UI.modal(); $('#scrim').classList.add('open');
+}
+function closeModal(){ UI.modal = null; $('#scrim').classList.remove('open'); }
+const mhead = (t, sub) => `<div class="mhead"><h2>${t}${sub ? ` <span class="small muted" style="font-family:var(--sans)">${sub}</span>` : ''}</h2><button class="ghost" data-act="mclose" title="Close (Esc)">✕</button></div>`;
+
+/* --- feature / resource detail --- */
+function featModal(cid, fid){
+  openModal(() => {
+    const c = charById(cid), f = c.features.find(x => x.id === fid); if (!f) return mhead('Not found');
+    const r = f.res ? resById(c, f.res) : null;
+    const left = r && r.max != null ? r.max - r.used : null;
+    const eff = f.effect;
+    return `${mhead(esc(f.name), esc(c.name))}<div class="mbody lookup">
+      <div class="meta"><span class="k">Type</span><span>${ACT_LABEL[f.act] || f.act}</span><span class="k">Source</span><span>${esc(f.src)}${f.ref ? ' · ' + esc(f.ref) : ''}${f.custom ? ' <span class="tag hb">yours</span>' : f.edited ? ' <span class="tag hb">edited</span>' : ''}</span>
+        ${r ? `<span class="k">Uses</span><span class="row">${pipsHTML(c, r, 'res', r.id)} <span class="muted small">${r.max == null ? 'set the max' : `${left}/${r.max} left`} · recharges ${({short:'on a short or long rest', long:'on a long rest', dawn:'at dawn', turn:'each turn', none:'never (charges)'})[r.reset] || r.reset}</span></span>` : ''}</div>
+      <div class="desc"><p>${esc(f.text)}</p></div>
+      ${eff && eff.type === 'heal' ? `<div class="row" style="margin-top:8px"><span class="muted">Roll ${esc(eff.die)} and type it:</span><input type="number" min="1" id="effRoll" style="width:70px"><span class="muted">+ ${eff.bonus}</span></div>` : ''}
+    </div><div class="mfoot">
+      ${editBtn('editfeat', `data-cid="${cid}" data-fid="${fid}"`)}
+      ${r ? `<button class="small" data-act="resn" data-d="-1" data-cid="${cid}" data-rid="${r.id}" ${r.used ? '' : 'disabled'}>Regain one</button>` : ''}
+      <span class="grow"></span>
+      ${eff && eff.type === 'temp' ? `<button class="b-tmp" data-act="usefeat" data-cid="${cid}" data-fid="${fid}">Gain ${eff.amount} temp HP</button>` : ''}
+      ${eff && eff.type === 'heal' ? `<button class="b-heal" data-act="usefeat" data-cid="${cid}" data-fid="${fid}" ${r && left === 0 ? 'disabled' : ''}>Use &amp; heal</button>` : ''}
+      ${r && !(eff && eff.type === 'heal') ? `<button class="pri" data-act="usefeat" data-cid="${cid}" data-fid="${fid}" ${left === 0 ? 'disabled' : ''}>Use${left === 0 ? ' (none left)' : ''}</button>` : ''}
+      <label class="row small"><input type="checkbox" id="featLog"> Add to journal</label>
+    </div>`; });
+}
+function resModal(cid, rid){
+  openModal(() => {
+    const c = charById(cid), r = resById(c, rid); if (!r) return mhead('Not found');
+    return `${mhead(esc(r.name), esc(c.name))}<div class="mbody lookup">
+      <div class="meta"><span class="k">Uses</span><span class="row">${pipsHTML(c, r, 'res', r.id)}</span><span class="k">Recharge</span><span>${esc(r.reset)}</span></div>
+      <div class="desc"><p>${esc(r.notes || '')}</p></div>
+      ${c.inventory.some(i => r.name.startsWith(i.name)) ? `<button class="small" data-act="iteminfo" data-cid="${cid}" data-iid="${c.inventory.find(i => r.name.startsWith(i.name)).id}">View the item</button>` : ''}
+    </div><div class="mfoot">${editBtn('editres', `data-cid="${cid}" data-rid="${rid}"`)}<span class="grow"></span><button class="small" data-act="resn" data-d="-1" data-cid="${cid}" data-rid="${rid}">Regain one</button><button class="pri" data-act="resn" data-d="1" data-cid="${cid}" data-rid="${rid}">Use one</button></div>`; });
+}
+function atkModal(cid, i){
+  openModal(() => {
+    const c = charById(cid), a = c.attacks[i];
+    const item = c.inventory.find(x => x.name.toLowerCase() === a.name.toLowerCase());
+    const sp = c.spells.find(x => x.name.toLowerCase() === a.name.toLowerCase());
+    return `${mhead(esc(a.name), esc(c.name))}<div class="mbody lookup">
+      <div class="meta"><span class="k">To hit</span><span><b>${esc(a.hit)}</b></span><span class="k">Damage</span><span>${esc(a.damage)}</span>${a.notes ? `<span class="k">Notes</span><span>${esc(a.notes)}</span>` : ''}</div>
+      <div class="row">${item ? `<button class="small" data-act="iteminfo" data-cid="${cid}" data-iid="${item.id}">Item details</button>` : ''}${sp ? `<button class="small" data-act="spellinfo" data-cid="${cid}" data-sid="${sp.id}">Spell details</button>` : ''}</div>
+    </div><div class="mfoot">${editBtn('editatk', `data-cid="${cid}" data-i="${i}"`)}</div>`; });
+}
+function iactModal(cid, iid, aid){
+  openModal(() => {
+    const c = charById(cid), it = c.inventory.find(x => x.id === iid), a = it && (it.actions||[]).find(x => x.id === aid);
+    if (!a) return mhead('Not found');
+    const r = a.res ? resById(c, a.res) : null, left = r && r.max != null ? r.max - r.used : null;
+    return `${mhead('⚔ ' + esc(a.name), esc(it.name))}<div class="mbody lookup">
+      <div class="meta"><span class="k">Type</span><span>${ACT_LABEL[a.act] || a.act}</span><span class="k">From</span><span class="link" data-act="iteminfo" data-cid="${cid}" data-iid="${iid}">${esc(it.name)}</span>
+        ${r ? `<span class="k">Charges</span><span class="row">${pipsHTML(c, r, 'res', r.id)} <span class="muted small">${r.max == null ? 'set the max' : `${left}/${r.max} left`}</span></span>` : ''}</div>
+      <div class="desc"><p>${esc(a.text)}</p></div></div>
+      <div class="mfoot">${editBtn('editiact', `data-cid="${cid}" data-iid="${iid}" data-aid="${aid}"`)}<span class="grow"></span>
+        ${r ? `<label class="row small"><input type="checkbox" id="featLog"> Add to journal</label><button class="pri" data-act="iactuse" data-cid="${cid}" data-iid="${iid}" data-aid="${aid}" ${left === 0 ? 'disabled' : ''}>Use ${r.max != null ? '(spend a charge)' : ''}</button>` : ''}</div>`; });
+}
+/* =====================================================================
+   EDITING — one generic form, used for every kind of homebrew entry.
+   Anything added in the app is custom:true; edits to sheet entries set
+   edited:true. The merge never silently removes or overwrites either.
+   ===================================================================== */
+let FORM = null;
+function fieldHTML(f, v){
+  const id = 'ff_' + f.k; let inp;
+  if (f.type === 'textarea') inp = `<textarea id="${id}" rows="${f.rows||4}" placeholder="${esc(f.ph||'')}">${esc(v ?? '')}</textarea>`;
+  else if (f.type === 'select') inp = `<select id="${id}">${f.options.map(([val,l]) => `<option value="${esc(val)}" ${String(v ?? '') === String(val) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`;
+  else if (f.type === 'check') inp = `<input type="checkbox" id="${id}" ${v ? 'checked' : ''}>`;
+  else inp = `<input id="${id}" type="${f.type === 'number' ? 'number' : 'text'}" value="${esc(v ?? '')}" placeholder="${esc(f.ph||'')}">`;
+  return `<label class="fld ${f.type === 'check' ? 'chk' : ''} ${f.wide || f.type === 'textarea' ? 'wide' : ''}">${f.type === 'check' ? inp + `<span>${esc(f.label)}</span>` : `<span>${esc(f.label)}</span>${inp}`}${f.hint ? `<small class="dim">${esc(f.hint)}</small>` : ''}</label>`;
+}
+function formModal(title, sub, fields, values, onSave, onDelete){
+  FORM = {fields, onSave, onDelete};
+  openModal(() => `${mhead(title, sub)}<div class="mbody"><div class="form">${fields.map(f => fieldHTML(f, values[f.k])).join('')}</div></div>
+    <div class="mfoot">${onDelete ? `<button class="small b-dmg" data-act="formdel">Delete</button>` : ''}<span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="formsave">Save</button></div>`);
+  setTimeout(() => { const first = document.querySelector('#modal .form input, #modal .form textarea'); if (first) first.focus(); }, 30);
+}
+function readForm(){
+  const o = {};
+  FORM.fields.forEach(f => { const el = document.getElementById('ff_' + f.k); if (!el) return;
+    o[f.k] = f.type === 'check' ? el.checked : f.type === 'number' ? (el.value === '' ? null : Number(el.value)) : el.value.trim(); });
+  return o;
+}
+const ACT_OPTS = [['action','Action'],['bonus','Bonus action'],['reaction','Reaction'],['special','Special / limited'],['passive','Passive trait']];
+const RESET_OPTS = [['short','Short or long rest'],['long','Long rest'],['dawn','Dawn'],['turn','Each turn'],['none','Never (charges)']];
+const resFields = (c, label) => [
+  {k:'res', label: label || 'Uses / charges', type:'select', options: [['','None'], ...c.resources.map(r => [r.id, r.name]), ['__new','New counter…']]},
+  {k:'newMax', label:'New counter: max', type:'number', hint:'only for "New counter"'},
+  {k:'newReset', label:'New counter: recharges', type:'select', options: RESET_OPTS}];
+/** Resolve the uses picker into a resource id, creating a counter when asked. */
+function applyRes(c, v, baseName){
+  if (v.res !== '__new') return v.res || undefined;
+  let id = slug(baseName + '-uses'); while (resById(c, id)) id += '-' + uid().slice(0,2);
+  c.resources.push({id, name: baseName, max: v.newMax || null, used: 0, reset: v.newReset || 'long', die: null, notes: '', custom: true});
+  return id;
+}
+function editFeature(cid, fid, act){
+  const c = charById(cid), f = fid ? c.features.find(x => x.id === fid) : null;
+  const vals = f ? {name:f.name, act:f.act, src:f.src, text:f.text, res:f.res || '', effType: f.effect ? f.effect.type : '', effDie: f.effect && f.effect.die || '', effNum: f.effect ? (f.effect.bonus ?? f.effect.amount) : null}
+                 : {act: act || 'action', src: 'Homebrew', newReset: 'short'};
+  formModal(f ? 'Edit feature' : 'Add feature', esc(c.name), [
+    {k:'name', label:'Name', ph:'e.g. Hammer of the Faithful'}, {k:'act', label:'Type', type:'select', options: ACT_OPTS},
+    {k:'src', label:'Source', ph:'Class, species, feat, item, Homebrew…', wide:true},
+    {k:'text', label:'What it does', type:'textarea', rows:5},
+    ...resFields(c),
+    {k:'effType', label:'Quick effect on Use', type:'select', options: [['','None'],['heal','Heal (type the roll)'],['temp','Temp HP']]},
+    {k:'effDie', label:'Heal die', ph:'1d10'}, {k:'effNum', label:'Heal bonus / temp HP', type:'number'}],
+    vals,
+    v => { if (!v.name) return;
+      const effect = v.effType === 'heal' ? {type:'heal', die: v.effDie || '1d8', bonus: v.effNum || 0} : v.effType === 'temp' ? {type:'temp', amount: v.effNum || 0} : undefined;
+      const res = applyRes(c, v, v.name);
+      if (f){ Object.assign(f, {name:v.name, act:v.act, src:v.src, text:v.text, res, effect}); if (!f.custom) f.edited = true; }
+      else c.features.push({id: slug(v.name) + '-' + uid().slice(0,3), name:v.name, act:v.act, src:v.src || 'Homebrew', text:v.text, res, effect, custom:true}); },
+    f ? () => { c.features = c.features.filter(x => x !== f); } : null);
+}
+function editResource(cid, rid){
+  const c = charById(cid), r = rid ? resById(c, rid) : null;
+  formModal(r ? 'Edit limited use' : 'Add limited use', esc(c.name), [
+    {k:'name', label:'Name', ph:'e.g. Wand of Web charges', wide:true}, {k:'max', label:'Max uses', type:'number'},
+    {k:'reset', label:'Recharges', type:'select', options: RESET_OPTS}, {k:'die', label:'Die (optional)', ph:'d8'},
+    {k:'notes', label:'Notes', type:'textarea', rows:3}],
+    r ? {name:r.name, max:r.max, reset:r.reset, die:r.die || '', notes:r.notes || ''} : {reset:'long'},
+    v => { if (!v.name) return;
+      if (r){ Object.assign(r, {name:v.name, max:v.max, reset:v.reset, die:v.die || null, notes:v.notes}); r.used = Math.min(r.used, v.max ?? r.used); if (!r.custom) r.edited = true; }
+      else c.resources.push({id: slug(v.name) + '-' + uid().slice(0,3), name:v.name, max:v.max, used:0, reset:v.reset, die:v.die || null, notes:v.notes, custom:true}); },
+    r ? () => { c.resources = c.resources.filter(x => x !== r);
+      c.features.forEach(f => { if (f.res === r.id) delete f.res; }); c.inventory.forEach(i => (i.actions||[]).forEach(a => { if (a.res === r.id) delete a.res; })); } : null);
+}
+function editAttack(cid, i){
+  const c = charById(cid), a = i != null ? c.attacks[i] : null;
+  formModal(a ? 'Edit attack' : 'Add attack', esc(c.name), [
+    {k:'name', label:'Name', wide:true}, {k:'hit', label:'To hit', ph:'+7'}, {k:'damage', label:'Damage', ph:'1d8+4 slashing'},
+    {k:'notes', label:'Notes', type:'textarea', rows:2, ph:'Range, properties, extra damage…'}],
+    a || {}, v => { if (!v.name) return;
+      const hit = v.hit && !/^[+-]/.test(v.hit) ? '+' + v.hit : v.hit;
+      if (a) Object.assign(a, {name:v.name, hit, damage:v.damage, notes:v.notes, custom:true});
+      else (c.attacks = c.attacks || []).push({name:v.name, hit, damage:v.damage, notes:v.notes, custom:true}); },
+    a ? () => { c.attacks.splice(i, 1); } : null);
+}
+function editSpell(cid, sid){
+  const c = charById(cid), s = sid ? c.spells.find(x => x.id === sid) : null;
+  formModal(s ? 'Edit spell' : 'Add spell', esc(c.name), [
+    {k:'name', label:'Name'}, {k:'level', label:'Level (0 = cantrip)', type:'number'},
+    {k:'time', label:'Casting time', type:'select', options: [['1A','Action'],['1BA','Bonus action'],['1R','Reaction'],['1m','1 minute'],['10m','10 minutes'],['1h','1 hour'],['8h','8 hours']]},
+    {k:'range', label:'Range', ph:'60 ft.'}, {k:'duration', label:'Duration', ph:'Instantaneous / 1 minute'}, {k:'saveAtk', label:'Save / attack', ph:'WIS 15 or +7'},
+    {k:'components', label:'Components', ph:'V,S,M'}, {k:'source', label:'Source', ph:'Class or item'},
+    {k:'concentration', label:'Concentration', type:'check'}, {k:'ritual', label:'Ritual', type:'check'},
+    {k:'desc', label:'Description (shown in the spell pop-up)', type:'textarea', rows:5}],
+    s ? Object.assign({}, s, {desc: s.desc || ''}) : {level:1, time:'1A', source: c.classes[0].name},
+    v => { if (!v.name) return;
+      const fields = {name:v.name, level: Math.max(0, Math.min(9, v.level || 0)), time:v.time, range:v.range, duration:v.duration || (v.concentration ? 'Concentration' : ''), saveAtk:v.saveAtk || '--',
+        components:v.components, source:v.source || 'Homebrew', concentration:v.concentration, ritual:v.ritual, desc:v.desc};
+      if (s){ Object.assign(s, fields); if (!s.custom) s.edited = true; }
+      else c.spells.push(Object.assign({id: slug(v.name + '-' + (v.source || 'homebrew')) + '-' + uid().slice(0,3), alwaysPrepared:false, prepared:true, ref:'Homebrew', notes:'', custom:true}, fields)); },
+    s ? () => { c.spells = c.spells.filter(x => x !== s); if (c.concentration === s.name) c.concentration = null; } : null);
+}
+function editItem(cid, iid){
+  const c = charById(cid), it = iid ? c.inventory.find(x => x.id === iid) : null;
+  formModal(it ? 'Edit item' : 'Add item', esc(c.name), [
+    {k:'name', label:'Name', wide:true}, {k:'qty', label:'Quantity', type:'number'}, {k:'weight', label:'Weight', ph:'5 lb.'},
+    {k:'magic', label:'Magic', type:'check'}, {k:'attuned', label:'Attuned', type:'check'}, {k:'consumable', label:'Consumable', type:'check'},
+    {k:'desc', label:'Description (homebrew rules text)', type:'textarea', rows:6},
+    ...resFields(c, 'Charges')],
+    it ? Object.assign({}, it, {res: it.res || '', desc: it.desc || ''}) : {qty:1, newReset:'dawn'},
+    v => { if (!v.name) return;
+      const res = applyRes(c, v, v.name + ' charges');
+      const fields = {name:v.name, qty: Math.max(0, v.qty ?? 1), weight:v.weight || null, magic:v.magic, attuned:v.attuned, consumable:v.consumable, desc:v.desc, res};
+      if (it){ Object.assign(it, fields); if (!it.custom) it.edited = true; }
+      else c.inventory.push(Object.assign({id: slug(v.name) + '-' + uid().slice(0,4), notes:'', actions:[], open5eKey:null, custom:true}, fields)); },
+    it ? () => { c.inventory = c.inventory.filter(x => x !== it); } : null);
+}
+function editItemAction(cid, iid, aid){
+  const c = charById(cid), it = c.inventory.find(x => x.id === iid), a = aid ? (it.actions||[]).find(x => x.id === aid) : null;
+  formModal(a ? 'Edit item action' : 'Add item action', esc(it.name), [
+    {k:'name', label:'Name', ph:'e.g. Thunderous Smite'}, {k:'act', label:'Type', type:'select', options: ACT_OPTS.filter(o => o[0] !== 'passive')},
+    {k:'text', label:'What it does', type:'textarea', rows:5}, ...resFields(c, 'Uses charges')],
+    a ? {name:a.name, act:a.act, text:a.text, res:a.res || ''} : {act:'bonus', res: it.res || '', newReset:'dawn'},
+    v => { if (!v.name) return;
+      const res = applyRes(c, v, it.name + ' charges');
+      if (a) Object.assign(a, {name:v.name, act:v.act, text:v.text, res});
+      else (it.actions = it.actions || []).push({id: slug(v.name) + '-' + uid().slice(0,3), name:v.name, act:v.act, text:v.text, res}); },
+    a ? () => { it.actions = it.actions.filter(x => x !== a); } : null);
+}
+const editBtn = (act, attrs) => `<button class="small" data-act="${act}" ${attrs}>✎ Edit</button>`;
+
+function condInfoModal(cid, name){
+  openModal(() => {
+    const c = charById(cid);
+    if (name === 'Exhaustion') return `${mhead('Exhaustion ' + c.exhaustion, esc(c.name))}<div class="mbody lookup">
+      ${S.ruleset === '2024' ? `<p>Each level gives −${2*c.exhaustion} to D20 Tests (total) and −${5*c.exhaustion} ft speed. Level 6 is death. A long rest removes one level.</p>`
+        : `<div class="list">${EXH_2014.slice(1).map((t, i) => `<div class="li" style="${i < c.exhaustion ? 'border-color:#a0752a' : 'opacity:.55'}"><b>${i+1}</b>&nbsp; ${t}</div>`).join('')}</div><p class="small muted">Effects are cumulative. A long rest removes one level.</p>`}
+      <div class="seg" style="margin-top:8px">${[0,1,2,3,4,5,6].map(n => `<button class="${c.exhaustion===n?'on':''}" data-act="exh" data-cid="${cid}" data-v="${n}">${n}</button>`).join('')}</div></div>`;
+    const on = c.conditions.includes(name);
+    return `${mhead(esc(name), esc(c.name))}<div class="mbody lookup"><div class="desc"><p>${esc(COND_RULES[name] || '')}</p></div><div class="src2">${S.ruleset} rules summary</div></div>
+      <div class="mfoot"><button class="${on ? 'b-dmg' : 'pri'}" data-act="togcond" data-cid="${cid}" data-v="${esc(name)}">${on ? 'Remove' : 'Apply'}</button></div>`; });
+}
+function concModal(cid){
+  const c = charById(cid); const s = c.spells.find(x => x.name === c.concentration);
+  if (s) spellModal(cid, s.id); else openModal(() => `${mhead('Concentrating', esc(c.name))}<div class="mbody">${esc(c.concentration || '')}</div><div class="mfoot"><button class="b-dmg" data-act="dropconc" data-cid="${cid}">Drop concentration</button></div>`);
+}
+function condModal(cid){
+  openModal(() => { const c = charById(cid); return `${mhead('Conditions', esc(c.name))}
+    <div class="mbody"><div class="condgrid">${CONDITIONS.map(x => `<button class="${c.conditions.includes(x)?'on':''}" data-act="togcond" data-cid="${cid}" data-v="${x}" title="${esc(COND_RULES[x])}">${x}</button>`).join('')}</div>
+      <h3>Exhaustion</h3><div class="seg">${[0,1,2,3,4,5,6].map(n => `<button class="${c.exhaustion===n?'on':''}" data-act="exh" data-cid="${cid}" data-v="${n}">${n}</button>`).join('')}</div>
+      <div class="small dim" style="margin-top:8px">Hover a condition for its rules, or click its chip on the card.</div>
+    </div><div class="mfoot"><button class="pri" data-act="mclose">Done</button></div>`; });
+}
+function castModal(cid, sid){
+  openModal(() => {
+    const c = charById(cid), s = c.spells.find(x => x.id === sid);
+    const opts = [];
+    if (s.level === 0) opts.push(`<button data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="free">Cast (cantrip)</button>`);
+    c.spellSlots.filter(x => x.level >= s.level && s.level > 0).forEach(x => opts.push(`<button ${x.max - x.used ? '' : 'disabled'} data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="slot" data-lvl="${x.level}">${ORD(x.level)}-level slot <span class="dim">(${x.max - x.used} left)</span></button>`));
+    if (c.pactSlots && s.level > 0 && s.level <= c.pactSlots.level) opts.push(`<button ${c.pactSlots.max - c.pactSlots.used ? '' : 'disabled'} data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="pact">Pact slot (${ORD(c.pactSlots.level)}) <span class="dim">(${c.pactSlots.max - c.pactSlots.used} left)</span></button>`);
+    c.resources.filter(r => r.name.toLowerCase().includes(s.name.toLowerCase()) || r.name.toLowerCase().includes(String(s.source).toLowerCase()))
+      .forEach(r => opts.push(`<button ${r.max == null || r.max - r.used ? '' : 'disabled'} data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="res" data-rid="${r.id}">Use ${esc(r.name)} ${r.max != null ? `<span class="dim">(${r.max - r.used} left)</span>` : ''}</button>`));
+    if (s.level > 0) opts.push(`<button data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="free">Free cast (scroll, item, feature)</button>`);
+    return `${mhead('Cast ' + esc(s.name), esc(c.name))}<div class="mbody">
+      <div class="muted small" style="margin-bottom:8px">${s.level ? ORD(s.level) + ' level' : 'Cantrip'} · ${esc(fmtTime(s.time))} · ${esc(s.range)} · ${esc(s.duration)}</div>
+      <div class="list">${opts.join('')}</div>
+      ${s.concentration ? `<div class="small" style="margin-top:8px;color:#8fb8e6">Concentration: casting sets it${c.concentration ? `, and drops <b>${esc(c.concentration)}</b>` : ''}.</div>` : ''}
+      <label class="row small" style="margin-top:10px"><input type="checkbox" id="castLog"> Add to journal</label></div>`; });
+}
+function checksModal(){
+  openModal(() => {
+    const cs = S.characters;
+    const row = (label, vals, profs) => { const best = Math.max(...vals);
+      return `<tr><td>${label}</td>${vals.map((v,i) => `<td class="${v === best ? 'best' : ''} ${profs[i] ? 'p' : ''}">${sgn(v)}</td>`).join('')}</tr>`; };
+    const g = t => `<tr class="grp"><td colspan="${cs.length+1}">${t}</td></tr>`;
+    return `${mhead('Party checks')}<div class="mbody"><table class="mx"><thead><tr><th></th>${cs.map(c => `<th>${esc(c.name.split(' ')[0])}</th>`).join('')}</tr></thead><tbody>
+      ${g('Saving throws')}${ABILS.map(a => row(ABFULL[a], cs.map(c => c.abilities[a].save), cs.map(c => c.abilities[a].saveProf))).join('')}
+      ${g('Skills')}${Object.keys(SKN).map(k => row(`${SKN[k]} <span class="dim small">${ABN[cs[0].skills[k].ability]}</span>`, cs.map(c => c.skills[k].mod), cs.map(c => /prof|expert/.test(c.skills[k].prof)))).join('')}
+      ${g('Raw ability checks')}${ABILS.map(a => row(ABFULL[a], cs.map(c => c.abilities[a].mod), cs.map(() => false))).join('')}
+      ${g('Passives')}${['perception','insight','investigation'].map(k => row('Passive ' + k, cs.map(c => c.passive[k]), cs.map(() => false))).join('')}
+      </tbody></table><div class="small dim" style="margin-top:6px">Gold = best in the party · dotted = proficient</div></div>`; }, true);
+}
+function purseModal(){
+  openModal(() => {
+    const n = S.characters.length || 1, gp = COINS.reduce((t,k) => t + S.purse[k]*COIN_GP[k], 0);
+    return `${mhead('Party purse')}<div class="mbody">
+      <div class="coins">${COINS.map(k => `<div class="coin"><div class="k">${k.toUpperCase()}</div><div class="v">${S.purse[k].toLocaleString()}</div><div class="each">${Math.floor(S.purse[k]/n).toLocaleString()} each</div></div>`).join('')}</div>
+      <div class="row" style="margin-top:10px"><b>Total value:</b> ${gp.toLocaleString(undefined,{maximumFractionDigits:2})} gp <span class="muted">(${(gp/n).toLocaleString(undefined,{maximumFractionDigits:2})} gp each across ${n})</span></div>
+      <h3>Add or spend</h3>
+      <div class="row"><input type="number" id="coinAmt" min="0" placeholder="amount" style="width:110px"><select id="coinType">${COINS.map(k => `<option ${k==='gp'?'selected':''}>${k}</option>`).join('')}</select>
+        <input id="coinNote" class="grow" placeholder="What for? (optional, goes to the journal)"></div>
+      <div class="row" style="margin-top:6px"><button class="b-heal" data-act="coin" data-d="1">+ Add</button><button class="b-dmg" data-act="coin" data-d="-1">− Spend</button></div></div>`; });
+}
+function shortRestModal(){
+  openModal(() => `${mhead('Short rest')}<div class="mbody">
+    <div class="muted small" style="margin-bottom:8px">Roll hit dice at the table, type the roll and press Spend. The CON modifier is added for you.</div>
+    ${S.characters.map(c => `<div class="li" style="margin-bottom:4px;flex-wrap:wrap">
+      <div class="grow"><b>${esc(c.name)}</b> <span class="muted small">HP ${c.hp.current}/${c.hp.max} · CON ${sgn(c.abilities.con.mod)}</span>
+        <div class="small">${c.hitDice.map(h => `${h.die}: ${h.max - h.used}/${h.max}`).join(' · ')}</div></div>
+      ${c.hitDice.map(h => `<span class="row"><input type="number" min="1" style="width:56px" placeholder="${h.die}" data-hdroll="${c.id}|${h.die}"><button ${h.max - h.used ? '' : 'disabled'} data-act="spendhd" data-cid="${c.id}" data-die="${h.die}">Spend ${h.die}</button></span>`).join('')}
+    </div>`).join('')}
+    <div class="small dim" style="margin-top:8px">Finishing the rest resets short-rest uses (Action Surge, Channel Divinity, Bardic Inspiration…) and pact slots for everyone.</div>
+  </div><div class="mfoot"><button data-act="mclose">Cancel</button><button class="pri" data-act="doShort">Finish short rest</button></div>`);
+}
+function longRestModal(){
+  openModal(() => `${mhead('Long rest')}<div class="mbody">
+    <p>Everyone gets: full HP, all spell slots and limited uses back, half their hit dice back, death saves cleared, concentration dropped, exhaustion −1.</p>
+    <p class="small muted">Charges marked "dawn" (magic items) are reset too. Adjust any that regain a random amount.</p>
+  </div><div class="mfoot"><button data-act="mclose">Cancel</button><button class="pri" data-act="doLong">Take long rest</button></div>`);
+}
+
+/* --- journal --- */
+function entryHTML(e){
+  const names = (e.chars||[]).map(id => (charById(id)||{}).name).filter(Boolean).map(n => n.split(' ')[0]);
+  return `<div class="journal-entry ${e.star ? 'star' : ''}">
+    <div class="jm"><span>S${e.session}</span>${e.round ? `<span>Rd ${e.round}</span>` : ''}<span>${new Date(e.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
+      ${names.map(n => `<span class="chip">${esc(n)}</span>`).join('')}<span class="grow"></span>
+      <button class="ghost small" data-act="jstar" data-eid="${e.id}" title="Memorable moment">${e.star ? '★' : '☆'}</button>
+      <button class="ghost small" data-act="jdel" data-eid="${e.id}" title="Delete (undo available)">🗑</button></div>
+    <div class="jt">${esc(e.text)}</div></div>`;
+}
+function journalModal(){
+  openModal(() => {
+    const tab = UI.journalTab;
+    const sessions = [...new Set(S.log.map(e => e.session))].sort((a,b) => b-a);
+    const cur = S.log.filter(e => e.session === S.session);
+    const body = tab === 'log' ? `
+      <div class="row" style="margin-bottom:6px"><b>Session ${S.session}</b><span class="grow"></span>
+        <button class="small" data-act="newsession">Start session ${S.session + 1}</button>
+        <button class="small gold" data-act="exportmd">Export for blog (.md)</button><button class="small gold" data-act="copymd">Copy for blog</button></div>
+      <div class="tagpick" style="margin-bottom:6px">${S.characters.map(c => `<button class="${UI.tags.includes(c.id)?'on':''}" data-act="jtag" data-cid="${c.id}">${esc(c.name.split(' ')[0])}</button>`).join('')}
+        <input type="number" id="jround" placeholder="round" min="1" style="width:76px" value="${UI.round||''}"></div>
+      <textarea id="jtext" rows="3" placeholder="What happened? e.g. the bard lands the killing blow with a fiddle solo… (Ctrl+Enter to add)"></textarea>
+      <div class="row" style="margin:6px 0 12px"><label class="row small"><input type="checkbox" id="jstar"> ★ memorable</label><span class="grow"></span><button class="pri" data-act="jadd">Add entry</button></div>
+      ${cur.length ? cur.slice().reverse().map(entryHTML).join('') : '<div class="empty">No entries for this session yet.</div>'}
+      ${sessions.filter(s => s !== S.session).length ? `<div class="small dim">Earlier sessions: ${sessions.filter(s => s !== S.session).map(s => `S${s} (${S.log.filter(e => e.session === s).length})`).join(', ')}. All are included in the export.</div>` : ''}`
+    : `<textarea data-note="shared" rows="18" placeholder="Shared party notes: quests, NPCs, places, loot to sell, rumours…">${esc(S.sharedNotes)}</textarea>`;
+    return `${mhead('Journal')}<nav class="tabs"><button class="${tab==='log'?'on':''}" data-act="jtab" data-v="log">Combat log</button><button class="${tab==='shared'?'on':''}" data-act="jtab" data-v="shared">Party notes</button></nav>
+      <div class="mbody">${body}</div>`; }, true);
+}
+function markdownLog(){
+  const bySession = {};
+  S.log.forEach(e => (bySession[e.session] = bySession[e.session] || []).push(e));
+  let md = `# ${S.name || 'Party'}: session log\n\n`;
+  Object.keys(bySession).sort((a,b) => a-b).forEach(s => {
+    md += `## Session ${s}\n\n`;
+    bySession[s].forEach(e => {
+      const who = (e.chars||[]).map(id => (charById(id)||{}).name).filter(Boolean).join(', ');
+      md += `- ${e.star ? '★ ' : ''}${e.round ? `**Round ${e.round}.** ` : ''}${who ? `*${who}:* ` : ''}${e.text.replace(/\n/g, ' ')}\n`;
+    });
+    md += '\n';
+  });
+  if (S.sharedNotes.trim()) md += `## Party notes\n\n${S.sharedNotes}\n`;
+  return md;
+}
+function logEntry(chars, text){ S.log.push({id: uid(), ts: Date.now(), session: S.session, round: parseInt(UI.round,10) || null, chars, text, star: false}); }
+
+/* --- data menu --- */
+function dataModal(){
+  openModal(() => `${mhead('Data')}<div class="mbody"><div class="list">
+      <button data-act="importUpdate" style="text-align:left"><b>Import updated sheet(s)</b><div class="small muted">After a level-up: load a character or party file and review what changed. HP, used slots, notes, journal and portraits are kept.</div></button>
+      <button data-act="addchar" style="text-align:left"><b>Add a character</b><div class="small muted">New, from a file, or copied from another campaign.</div></button>
+      <button data-act="exportJson" style="text-align:left"><b>Export this campaign</b><div class="small muted">Party, journal and portraits as one .json file.</div></button>
+      <button data-act="copyJson" style="text-align:left"><b>Copy this campaign to the clipboard</b><div class="small muted">For where downloads are blocked.</div></button>
+      <button data-act="restoreJson" style="text-align:left"><b>Restore this campaign from a backup</b><div class="small muted">Replace this campaign with a backup file (undo available).</div></button>
+      <button data-act="rename" style="text-align:left"><b>Rename campaign</b></button>
+    </div><div class="small dim" style="margin-top:10px">Version ${APP_VERSION} · storage namespace "${STORAGE_NS || 'prod'}"</div></div>`);
+}
+function renameModal(){
+  openModal(() => `${mhead('Rename campaign')}<div class="mbody"><input id="pname" style="width:100%" value="${esc(S.name||'')}"></div>
+    <div class="mfoot"><button data-act="mclose">Cancel</button><button class="pri" data-act="dorename">Save</button></div>`);
+}
+
+/* =====================================================================
+   SHEET UPDATE MERGE
+   Sheet-owned: identity, stats, skills, max HP, attacks, spell list,
+   features, slot/resource maximums, proficiencies, defences.
+   Session-owned (kept): current HP, temp, used slots/resources/hit dice,
+   conditions, concentration, notes, journal, portraits, item notes,
+   prepared choices, purse.
+   ===================================================================== */
+const SCALARS = [['level','Level'],['xp','XP'],['species','Species'],['background','Background'],['ac','AC'],['initiative','Initiative'],
+  ['profBonus','Proficiency bonus'],['attacksPerAction','Attacks per Attack action'],['bonusAttack','Bonus-action attack'],['speed.walk','Speed'],['hp.max','Max HP'],['preparedLimit','Prepared spell limit'],
+  ['passive.perception','Passive Perception'],['passive.insight','Passive Insight'],['passive.investigation','Passive Investigation']];
+const getp = (o, p) => p.split('.').reduce((x,k) => x == null ? x : x[k], o);
+function setp(o, p, v){ const ks = p.split('.'); const last = ks.pop(); ks.reduce((x,k) => x[k] = x[k] || {}, o)[last] = v; }
+const same = (a,b) => JSON.stringify(a) === JSON.stringify(b);
+function diffChar(old, nu){
+  const ch = [];
+  const add = (group, label, html, apply, def = true) => ch.push({id: uid(), group, label, html, apply, def});
+  if (!same(old.classes, nu.classes)) add('Core', 'Classes', `<span class="old">${esc(classLine(old))}</span> → <span class="new">${esc(classLine(nu))} (${esc(subLine(nu))})</span>`, c => c.classes = clone(nu.classes));
+  SCALARS.forEach(([p,l]) => { const a = getp(old,p), b = getp(nu,p);
+    if (b !== undefined && !same(a,b)) add('Core', l, `<span class="old">${esc(a ?? '—')}</span> → <span class="new">${esc(b)}</span>`, c => {
+      if (p === 'hp.max'){ const d = b - c.hp.max; c.hp.max = b; c.hp.current = Math.max(0, Math.min(b, c.hp.current + Math.max(0,d))); }
+      else setp(c, p, clone(b)); }); });
+  ABILS.forEach(a => { const A = old.abilities[a], B = nu.abilities[a];
+    if (!same(A,B)) add('Abilities & saves', ABFULL[a], `<span class="old">${A.score} (${sgn(A.mod)}), save ${sgn(A.save)}</span> → <span class="new">${B.score} (${sgn(B.mod)}), save ${sgn(B.save)}${B.saveProf ? ' ●' : ''}</span>`, c => c.abilities[a] = clone(B)); });
+  Object.keys(SKN).forEach(k => { const A = old.skills[k], B = nu.skills && nu.skills[k];
+    if (B && !same(A,B)) add('Skills', SKN[k], `<span class="old">${sgn(A.mod)} ${profMark(A.prof)}</span> → <span class="new">${sgn(B.mod)} ${profMark(B.prof)}</span>`, c => c.skills[k] = clone(B)); });
+  // attacks: sheet attacks update, attacks you added or edited are kept
+  const sheetAtks = (old.attacks||[]).filter(a => !a.custom), mine = (old.attacks||[]).filter(a => a.custom);
+  if (nu.attacks && !same(sheetAtks, nu.attacks.filter(a => !mine.some(m => m.name === a.name))))
+    add('Combat & proficiencies', 'Attacks', `updated from the sheet${mine.length ? ` <span class="dim">(your ${mine.length} custom attack${mine.length > 1 ? 's are' : ' is'} kept)</span>` : ''}`,
+      c => { const keep = c.attacks.filter(a => a.custom); c.attacks = nu.attacks.filter(a => !keep.some(m => m.name === a.name)).concat(keep); });
+  ['senses','defenses','proficiencies','spellcasting'].forEach(k => {
+    if (nu[k] !== undefined && !same(old[k], nu[k])) add('Combat & proficiencies', k[0].toUpperCase()+k.slice(1), 'updated from the sheet', c => c[k] = clone(nu[k])); });
+  if (!same(old.hitDice.map(h => [h.die,h.max]), nu.hitDice.map(h => [h.die,h.max])))
+    add('Core', 'Hit dice', `<span class="old">${old.hitDice.map(h => h.max + h.die).join(' + ')}</span> → <span class="new">${nu.hitDice.map(h => h.max + h.die).join(' + ')}</span>`, c => {
+      c.hitDice = nu.hitDice.map(h => { const o = c.hitDice.find(x => x.die === h.die); return {die:h.die, max:h.max, used: Math.min(h.max, o ? o.used : 0)}; }); });
+  const slotStr = s => (s||[]).filter(x => x.max).map(x => `${ORD(x.level)}×${x.max}`).join(' ');
+  if (!same((old.spellSlots||[]).map(x => [x.level,x.max]), (nu.spellSlots||[]).map(x => [x.level,x.max])))
+    add('Spell slots', 'Slots', `<span class="old">${slotStr(old.spellSlots) || 'none'}</span> → <span class="new">${slotStr(nu.spellSlots)}</span>`, c => {
+      c.spellSlots = nu.spellSlots.map(s => { const o = c.spellSlots.find(x => x.level === s.level); return {level:s.level, max:s.max, used: Math.min(s.max, o ? o.used : 0)}; }); });
+  if (!same(old.pactSlots && [old.pactSlots.level, old.pactSlots.max], nu.pactSlots && [nu.pactSlots.level, nu.pactSlots.max]))
+    add('Spell slots', 'Pact slots', `<span class="old">${old.pactSlots ? old.pactSlots.max + '×' + ORD(old.pactSlots.level) : 'none'}</span> → <span class="new">${nu.pactSlots ? nu.pactSlots.max + '×' + ORD(nu.pactSlots.level) : 'none'}</span>`,
+      c => c.pactSlots = nu.pactSlots ? Object.assign({}, nu.pactSlots, {used: Math.min(nu.pactSlots.max, c.pactSlots ? c.pactSlots.used : 0)}) : null);
+  (nu.resources||[]).forEach(r => { const o = old.resources.find(x => x.id === r.id);
+    if (!o) add('Limited uses', r.name, `<span class="add">+ new: ${esc(r.name)} (${r.max ?? '?'} / ${r.reset})</span>`, c => c.resources.push(Object.assign({used:0}, clone(r))));
+    else if (r.max != null && ((o.max !== r.max) || o.reset !== r.reset || o.die !== r.die))
+      add('Limited uses', r.name, `<span class="old">${o.max ?? '?'} ${o.die || ''}</span> → <span class="new">${r.max} ${r.die || ''} (${r.reset})</span>${o.edited ? ' <span class="dim">(you edited this)</span>' : ''}`, c => { const x = resById(c, r.id); Object.assign(x, {max:r.max, reset:r.reset, die:r.die}); x.used = Math.min(x.used, r.max ?? x.used); }, !o.edited); });
+  old.resources.filter(o => !o.custom && !(nu.resources||[]).some(r => r.id === o.id)).forEach(o =>
+    add('Limited uses', o.name, `<span class="rem">− no longer on the sheet: ${esc(o.name)}</span>`, c => c.resources = c.resources.filter(x => x.id !== o.id), false));
+  const sk = s => slug(s.name + '-' + s.source);
+  (nu.spells||[]).forEach(s => { if (!old.spells.some(o => o.id === sk(s)))
+    add('Spells', s.name, `<span class="add">+ ${esc(s.name)}</span> <span class="dim">${s.level ? ORD(s.level) + ' level' : 'cantrip'} · ${esc(s.source)}</span>`, c => c.spells.push(Object.assign({}, clone(s), {id: sk(s), prepared: c.preparedLimit ? !!s.alwaysPrepared : true}))); });
+  old.spells.filter(o => !o.custom && !(nu.spells||[]).some(s => sk(s) === o.id)).forEach(o =>
+    add('Spells', o.name, `<span class="rem">− ${esc(o.name)}</span> <span class="dim">no longer on the sheet</span>`, c => c.spells = c.spells.filter(x => x.id !== o.id)));
+  const fk = f => f.id || slug(f.name);
+  (nu.features||[]).forEach(f => { const o = (old.features||[]).find(x => fk(x) === fk(f));
+    if (!o) add('Features', f.name, `<span class="add">+ ${esc(f.name)}</span>`, c => c.features.push(Object.assign({id: fk(f)}, clone(f))));
+    else if (!o.custom && (o.text !== f.text || o.name !== f.name || o.res !== f.res))
+      add('Features', f.name, o.edited ? 'the sheet differs from your edited version' : 'description or uses updated', c => Object.assign(c.features.find(x => fk(x) === fk(f)), clone(f), {edited:false}), !o.edited); });
+  (old.features||[]).filter(o => !o.custom && !(nu.features||[]).some(f => fk(f) === fk(o))).forEach(o =>
+    add('Features', o.name, `<span class="rem">− ${esc(o.name)}</span> <span class="dim">not on the new sheet</span>`, c => c.features = c.features.filter(x => fk(x) !== fk(o)), false));
+  (nu.inventory||[]).forEach(i => { const o = old.inventory.find(x => x.name === i.name);
+    if (!o) add('Inventory', i.name, `<span class="add">+ ${esc(i.name)} ×${i.qty}</span>`, c => c.inventory.push(Object.assign({}, clone(i), {id: slug(i.name), notes: i.notes || ''})));
+    else {
+      if (o.qty !== i.qty) add('Inventory', i.name, `${esc(i.name)}: <span class="old">×${o.qty}</span> → <span class="new">×${i.qty}</span> <span class="dim">(app ×${o.qty} may be more current)</span>`, c => c.inventory.find(x => x.id === o.id).qty = i.qty, false);
+      if (o.attuned !== i.attuned) add('Inventory', i.name, `${esc(i.name)}: ${i.attuned ? 'now attuned' : 'no longer attuned'}`, c => c.inventory.find(x => x.id === o.id).attuned = i.attuned);
+    } });
+  old.inventory.filter(o => !o.custom && !(nu.inventory||[]).some(i => i.name === o.name)).forEach(o =>
+    add('Inventory', o.name, `<span class="rem">− ${esc(o.name)}</span> <span class="dim">${o.custom ? 'you added this in the app' : 'not on the sheet any more'}</span>`, c => c.inventory = c.inventory.filter(x => x.id !== o.id), false));
+  Object.entries(nu.notes||{}).forEach(([k,v]) => { if (k === 'session') return; const a = (old.notes||{})[k];
+    if (v && v !== a) add('Bio', k, `${esc(k)} updated from the sheet`, c => { c.notes = c.notes || {}; c.notes[k] = v; }, !a); });
+  return ch;
+}
+let pendingMerge = null;
+function startMerge(data, targetId){
+  if (data.campaign) data = data.campaign;
+  const incoming = (data.characters ? data.characters : [data]).slice();
+  if (targetId && incoming.length > 1){ const t = charById(targetId); const hit = incoming.filter(c => c.id === targetId || c.name === t.name); if (hit.length) incoming.splice(0, incoming.length, ...hit); }
+  const plan = incoming.map(nu => {
+    nu = normaliseChar(clone(nu));
+    const old = (targetId && incoming.length === 1 ? charById(targetId) : null) || S.characters.find(c => c.id === nu.id) || S.characters.find(c => c.name === nu.name);
+    if (!old) nu.id = uniqueId(S, nu.id || slug(nu.name));
+    return {nu, old, changes: old ? diffChar(old, nu) : []};
+  });
+  pendingMerge = plan;
+  openModal(() => {
+    const blocks = plan.map((p, pi) => {
+      if (!p.old) return `<div class="dgrp"><h3>${esc(p.nu.name)}</h3><label><input type="checkbox" data-mnew="${pi}" checked><span class="add">New character: add to the party</span></label></div>`;
+      if (!p.changes.length) return `<div class="dgrp"><h3>${esc(p.nu.name)}</h3><div class="empty">No changes.</div></div>`;
+      const groups = {}; p.changes.forEach(ch => (groups[ch.group] = groups[ch.group] || []).push(ch));
+      return `<div class="dgrp"><h3>${esc(p.nu.name)} <span class="small muted">${p.changes.length} change${p.changes.length>1?'s':''}</span></h3>
+        ${Object.entries(groups).map(([g, list]) => `<div class="small muted" style="margin:6px 0 3px">${esc(g)}</div>
+          ${list.map(ch => `<label><input type="checkbox" data-mch="${ch.id}" ${ch.def ? 'checked' : ''}><span><b>${esc(ch.label)}</b>: ${ch.html}</span></label>`).join('')}`).join('')}</div>`;
+    }).join('');
+    return `${mhead('Review sheet update')}<div class="mbody diff">
+      <div class="small muted" style="margin-bottom:8px">Ticked changes are applied. Item removals and quantity changes start unticked because the app is usually more up to date than the sheet. Undo is available afterwards.</div>
+      ${blocks}</div><div class="mfoot"><button data-act="mclose">Cancel</button><button class="pri" data-act="applyMerge">Apply ticked changes</button></div>`; }, true);
+}
+function applyMerge(){
+  if (!pendingMerge) return;
+  const ticked = new Set([...document.querySelectorAll('[data-mch]:checked')].map(x => x.dataset.mch));
+  const newOK = new Set([...document.querySelectorAll('[data-mnew]:checked')].map(x => +x.dataset.mnew));
+  let n = 0;
+  const plan = pendingMerge; pendingMerge = null; closeModal();
+  mutate(() => plan.forEach((p, pi) => {
+    if (!p.old){ if (newOK.has(pi)){ S.characters.push(p.nu); n++; } return; }
+    const c = charById(p.old.id);
+    p.changes.filter(ch => ticked.has(ch.id)).forEach(ch => { ch.apply(c); n++; });
+  }));
+  toast(`Applied ${n} change${n === 1 ? '' : 's'}`);
+}
+
+/* =====================================================================
+   OPEN5E LOOKUPS
+   ===================================================================== */
+let O5 = {};
+try { O5 = JSON.parse(localStorage.getItem(K_O5E) || '{}'); } catch(e){}
+function o5Save(){ try { localStorage.setItem(K_O5E, JSON.stringify(O5)); } catch(e){ O5 = {}; } }
+async function o5Get(path){ const r = await fetch(O5E + path, {headers:{Accept:'application/json'}}); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }
+const docKey = r => (r && (r.document && (r.document.key || r.document.slug))) || (r && r.document__slug) || '';
+function pick(results){
+  if (!results || !results.length) return null;
+  const want = S.ruleset === '2024' ? '2024' : '2014';
+  return results.find(r => /srd/.test(docKey(r)) && docKey(r).includes(want)) || results.find(r => /srd|5esrd|wotc/.test(docKey(r))) || results[0];
+}
+async function o5Find(kind, name){
+  const key = `${kind}|${S.ruleset}|${name.toLowerCase()}`;
+  const hit = O5[key];
+  if (hit && (hit.data || Date.now() - hit.t < 864e5)) return hit.data;
+  const q = encodeURIComponent(name);
+  const attempts = kind === 'spell'
+    ? [`/v2/spells/?name__iexact=${q}`, `/v2/spells/?search=${q}`, `/v1/spells/?name=${q}`]
+    : [`/v2/items/?name__iexact=${q}`, `/v2/magicitems/?name__iexact=${q}`, `/v2/weapons/?name__iexact=${q}`, `/v2/armor/?name__iexact=${q}`, `/v1/magicitems/?search=${q}`, `/v2/items/?search=${q}`];
+  let data = null, reached = false;
+  for (const a of attempts){
+    try {
+      const j = await o5Get(a); reached = true;
+      const res = (j.results || []).filter(r => !/search=/.test(a) || String(r.name).toLowerCase() === name.toLowerCase() || attempts.indexOf(a) === attempts.length - 1);
+      data = pick(res); if (data) break;
+    } catch(e){ if (/HTTP 4\d\d/.test(e.message)) reached = true; }
+  }
+  if (!data && !reached) throw new Error('offline or blocked');
+  O5[key] = {t: Date.now(), data}; o5Save();
+  return data;
+}
+function itemNameVariants(n){
+  const v = [n];
+  const a = n.replace(/\s*\+\d+$/,'').replace(/\s*\(.*?\)\s*/g,' ').trim(); if (a !== n) v.push(a);
+  const m = n.match(/^(.*), (.*)$/); if (m) v.push(`${m[2]} ${m[1]}`);
+  return [...new Set(v)];
+}
+function md(t){
+  if (!t) return '';
+  const lines = esc(t).split('\n'); let out = '', tbl = [];
+  const flush = () => { if (!tbl.length) return; const rows = tbl.filter(r => !/^\|\s*[-:]+/.test(r));
+    out += '<table>' + rows.map((r,i) => '<tr>' + r.replace(/^\||\|$/g,'').split('|').map(c => `<${i?'td':'th'}>${c.trim()}</${i?'td':'th'}>`).join('') + '</tr>').join('') + '</table>'; tbl = []; };
+  lines.forEach(l => { if (/^\s*\|/.test(l)) { tbl.push(l.trim()); return; } flush();
+    if (l.trim()) out += '<p>' + l.replace(/\*\*\*(.+?)\*\*\*/g,'<b><i>$1</i></b>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*]+?)\*/g,'$1<i>$2</i>').replace(/^#+\s*/,'') + '</p>'; });
+  flush(); return out;
+}
+function o5SpellHTML(d){
+  if (!d) return '<div class="empty">Not found on Open5e (homebrew, or a non-SRD book). Details above come from the sheet.</div>';
+  const school = d.school && (d.school.name || d.school) || '';
+  const comps = d.components || [d.verbal && 'V', d.somatic && 'S', d.material && 'M'].filter(Boolean).join(', ');
+  return `<div class="meta">${school ? `<span class="k">School</span><span>${esc(school)}</span>` : ''}
+      ${comps ? `<span class="k">Components</span><span>${esc(comps)}${d.material_specified || typeof d.material === 'string' ? ` <span class="dim">(${esc(typeof d.material === 'string' ? d.material : d.material_specified)})</span>` : ''}</span>` : ''}</div>
+    <div class="desc">${md(d.desc)}</div>${d.higher_level ? `<div class="desc"><p><b>At higher levels.</b></p>${md(d.higher_level)}</div>` : ''}
+    <div class="src2">Open5e · ${esc((d.document && (d.document.name || d.document.display_name)) || d.document__title || docKey(d))}</div>`;
+}
+function o5ItemHTML(d){
+  if (!d) return '<div class="empty">Not found on Open5e. Probably homebrew or campaign loot; use the notes box below to keep its details here.</div>';
+  const rar = d.rarity && (d.rarity.name || d.rarity) || '', cat = d.category && (d.category.name || d.category) || d.type || '';
+  const att = d.requires_attunement === true || /attune/i.test(d.requires_attunement || '') ? (typeof d.requires_attunement === 'string' ? d.requires_attunement : 'requires attunement') : '';
+  return `<div class="meta">${cat ? `<span class="k">Type</span><span>${esc(cat)}</span>` : ''}${rar ? `<span class="k">Rarity</span><span>${esc(rar)}</span>` : ''}
+      ${att ? `<span class="k">Attunement</span><span>${esc(att)}</span>` : ''}
+      ${d.damage_dice ? `<span class="k">Damage</span><span>${esc(d.damage_dice)} ${esc(d.damage_type && (d.damage_type.name || d.damage_type) || '')}</span>` : ''}
+      ${d.ac_display || d.ac_base ? `<span class="k">AC</span><span>${esc(d.ac_display || d.ac_base)}</span>` : ''}
+      ${d.weight ? `<span class="k">Weight</span><span>${esc(d.weight)}</span>` : ''}${d.cost ? `<span class="k">Cost</span><span>${esc(d.cost)}</span>` : ''}</div>
+    <div class="desc">${md(d.desc)}</div><div class="src2">Open5e · ${esc((d.document && (d.document.name || d.document.display_name)) || d.document__title || docKey(d))}</div>`;
+}
+function spellModal(cid, sid){
+  const c = charById(cid), s = c.spells.find(x => x.id === sid);
+  const st = {data: undefined, err: null};
+  openModal(() => `${mhead(esc(s.name), esc(c.name))}<div class="mbody lookup">
+    <div class="meta"><span class="k">Level</span><span>${s.level ? ORD(s.level) + ' level' : 'Cantrip'}${s.ritual ? ' · ritual' : ''}${s.concentration ? ' · concentration' : ''}</span>
+      <span class="k">Casting time</span><span>${esc(fmtTime(s.time))}</span><span class="k">Range</span><span>${esc(s.range)}</span><span class="k">Duration</span><span>${esc(s.duration)}</span>
+      ${s.saveAtk && s.saveAtk !== '--' ? `<span class="k">Save / attack</span><span>${esc(s.saveAtk)}</span>` : ''}
+      <span class="k">Source</span><span>${esc(s.source)} · ${esc(s.ref)}${s.custom ? ' <span class="tag hb">yours</span>' : s.edited ? ' <span class="tag hb">edited</span>' : ''}</span>${s.notes ? `<span class="k">Sheet notes</span><span>${esc(s.notes)}</span>` : ''}</div>
+    ${s.desc ? `<div class="desc">${md(s.desc)}</div>` : ''}
+    ${st.data === undefined ? (st.err ? (s.desc ? '' : `<div class="empty">Open5e unavailable (${esc(st.err)}). Sheet details shown.</div>`) : '<div class="empty">Looking up on Open5e…</div>') : (st.data || !s.desc ? o5SpellHTML(st.data) : '')}
+  </div><div class="mfoot">${editBtn('editspell', `data-cid="${cid}" data-sid="${sid}"`)}<span class="grow"></span>${s.level > 0 || s.concentration ? `<button class="pri" data-act="cast" data-cid="${cid}" data-sid="${sid}">Cast…</button>` : ''}</div>`);
+  const live = UI.modal;
+  o5Find('spell', s.name).then(d => { st.data = d; }).catch(e => { st.err = e.message; }).finally(() => { if (UI.modal === live) live(); });
+}
+function itemModal(cid, iid){
+  const c = charById(cid), it = c.inventory.find(x => x.id === iid);
+  const st = {data: undefined, err: null, done: false};
+  openModal(() => `${mhead(esc(it.name), esc(c.name))}<div class="mbody lookup">
+    <div class="meta"><span class="k">Carried</span><span>×${it.qty}${it.weight ? ' · ' + esc(it.weight) : ''}${it.attuned ? ' · attuned' : ''}${it.custom ? ' <span class="tag hb">yours</span>' : it.edited ? ' <span class="tag hb">edited</span>' : ''}</span>
+      ${it.res && resById(c, it.res) ? `<span class="k">Charges</span><span class="row">${pipsHTML(c, resById(c, it.res), 'res', it.res)}</span>` : ''}</div>
+    ${it.desc ? `<div class="desc">${md(it.desc)}</div>` : ''}
+    ${!st.done ? '<div class="empty">Looking up on Open5e…</div>' : st.err ? (it.desc ? '' : `<div class="empty">Open5e unavailable (${esc(st.err)}).</div>`) : (st.data || !it.desc ? o5ItemHTML(st.data) : '')}
+    <h3>Actions from this item</h3>
+    ${(it.actions||[]).length ? `<div class="list">${it.actions.map(a => `<div class="li"><div class="nm" data-act="iactinfo" data-cid="${cid}" data-iid="${iid}" data-aid="${a.id}">⚔ ${esc(a.name)} <span class="tag">${ACT_LABEL[a.act]}</span>${a.res ? ' <span class="tag a">charges</span>' : ''}<div class="meta">${esc(a.text.slice(0,90))}</div></div></div>`).join('')}</div>` : '<div class="empty">None yet. Add any action, bonus action or reaction this item gives, and it appears in the stat block and on the card.</div>'}
+    <div class="addrow"><span data-act="addiact" data-cid="${cid}" data-iid="${iid}">+ Add an action, bonus action or reaction</span></div>
+    <h3>My notes</h3><textarea data-note="item" data-cid="${cid}" data-iid="${iid}" rows="4" placeholder="Charges, what it does, where you found it…">${esc(it.notes)}</textarea>
+    <div class="row" style="margin-top:8px">
+      <label class="row small"><input type="checkbox" data-act="itemflag" data-k="attuned" data-cid="${cid}" data-iid="${iid}" ${it.attuned ? 'checked' : ''}> Attuned</label>
+      <label class="row small"><input type="checkbox" data-act="itemflag" data-k="magic" data-cid="${cid}" data-iid="${iid}" ${it.magic ? 'checked' : ''}> Magic</label>
+      <label class="row small"><input type="checkbox" data-act="itemflag" data-k="consumable" data-cid="${cid}" data-iid="${iid}" ${it.consumable ? 'checked' : ''}> Consumable</label>
+      <span class="grow"></span>${editBtn('edititem', `data-cid="${cid}" data-iid="${iid}"`)}<button class="small b-dmg" data-act="delitem" data-cid="${cid}" data-iid="${iid}">Remove item</button></div></div>`);
+  const live = UI.modal;
+  (async () => { for (const n of itemNameVariants(it.name)){ const d = await o5Find('item', n); if (d) return d; } return null; })()
+    .then(d => { st.data = d; }).catch(e => { st.err = e.message; }).finally(() => { st.done = true; if (UI.modal === live) live(); });
+}
+
+/* =====================================================================
+   FILE INPUTS
+   ===================================================================== */
+let portraitTarget = null, jsonMode = null;
+$('#fileImg').addEventListener('change', e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f || !portraitTarget) return;
+  const img = new Image(), url = URL.createObjectURL(f);
+  img.onload = () => {
+    const sc = Math.min(1, 360 / Math.max(img.width, img.height));
+    const cv = document.createElement('canvas'); cv.width = Math.round(img.width*sc); cv.height = Math.round(img.height*sc);
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+    P[portraitTarget] = cv.toDataURL('image/jpeg', .85); savePortraits(); URL.revokeObjectURL(url); renderAll();
+  };
+  img.onerror = () => toast('That file could not be read as an image', true);
+  img.src = url;
+});
+$('#fileJson').addEventListener('change', e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  f.text().then(t => {
+    let d; try { d = JSON.parse(t); } catch(err){ toast('Not a valid JSON file', true); return; }
+    if (jsonMode === 'restore'){
+      const r = stateFromFile(d); if (!r){ toast('That is not a party backup', true); return; }
+      closeModal();
+      mutate(() => { const keepName = S.name; S = r.st; S.name = S.name || keepName; upgrade(); if (Object.keys(r.portraits).length){ P = r.portraits; savePortraits(); } });
+      toast('Backup restored');
+    } else if (jsonMode === 'newcamp' || jsonMode === 'importcamp'){
+      closeModal();
+      const list = d.everything ? d.everything : [d];
+      let n = 0, last = null;
+      list.forEach(x => { const r = stateFromFile(x, jsonMode === 'newcamp' ? (UI._newName || '') : ''); if (r){ last = createCampaign(r.st, r.portraits); n++; } });
+      if (!n){ toast('Nothing in that file looked like a party or character', true); return; }
+      toast(`Added ${n} campaign${n > 1 ? 's' : ''}`);
+      if (n === 1 && jsonMode === 'newcamp') openCampaign(last); else renderAll();
+    } else { closeModal(); startMerge(d, jsonMode === 'update' ? UI._updateTarget : null); }
+  });
+});
+
+/* =====================================================================
+   EVENTS (delegated)
+   ===================================================================== */
+function togglePip(c, kind, ref, i){
+  const o = kind === 'slot' ? (ref === 'pact' ? c.pactSlots : c.spellSlots.find(x => x.level === +ref)) : resById(c, ref);
+  // tap an available pip = spend one; tap a used pip = regain one
+  const avail = o.max - o.used;
+  o.used = i < avail ? Math.min(o.max, o.used + 1) : Math.max(0, o.used - 1);
+}
+function useFeature(c, f, logIt){
+  const r = f.res ? resById(c, f.res) : null;
+  const eff = f.effect; let msg = `${c.name} uses ${f.name.replace(/ \(.*\)$/,'')}`;
+  if (eff && eff.type === 'heal'){
+    const roll = parseInt(($('#effRoll')||{}).value, 10);
+    if (!(roll > 0)){ toast(`Type the ${esc(eff.die)} roll first`); $('#effRoll') && $('#effRoll').focus(); return false; }
+    heal(c, roll + eff.bonus); msg += ` and heals ${roll + eff.bonus}`;
+  }
+  if (eff && eff.type === 'temp'){ c.hp.temp = Math.max(c.hp.temp, eff.amount); msg += ` (+${eff.amount} temp HP)`; }
+  if (r && r.max != null){ if (r.max - r.used <= 0){ toast('None left', true); return false; } r.used++; }
+  if (logIt) logEntry([c.id], msg + '.');
+  toast(esc(msg));
+  return true;
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  e.stopPropagation();
+  const d = t.dataset, c = d.cid ? charById(d.cid) : null;
+  switch (d.act){
+    case 'portrait': portraitTarget = d.cid; $('#fileImg').click(); break;
+    case 'toggle': UI.open[d.cid] = !UI.open[d.cid];
+      if (UI.open[d.cid]) DEFAULT_SHUT.forEach(k => { if (UI.collapsed[d.cid + ':' + k] === undefined) UI.collapsed[d.cid + ':' + k] = true; });
+      saveUI(); renderAll();
+      if (UI.open[d.cid] && sideMode()){ const el = document.getElementById('dock-' + d.cid); if (el) $('#dock').scrollTop = el.offsetTop - $('#dock .dnav').offsetHeight; }
+      break;
+    case 'expandAll': { const all = S.characters.every(x => UI.open[x.id]);
+      S.characters.forEach(x => { UI.open[x.id] = !all; if (!all) DEFAULT_SHUT.forEach(k => { if (UI.collapsed[x.id + ':' + k] === undefined) UI.collapsed[x.id + ':' + k] = true; }); });
+      saveUI(); renderAll(); break; }
+    case 'sbmode': UI.sbMode = d.v; saveUI(); renderAll(); break;
+    case 'dockclose': S.characters.forEach(x => UI.open[x.id] = false); saveUI(); renderAll(); break;
+    case 'dockjump': { const el = document.getElementById('dock-' + d.cid); if (el) $('#dock').scrollTo({top: el.offsetTop - $('#dock .dnav').offsetHeight, behavior:'smooth'}); break; }
+    case 'sect': { const k = d.cid + ':' + d.k; UI.collapsed[k] = !UI.collapsed[k]; saveUI(); renderGrid(); break; }
+    case 'hp': {
+      const inp = document.querySelector(`[data-hpin="${d.cid}"]`); const n = parseInt(inp.value, 10);
+      if (!(n > 0)){ inp.focus(); return; }
+      mutate(() => { if (d.op === 'dmg') damage(c, n); else if (d.op === 'heal') heal(c, n); else c.hp.temp = Math.max(c.hp.temp, n); });
+      break; }
+    case 'death': mutate(() => { const k = d.k, i = +d.i; c.deathSaves[k] = c.deathSaves[k] > i ? i : i + 1;
+      if (c.deathSaves.successes >= 3) toast(`${esc(c.name)} is stable`);
+      if (c.deathSaves.failures >= 3) toast(`<b>${esc(c.name)} has died.</b> Undo if that was a misclick.`, true); }); break;
+    case 'cond': condModal(d.cid); break;
+    case 'condinfo': condInfoModal(d.cid, d.v); break;
+    case 'concinfo': concModal(d.cid); break;
+    case 'togcond': mutate(() => { const i = c.conditions.indexOf(d.v); i >= 0 ? c.conditions.splice(i,1) : c.conditions.push(d.v); }); break;
+    case 'rmcond': mutate(() => c.conditions = c.conditions.filter(x => x !== d.v)); break;
+    case 'exh': mutate(() => c.exhaustion = +d.v); break;
+    case 'dropconc': mutate(() => c.concentration = null); if (UI.modal && /Concentrating/.test($('#modal').textContent)) closeModal(); break;
+    case 'pip': mutate(() => togglePip(c, d.kind, d.ref, +d.i)); break;
+    case 'resn': mutate(() => { const r = resById(c, d.rid); r.used = Math.max(0, Math.min(r.max, r.used + +d.d)); }); break;
+    case 'featinfo': featModal(d.cid, d.fid); break;
+    case 'resinfo': resModal(d.cid, d.rid); break;
+    case 'iactinfo': iactModal(d.cid, d.iid, d.aid); break;
+    case 'iactuse': { const it = c.inventory.find(x => x.id === d.iid), a = it.actions.find(x => x.id === d.aid), r = resById(c, a.res);
+      if (r.max != null && r.max - r.used <= 0){ toast('No charges left', true); break; }
+      const logIt = $('#featLog') && $('#featLog').checked; closeModal();
+      mutate(() => { if (r.max != null) r.used++; if (logIt) logEntry([c.id], `${c.name} uses ${it.name}: ${a.name}.`); });
+      toast(`${esc(c.name)}: ${esc(a.name)}${r.max != null ? ` · ${r.max - r.used} charge${r.max - r.used === 1 ? '' : 's'} left` : ''}`); break; }
+    case 'editfeat': editFeature(d.cid, d.fid); break;
+    case 'addfeat': editFeature(d.cid, null, d.v); break;
+    case 'editres': editResource(d.cid, d.rid); break;
+    case 'addres': editResource(d.cid, null); break;
+    case 'editatk': editAttack(d.cid, +d.i); break;
+    case 'addatk': editAttack(d.cid, null); break;
+    case 'editspell': editSpell(d.cid, d.sid); break;
+    case 'addspell': editSpell(d.cid, null); break;
+    case 'edititem': editItem(d.cid, d.iid); break;
+    case 'additemfull': editItem(d.cid, null); break;
+    case 'editiact': editItemAction(d.cid, d.iid, d.aid); break;
+    case 'addiact': editItemAction(d.cid, d.iid, null); break;
+    case 'formsave': { const v = readForm(); const nameField = FORM.fields.find(f => f.k === 'name');
+      if (nameField && !v.name){ document.getElementById('ff_name').focus(); toast('Give it a name first'); break; }
+      const fn = FORM.onSave; closeModal(); mutate(() => fn(v)); toast('Saved'); break; }
+    case 'formdel': { const fn = FORM.onDelete; closeModal(); mutate(fn); toast('Deleted (Undo to restore)'); break; }
+    case 'iactdel': closeModal(); mutate(() => { const it = c.inventory.find(x => x.id === d.iid); it.actions = it.actions.filter(x => x.id !== d.aid); }); toast('Action removed (Undo to restore)'); break;
+    case 'atkinfo': atkModal(d.cid, +d.i); break;
+    case 'usefeat': { const f = c.features.find(x => x.id === d.fid); const logIt = $('#featLog') && $('#featLog').checked;
+      snap(); if (useFeature(c, f, logIt)){ closeModal(); save(); renderAll(); } else undoStack.pop(); break; }
+    case 'spellview': UI.spellView[d.cid] = d.v; saveUI(); renderGrid(); break;
+    case 'invview': UI.invView[d.cid] = d.v; saveUI(); renderGrid(); break;
+    case 'prep': mutate(() => { c.spells.find(x => x.id === d.sid).prepared = t.checked; }); break;
+    case 'spellinfo': spellModal(d.cid, d.sid); break;
+    case 'iteminfo': itemModal(d.cid, d.iid); break;
+    case 'cast': castModal(d.cid, d.sid); break;
+    case 'docast': {
+      const s = c.spells.find(x => x.id === d.sid); const logIt = $('#castLog') && $('#castLog').checked;
+      let how = '';
+      mutate(() => {
+        if (d.how === 'slot'){ const sl = c.spellSlots.find(x => x.level === +d.lvl); sl.used++; how = `${ORD(sl.level)}-level slot`; }
+        if (d.how === 'pact'){ c.pactSlots.used++; how = 'pact slot'; }
+        if (d.how === 'res'){ const r = resById(c, d.rid); if (r.max != null) r.used++; how = r.name; }
+        if (s.concentration){ if (c.concentration && c.concentration !== s.name) toast(`${esc(c.name)} drops ${esc(c.concentration)}`); c.concentration = s.name; }
+        if (logIt) logEntry([c.id], `${c.name} casts ${s.name}${how ? ` (${how})` : ''}.`);
+      });
+      closeModal(); toast(`${esc(c.name)} casts <b>${esc(s.name)}</b>${how ? ` · ${esc(how)}` : ''}`);
+      break; }
+    case 'qty': mutate(() => { const i = c.inventory.find(x => x.id === d.iid); i.qty = Math.max(0, i.qty + +d.d); }); break;
+    case 'additem': { const ni = document.querySelector(`[data-newitem="${d.cid}"]`), nq = document.querySelector(`[data-newqty="${d.cid}"]`);
+      const n = ni.value.trim(), q = Math.max(1, parseInt(nq.value, 10) || 1); if (!n){ ni.focus(); return; }
+      mutate(() => { const ex = c.inventory.find(x => x.name.toLowerCase() === n.toLowerCase());
+        if (ex) ex.qty += q; else c.inventory.push({id: slug(n) + '-' + uid().slice(0,4), name: n, qty: q, weight: null, attuned: false, magic: /potion|scroll|\+\d|wand|ring of|cloak of|boots of/i.test(n), consumable: /potion|scroll|ration|arrow|bolt|oil|torch/i.test(n), open5eKey: null, notes: ''}); });
+      break; }
+    case 'delitem': mutate(() => c.inventory = c.inventory.filter(x => x.id !== d.iid)); closeModal(); toast('Item removed (Undo to restore)'); break;
+    case 'itemflag': { const v = t.checked; snap(); c.inventory.find(x => x.id === d.iid)[d.k] = v; save(); renderGrid(); break; }
+    case 'purse': purseModal(); break;
+    case 'coin': { const n = parseInt($('#coinAmt').value, 10), k = $('#coinType').value, note = $('#coinNote').value.trim();
+      if (!(n > 0)) return;
+      if (+d.d < 0 && S.purse[k] < n){ toast(`Only ${S.purse[k]} ${k} in the purse`, true); return; }
+      mutate(() => { S.purse[k] += n * +d.d; if (note) logEntry([], `${+d.d > 0 ? 'Gained' : 'Spent'} ${n} ${k}: ${note}`); }); break; }
+    case 'checks': checksModal(); break;
+    case 'journal': journalModal(); break;
+    case 'jtab': UI.journalTab = d.v; saveUI(); UI.modal(); break;
+    case 'jtag': { const i = UI.tags.indexOf(d.cid); i >= 0 ? UI.tags.splice(i,1) : UI.tags.push(d.cid); const txt = $('#jtext').value; UI.round = $('#jround').value; UI.modal(); $('#jtext').value = txt; $('#jtext').focus(); break; }
+    case 'jadd': addJournal(); break;
+    case 'jstar': mutate(() => { const en = S.log.find(x => x.id === d.eid); en.star = !en.star; }); break;
+    case 'jdel': mutate(() => S.log = S.log.filter(x => x.id !== d.eid)); toast('Entry deleted (Undo to restore)'); break;
+    case 'newsession': mutate(() => { S.session++; UI.round = ''; }); toast(`Session ${S.session} started`); break;
+    case 'exportmd': download(`party-log-session-${S.session}.md`, markdownLog(), 'text/markdown'); break;
+    case 'copymd': copyText(markdownLog(), 'Session log'); break;
+    case 'shortRest': shortRestModal(); break;
+    case 'spendhd': {
+      const inp = document.querySelector(`[data-hdroll="${d.cid}|${d.die}"]`); const roll = parseInt(inp.value, 10);
+      if (!(roll > 0)){ inp.focus(); toast('Type the hit die roll first'); return; }
+      const amt = Math.max(0, roll + c.abilities.con.mod);
+      mutate(() => { c.hitDice.find(x => x.die === d.die).used++; heal(c, amt); });
+      toast(`${esc(c.name)} heals ${amt}`); break; }
+    case 'doShort': closeModal(); mutate(() => S.characters.forEach(shortRestChar)); toast('Short rest finished'); break;
+    case 'longRest': longRestModal(); break;
+    case 'doLong': closeModal(); mutate(() => S.characters.forEach(longRestChar)); toast('Long rest finished: everyone refreshed'); break;
+    case 'ruleset': mutate(() => S.ruleset = d.v); break;
+    case 'undo': undo(); break;
+    case 'menu': dataModal(); break;
+    case 'importUpdate': jsonMode = 'merge'; $('#fileJson').click(); break;
+    case 'restoreJson': jsonMode = 'restore'; $('#fileJson').click(); break;
+    case 'exportJson': flushSave(); download(`${slug(S.name || 'campaign')}-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify({campaign: S, portraits: P}, null, 1)); break;
+    case 'copyJson': flushSave(); copyText(JSON.stringify({campaign: S, portraits: P}), 'Campaign'); break;
+    /* --- campaigns --- */
+    case 'home': goHome(); break;
+    case 'campopen': openCampaign(d.id); break;
+    case 'newcamp': newCampModal(); break;
+    case 'newcampfile': UI._newName = ($('#ncName') && $('#ncName').value.trim()) || ''; jsonMode = 'newcamp'; $('#fileJson').click(); break;
+    case 'docreatecamp': {
+      const name = ($('#ncName') && $('#ncName').value.trim()) || 'New campaign';
+      const st = emptyState(name), img = {};
+      document.querySelectorAll('[data-pick]:checked').forEach(el => { const o = UI._others[+el.dataset.pick]; const x = freshCopy(o.c); x.id = uniqueId(st, x.id);
+        st.characters.push(x); const pimg = lsGet(kImg(o.camp.id), {})[o.c.id]; if (pimg) img[x.id] = pimg; });
+      if (VIEW === 'party') flushSave();
+      openCampaign(createCampaign(st, img)); toast(`Created ${esc(name)}`); break; }
+    case 'camprename': campRenameModal(d.id); break;
+    case 'docamprename': { const e = campById(d.id), nm = $('#pname').value.trim() || e.name; e.name = nm;
+      const st = lsGet(kState(d.id), null); if (st){ st.name = nm; lsSet(kState(d.id), st); } if (S && IDX.current === d.id) S.name = nm;
+      saveIndex(); closeModal(); renderAll(); break; }
+    case 'campdup': { const e = campById(d.id); const st = lsGet(kState(d.id), null); if (!st) break; st.name = e.name + ' (copy)';
+      createCampaign(st, lsGet(kImg(d.id), {})); toast('Duplicated'); renderAll(); break; }
+    case 'campexport': { const e = campById(d.id); download(`${slug(e.name)}-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify({campaign: lsGet(kState(d.id), null), portraits: lsGet(kImg(d.id), {})}, null, 1)); break; }
+    case 'camparch': { const e = campById(d.id); e.archived = !e.archived; saveIndex(); renderAll(); break; }
+    case 'campdel': { const e = campById(d.id); e.deleted = true; if (IDX.current === d.id) IDX.current = null; saveIndex(); renderAll(); toast(`${esc(e.name)} moved to Recently deleted`); break; }
+    case 'camprestore': { const e = campById(d.id); e.deleted = false; saveIndex(); renderAll(); break; }
+    case 'camppurge': { const id = d.id; openModal(() => `${mhead('Delete forever?')}<div class="mbody">This permanently removes <b>${esc(campById(id).name)}</b>, its journal and portraits from this browser. Export it first if you might want it back.</div>
+        <div class="mfoot"><button data-act="mclose">Cancel</button><button class="b-dmg" data-act="dopurge" data-id="${id}">Delete forever</button></div>`); break; }
+    case 'dopurge': { try { localStorage.removeItem(kState(d.id)); localStorage.removeItem(kImg(d.id)); localStorage.removeItem(kUI(d.id)); } catch(err){}
+      IDX.list = IDX.list.filter(x => x.id !== d.id); saveIndex(); closeModal(); renderAll(); break; }
+    case 'homedata': homeDataModal(); break;
+    case 'exportall': download(`party-manager-everything-${new Date().toISOString().slice(0,10)}.json`,
+      JSON.stringify({everything: IDX.list.filter(e => !e.deleted).map(e => ({campaign: lsGet(kState(e.id), null), portraits: lsGet(kImg(e.id), {})}))}, null, 1)); break;
+    case 'importcamp': jsonMode = 'importcamp'; $('#fileJson').click(); break;
+    /* --- characters --- */
+    case 'addchar': addCharModal(); break;
+    case 'newchar': charForm(null); break;
+    case 'importchar': jsonMode = 'merge'; $('#fileJson').click(); break;
+    case 'charmenu': charMenuModal(d.cid); break;
+    case 'editcore': charForm(d.cid); break;
+    case 'updatechar': UI._updateTarget = d.cid; jsonMode = 'update'; $('#fileJson').click(); break;
+    case 'savechar': {
+      const v = readCharForm(d.cid || null); if (!v) break;
+      const hpMax = v.hpMax; delete v.hpMax; closeModal();
+      if (d.cid){
+        mutate(() => { const c2 = charById(d.cid);
+          if (hpMax && hpMax !== c2.hp.max){ const diff = hpMax - c2.hp.max; c2.hp.max = hpMax; c2.hp.current = Math.max(0, Math.min(hpMax, c2.hp.current + Math.max(0, diff))); }
+          Object.assign(c2, v); c2.coreEdited = true; });
+        toast('Saved');
+      } else {
+        let nid;
+        mutate(() => { const c2 = normaliseChar(Object.assign({schema:'mnz-party/1', id: uniqueId(S, slug(v.name)), xp:0, hp:{max: hpMax || 10},
+          attacks:[], resources:[], spells:[], features:[], inventory:[], notes:{}, custom:true}, v)); nid = c2.id; S.characters.push(c2); UI.open[c2.id] = true; });
+        saveUI(); renderAll();
+        toast(`${esc(v.name)} added. Use the stat block's + links to add attacks, features, spells and kit.`);
+      }
+      break; }
+    case 'docopyin': { const picks = [...document.querySelectorAll('[data-pick]:checked')].map(el => UI._others[+el.dataset.pick]);
+      if (!picks.length){ toast('Tick at least one character'); break; } closeModal();
+      mutate(() => picks.forEach(o => { const x = freshCopy(o.c); x.id = uniqueId(S, x.id); S.characters.push(x); const pimg = lsGet(kImg(o.camp.id), {})[o.c.id]; if (pimg) P[x.id] = pimg; }));
+      savePortraits(); toast(`Copied ${picks.length} character${picks.length > 1 ? 's' : ''}`); break; }
+    case 'copyout': { const tid = $('#copyTo').value, st = lsGet(kState(tid), null); if (!st) break;
+      flushSave(); const dupName = st.characters.some(o => o.name === c.name);
+      const x = freshCopy(c); x.id = uniqueId(st, x.id); st.characters.push(x); lsSet(kState(tid), st);
+      if (dupName) toast(`${esc(campById(tid).name)} already had a ${esc(c.name)}: added a second copy (remove one from that party if unwanted)`, true);
+      if (P[c.id]){ const img = lsGet(kImg(tid), {}); img[x.id] = P[c.id]; lsSet(kImg(tid), img); }
+      const e = campById(tid); e.updated = Date.now(); saveIndex(); closeModal(); toast(`Copied ${esc(c.name)} to ${esc(e.name)}`); break; }
+    case 'removechar': closeModal(); mutate(() => S.characters = S.characters.filter(x => x.id !== d.cid)); toast(`${esc(c.name)} removed (Undo to restore)`); break;
+
+    case 'applyMerge': applyMerge(); break;
+    case 'rename': renameModal(); break;
+    case 'dorename': mutate(() => S.name = $('#pname').value.trim() || S.name); flushSave(); closeModal(); break;
+    case 'mclose': closeModal(); break;
+  }
+});
+function addJournal(){
+  const txt = $('#jtext').value.trim(); if (!txt){ $('#jtext').focus(); return; }
+  UI.round = $('#jround').value;
+  const star = $('#jstar').checked;
+  mutate(() => { logEntry(UI.tags.slice(), txt); S.log[S.log.length-1].star = star; });
+  UI.tags = []; UI.modal(); $('#jtext').focus();
+}
+$('#scrim').addEventListener('click', e => { if (e.target.id === 'scrim') closeModal(); });
+document.addEventListener('focusin', e => { if (e.target.dataset && e.target.dataset.note) snap(); });
+document.addEventListener('input', e => {
+  const t = e.target, d = t.dataset; if (!d || !d.note) return;
+  const c = d.cid ? charById(d.cid) : null;
+  if (d.note === 'char') c.myNotes = t.value;
+  if (d.note === 'bio'){ c.notes = c.notes || {}; c.notes[d.k] = t.value; }
+  if (d.note === 'shared') S.sharedNotes = t.value;
+  if (d.note === 'item') c.inventory.find(x => x.id === d.iid).notes = t.value;
+  save();
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.resmax){ const v = parseInt(t.value, 10); if (v > 0) mutate(() => { const r = resById(charById(t.dataset.cid), t.dataset.resmax); r.max = v; r.used = 0; }); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('#scrim').classList.contains('open')) closeModal();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && VIEW === 'party' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){ e.preventDefault(); undo(); }
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.hpin) document.querySelector(`[data-act="hp"][data-op="dmg"][data-cid="${e.target.dataset.hpin}"]`).click();
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.newitem) document.querySelector(`[data-act="additem"][data-cid="${e.target.dataset.newitem}"]`).click();
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && e.target.id === 'jtext'){ e.preventDefault(); addJournal(); }
+});
+
+window.addEventListener('resize', () => { const s = sideMode(); if (s !== lastSide){ lastSide = s; renderAll(); } else document.documentElement.style.setProperty('--toph', $('.top').offsetHeight + 'px'); });
+
+/* boot: reopen the last campaign, or show the campaigns page */
+bootStorage();
+if (IDX.current && campById(IDX.current) && !campById(IDX.current).deleted) openCampaign(IDX.current); else { VIEW = 'home'; renderAll(); }
+lastSide = sideMode();
+</script>
+</body>
+</html>

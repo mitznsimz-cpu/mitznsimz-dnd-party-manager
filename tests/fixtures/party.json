@@ -1,0 +1,5119 @@
+{
+ "schema": "mnz-party/1",
+ "name": "Test Party",
+ "campaign": "",
+ "ruleset": "2014",
+ "characters": [
+  {
+   "schema": "mnz-party/1",
+   "id": "brand-ashcroft",
+   "name": "Brand Ashcroft",
+   "classes": [
+    {
+     "name": "Fighter",
+     "level": 6,
+     "subclass": "Eldritch Knight"
+    },
+    {
+     "name": "Warlock",
+     "level": 1,
+     "subclass": "The Fiend"
+    }
+   ],
+   "level": 7,
+   "species": "Variant Tiefling",
+   "background": "Haunted One",
+   "xp": 23000,
+   "alignment": "Chaotic Neutral",
+   "size": "Medium",
+   "abilities": {
+    "str": {
+     "score": 18,
+     "mod": 4,
+     "save": 7,
+     "saveProf": true
+    },
+    "dex": {
+     "score": 10,
+     "mod": 0,
+     "save": 0,
+     "saveProf": false
+    },
+    "con": {
+     "score": 16,
+     "mod": 3,
+     "save": 6,
+     "saveProf": true
+    },
+    "int": {
+     "score": 10,
+     "mod": 0,
+     "save": 0,
+     "saveProf": false
+    },
+    "wis": {
+     "score": 7,
+     "mod": -2,
+     "save": -2,
+     "saveProf": false
+    },
+    "cha": {
+     "score": 16,
+     "mod": 3,
+     "save": 3,
+     "saveProf": false
+    }
+   },
+   "profBonus": 3,
+   "ac": 18,
+   "initiative": 0,
+   "speed": {
+    "walk": 30
+   },
+   "hp": {
+    "max": 89,
+    "current": 89,
+    "temp": 0
+   },
+   "hitDice": [
+    {
+     "die": "d10",
+     "max": 6,
+     "used": 0
+    },
+    {
+     "die": "d8",
+     "max": 1,
+     "used": 0
+    }
+   ],
+   "skills": {
+    "acrobatics": {
+     "mod": 0,
+     "ability": "dex",
+     "prof": "none"
+    },
+    "animalHandling": {
+     "mod": -2,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "arcana": {
+     "mod": 3,
+     "ability": "int",
+     "prof": "prof"
+    },
+    "athletics": {
+     "mod": 7,
+     "ability": "str",
+     "prof": "prof"
+    },
+    "deception": {
+     "mod": 3,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "history": {
+     "mod": 0,
+     "ability": "int",
+     "prof": "none"
+    },
+    "insight": {
+     "mod": -2,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "intimidation": {
+     "mod": 6,
+     "ability": "cha",
+     "prof": "prof"
+    },
+    "investigation": {
+     "mod": 3,
+     "ability": "int",
+     "prof": "prof"
+    },
+    "medicine": {
+     "mod": -2,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "nature": {
+     "mod": 0,
+     "ability": "int",
+     "prof": "none"
+    },
+    "perception": {
+     "mod": -2,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "performance": {
+     "mod": 3,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "persuasion": {
+     "mod": 3,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "religion": {
+     "mod": 0,
+     "ability": "int",
+     "prof": "none"
+    },
+    "sleightOfHand": {
+     "mod": 0,
+     "ability": "dex",
+     "prof": "none"
+    },
+    "stealth": {
+     "mod": 0,
+     "ability": "dex",
+     "prof": "none"
+    },
+    "survival": {
+     "mod": -2,
+     "ability": "wis",
+     "prof": "none"
+    }
+   },
+   "passive": {
+    "perception": 8,
+    "insight": 8,
+    "investigation": 13
+   },
+   "senses": [
+    "Darkvision 60 ft."
+   ],
+   "defenses": {
+    "resistances": [
+     "Fire",
+     "Bludgeoning, Piercing and Slashing from nonmagical attacks"
+    ],
+    "immunities": [
+     "Fire"
+    ],
+    "saveNotes": []
+   },
+   "proficiencies": {
+    "armor": "Heavy, Light, Medium, Shields",
+    "weapons": "Martial, Simple",
+    "tools": "Smith's, Carpenter's, Mason's (carried)",
+    "languages": "Abyssal, Common, Infernal"
+   },
+   "attacks": [
+    {
+     "name": "Bel's Vengence",
+     "hit": "+8",
+     "damage": "1d10+5 slashing",
+     "notes": "+1d8 slashing, +1d6 fire, 1 charge. Heavy, Reach, Two-Handed, Graze. GWF rerolls 1-2"
+    },
+    {
+     "name": "Polearm butt (bonus action)",
+     "hit": "+8",
+     "damage": "1d4+5 bludgeoning",
+     "notes": "Polearm Master"
+    },
+    {
+     "name": "Eldritch Blast",
+     "hit": "+6",
+     "damage": "1d10 force",
+     "notes": "2 beams"
+    },
+    {
+     "name": "Chill Touch",
+     "hit": "+6",
+     "damage": "2d8 necrotic",
+     "notes": "No healing until your next turn"
+    },
+    {
+     "name": "Fire Bolt",
+     "hit": "+3",
+     "damage": "2d10 fire",
+     "notes": ""
+    },
+    {
+     "name": "Ray of Frost",
+     "hit": "+3",
+     "damage": "2d8 cold",
+     "notes": "-10 ft speed"
+    },
+    {
+     "name": "Unarmed Strike",
+     "hit": "+7",
+     "damage": "5 bludgeoning",
+     "notes": ""
+    }
+   ],
+   "resources": [
+    {
+     "id": "second-wind",
+     "name": "Second Wind",
+     "max": 1,
+     "used": 0,
+     "reset": "short",
+     "die": null,
+     "notes": "Bonus action: regain 1d10+6 HP"
+    },
+    {
+     "id": "action-surge",
+     "name": "Action Surge",
+     "max": 1,
+     "used": 0,
+     "reset": "short",
+     "die": null,
+     "notes": "One additional action"
+    },
+    {
+     "id": "charm-person",
+     "name": "Charm Person (Devil's Tongue)",
+     "max": 1,
+     "used": 0,
+     "reset": "long",
+     "die": null,
+     "notes": "2nd-level, WIS DC 14"
+    },
+    {
+     "id": "enthrall",
+     "name": "Enthrall (Devil's Tongue)",
+     "max": 1,
+     "used": 0,
+     "reset": "long",
+     "die": null,
+     "notes": "WIS DC 14"
+    },
+    {
+     "id": "bels-vengence",
+     "name": "Bel's Vengence charges",
+     "max": null,
+     "used": 0,
+     "reset": "dawn",
+     "die": null,
+     "notes": "Max not on sheet. Wall of Fire uses a charge"
+    }
+   ],
+   "spellcasting": [
+    {
+     "class": "Fighter (Eldritch Knight)",
+     "ability": "int",
+     "dc": 11,
+     "attack": 3
+    },
+    {
+     "class": "Warlock",
+     "ability": "cha",
+     "dc": 14,
+     "attack": 6
+    }
+   ],
+   "spellSlots": [
+    {
+     "level": 1,
+     "max": 3,
+     "used": 0
+    }
+   ],
+   "pactSlots": {
+    "level": 1,
+    "max": 1,
+    "used": 0,
+    "reset": "short"
+   },
+   "spells": [
+    {
+     "name": "Fire Bolt",
+     "level": 0,
+     "source": "Fighter",
+     "alwaysPrepared": false,
+     "saveAtk": "+3",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 242",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Ray of Frost",
+     "level": 0,
+     "source": "Fighter",
+     "alwaysPrepared": false,
+     "saveAtk": "+3",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 271",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Eldritch Blast",
+     "level": 0,
+     "source": "Warlock",
+     "alwaysPrepared": false,
+     "saveAtk": "+6",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 237",
+     "notes": "Count: 2, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Chill Touch",
+     "level": 0,
+     "source": "Warlock",
+     "alwaysPrepared": false,
+     "saveAtk": "+6",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 221",
+     "notes": "D: 1Rnd, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Vicious Mockery",
+     "level": 0,
+     "source": "Variant Tiefling",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 14",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 285",
+     "notes": "V",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Burning Hands",
+     "level": 1,
+     "source": "Fighter",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 11",
+     "time": "1A",
+     "range": "Self/15 ft. Cone",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 220",
+     "notes": "15 ft. Cone, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Thunderwave",
+     "level": 1,
+     "source": "Fighter",
+     "alwaysPrepared": false,
+     "saveAtk": "CON 11",
+     "time": "1A",
+     "range": "Self/15 ft. Cube",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 282",
+     "notes": "15 ft. Cube, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Magic Missile",
+     "level": 1,
+     "source": "Fighter",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 257",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Color Spray",
+     "level": 1,
+     "source": "Fighter",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self/15 ft. Cone",
+     "components": "V,S,M",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 222",
+     "notes": "D: 1Rnd, 15 ft. Cone, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Hellish Rebuke",
+     "level": 1,
+     "source": "Warlock",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 14",
+     "time": "1R",
+     "range": "60 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 250",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Arms of Hadar",
+     "level": 1,
+     "source": "Warlock",
+     "alwaysPrepared": false,
+     "saveAtk": "STR 14",
+     "time": "1A",
+     "range": "Self/10 ft. Sphere",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 215",
+     "notes": "10 ft. Sphere, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Charm Person",
+     "level": 2,
+     "source": "Variant Tiefling",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 14",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 221",
+     "notes": "1/LR, Targets: +1, D: 1h, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Enthrall",
+     "level": 2,
+     "source": "Variant Tiefling",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 14",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S",
+     "duration": "1 minute",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 238",
+     "notes": "1/LR, D: 1m, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Wall of Fire",
+     "level": 4,
+     "source": "Bel's Vengence",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 15",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 285",
+     "notes": "1 Charge, D: 1m, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    }
+   ],
+   "features": [
+    {
+     "id": "extra-attack",
+     "name": "Extra Attack",
+     "src": "Fighter",
+     "act": "passive",
+     "text": "You can attack twice, instead of once, whenever you take the Attack action on your turn.",
+     "ref": "PHB 72"
+    },
+    {
+     "id": "action-surge",
+     "name": "Action Surge",
+     "src": "Fighter",
+     "act": "special",
+     "text": "On your turn, you can take one additional action. Once you use this feature, you must finish a short or long rest before you can use it again.",
+     "ref": "PHB 72",
+     "res": "action-surge"
+    },
+    {
+     "id": "second-wind",
+     "name": "Second Wind",
+     "src": "Fighter",
+     "act": "bonus",
+     "text": "On your turn, you can use a bonus action to regain hit points equal to 1d10 + 6 (your fighter level). Once used, you must finish a short or long rest before you can use it again.",
+     "ref": "PHB 72",
+     "res": "second-wind",
+     "effect": {
+      "type": "heal",
+      "die": "1d10",
+      "bonus": 6
+     }
+    },
+    {
+     "id": "gwf",
+     "name": "Great Weapon Fighting",
+     "src": "Fighter · Fighting Style",
+     "act": "passive",
+     "text": "When you roll a 1 or 2 on a damage die for an attack you make with a melee weapon that you are wielding with two hands, you can reroll the die and must use the new roll. The weapon must have the two-handed or versatile property.",
+     "ref": "PHB 72"
+    },
+    {
+     "id": "weapon-bond",
+     "name": "Weapon Bond",
+     "src": "Fighter · Eldritch Knight",
+     "act": "bonus",
+     "text": "Through a 1-hour ritual you bond with up to two weapons. You can't be disarmed of a bonded weapon unless you are incapacitated, and if it is on the same plane you can summon it to your hand as a bonus action.",
+     "ref": "PHB 75"
+    },
+    {
+     "id": "ek-spellcasting",
+     "name": "Spellcasting (Eldritch Knight)",
+     "src": "Fighter · Eldritch Knight",
+     "act": "passive",
+     "text": "You cast wizard spells using Intelligence. Spell save DC 11, spell attack +3. You regain expended slots on a long rest.",
+     "ref": "PHB 75"
+    },
+    {
+     "id": "pact-magic",
+     "name": "Pact Magic",
+     "src": "Warlock",
+     "act": "passive",
+     "text": "You cast warlock spells using Charisma. Spell save DC 14, spell attack +6. You can use an arcane focus. Your pact slot returns on a short or long rest.",
+     "ref": "PHB 107"
+    },
+    {
+     "id": "dark-ones-blessing",
+     "name": "Dark One's Blessing",
+     "src": "Warlock · The Fiend",
+     "act": "special",
+     "text": "When you reduce a hostile creature to 0 hit points, you gain temporary hit points equal to your Charisma modifier + your warlock level (4).",
+     "ref": "PHB 109",
+     "effect": {
+      "type": "temp",
+      "amount": 4
+     }
+    },
+    {
+     "id": "pam-bonus",
+     "name": "Polearm Master: Bonus Attack",
+     "src": "Feat",
+     "act": "bonus",
+     "text": "When you take the Attack action with only a glaive, halberd, quarterstaff or spear, you can use a bonus action to make a melee attack with the opposite end of the weapon. It uses the same ability modifier as the primary attack and deals 1d4 bludgeoning damage.",
+     "ref": "PHB 168"
+    },
+    {
+     "id": "pam-oa",
+     "name": "Polearm Master: Opportunity Attack",
+     "src": "Feat",
+     "act": "reaction",
+     "text": "While you are wielding a glaive, halberd, pike, quarterstaff or spear, other creatures provoke an opportunity attack from you when they enter your reach.",
+     "ref": "PHB 168"
+    },
+    {
+     "id": "devils-tongue",
+     "name": "Devil's Tongue",
+     "src": "Variant Tiefling",
+     "act": "passive",
+     "text": "You know the vicious mockery cantrip. You can cast charm person (as a 2nd-level spell) once per long rest, and enthrall once per long rest. Charisma is your spellcasting ability for these (DC 14).",
+     "ref": "SCAG"
+    },
+    {
+     "id": "hellish-resistance",
+     "name": "Hellish Resistance",
+     "src": "Variant Tiefling",
+     "act": "passive",
+     "text": "You have resistance to fire damage.",
+     "ref": "BR 43"
+    },
+    {
+     "id": "darkvision",
+     "name": "Darkvision",
+     "src": "Variant Tiefling",
+     "act": "passive",
+     "text": "You can see in dim light within 60 feet as if it were bright light, and in darkness as if it were dim light (shades of grey only).",
+     "ref": "BR 43"
+    }
+   ],
+   "inventory": [
+    {
+     "name": "Potion of Invulnerability",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Smith's Tools",
+     "qty": 1,
+     "weight": "8 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Bel's Vengence",
+     "qty": 1,
+     "weight": "6 lb.",
+     "attuned": true,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": "",
+     "actions": [
+      {
+       "id": "pam-butt",
+       "name": "Polearm Master butt end",
+       "act": "bonus",
+       "text": "After taking the Attack action with Bel's Vengence, make a bonus-action attack with the opposite end: +8 to hit, 1d4+5 bludgeoning."
+      },
+      {
+       "id": "wall-of-fire",
+       "name": "Wall of Fire",
+       "act": "action",
+       "res": "bels-vengence",
+       "text": "Spend 1 charge to cast Wall of Fire (4th level, DEX save DC 15, concentration up to 1 minute)."
+      },
+      {
+       "id": "bonus-damage",
+       "name": "Infernal edge",
+       "act": "special",
+       "text": "Sheet notes for this weapon: +1d8 slashing, +1d6 fire, 1 charge. Graze mastery: on a miss, deal damage equal to your Strength modifier. Edit this with the item's real wording."
+      }
+     ]
+    },
+    {
+     "name": "Infernal Armor +2",
+     "qty": 1,
+     "weight": "40 lb.",
+     "attuned": true,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Helm of Defense",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Backpack",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Clothes, Common",
+     "qty": 1,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Ornate Greatsword",
+     "qty": 1,
+     "weight": "6 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Book of Nine Hells",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Book of Smithing",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rations (1 day)",
+     "qty": 5,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rope, Hempen (50 feet)",
+     "qty": 1,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Torch",
+     "qty": 10,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Waterskin",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Carpenter's Tools",
+     "qty": 1,
+     "weight": "6 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Mason's Tools",
+     "qty": 1,
+     "weight": "8 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    }
+   ],
+   "notes": {
+    "personality": "",
+    "ideals": "",
+    "bonds": "",
+    "flaws": "",
+    "allies": "",
+    "organizations": "",
+    "faith": "",
+    "backstory": "",
+    "session": ""
+   },
+   "deathSaves": {
+    "successes": 0,
+    "failures": 0
+   },
+   "conditions": [],
+   "concentration": null,
+   "exhaustion": 0,
+   "heroicInspiration": false,
+   "coins": {
+    "cp": 300,
+    "sp": 291,
+    "ep": 0,
+    "gp": 632,
+    "pp": 20
+   },
+   "attacksPerAction": 2,
+   "bonusAttack": "Polearm Master butt (1d4)"
+  },
+  {
+   "schema": "mnz-party/1",
+   "id": "lira-swiftwind",
+   "name": "Lira Swiftwind",
+   "classes": [
+    {
+     "name": "Rogue",
+     "level": 7,
+     "subclass": "Arcane Trickster"
+    }
+   ],
+   "level": 7,
+   "species": "High Elf",
+   "background": "Urchin",
+   "xp": 23000,
+   "alignment": "Chaotic Good",
+   "size": "Medium",
+   "abilities": {
+    "str": {
+     "score": 13,
+     "mod": 1,
+     "save": 2,
+     "saveProf": false
+    },
+    "dex": {
+     "score": 18,
+     "mod": 4,
+     "save": 8,
+     "saveProf": true
+    },
+    "con": {
+     "score": 14,
+     "mod": 2,
+     "save": 3,
+     "saveProf": false
+    },
+    "int": {
+     "score": 15,
+     "mod": 2,
+     "save": 6,
+     "saveProf": true
+    },
+    "wis": {
+     "score": 10,
+     "mod": 0,
+     "save": 1,
+     "saveProf": false
+    },
+    "cha": {
+     "score": 10,
+     "mod": 0,
+     "save": 1,
+     "saveProf": false
+    }
+   },
+   "profBonus": 3,
+   "ac": 17,
+   "initiative": 4,
+   "speed": {
+    "walk": 30
+   },
+   "hp": {
+    "max": 70,
+    "current": 70,
+    "temp": 0
+   },
+   "hitDice": [
+    {
+     "die": "d8",
+     "max": 7,
+     "used": 0
+    }
+   ],
+   "skills": {
+    "acrobatics": {
+     "mod": 7,
+     "ability": "dex",
+     "prof": "prof"
+    },
+    "animalHandling": {
+     "mod": 0,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "arcana": {
+     "mod": 2,
+     "ability": "int",
+     "prof": "none"
+    },
+    "athletics": {
+     "mod": 7,
+     "ability": "str",
+     "prof": "expert"
+    },
+    "deception": {
+     "mod": 3,
+     "ability": "cha",
+     "prof": "prof"
+    },
+    "history": {
+     "mod": 2,
+     "ability": "int",
+     "prof": "none"
+    },
+    "insight": {
+     "mod": 0,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "intimidation": {
+     "mod": 0,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "investigation": {
+     "mod": 2,
+     "ability": "int",
+     "prof": "none"
+    },
+    "medicine": {
+     "mod": 0,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "nature": {
+     "mod": 2,
+     "ability": "int",
+     "prof": "none"
+    },
+    "perception": {
+     "mod": 6,
+     "ability": "wis",
+     "prof": "expert"
+    },
+    "performance": {
+     "mod": 0,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "persuasion": {
+     "mod": 3,
+     "ability": "cha",
+     "prof": "prof"
+    },
+    "religion": {
+     "mod": 2,
+     "ability": "int",
+     "prof": "none"
+    },
+    "sleightOfHand": {
+     "mod": 7,
+     "ability": "dex",
+     "prof": "prof"
+    },
+    "stealth": {
+     "mod": 10,
+     "ability": "dex",
+     "prof": "expert"
+    },
+    "survival": {
+     "mod": 0,
+     "ability": "wis",
+     "prof": "none"
+    }
+   },
+   "passive": {
+    "perception": 16,
+    "insight": 10,
+    "investigation": 12
+   },
+   "senses": [
+    "Darkvision 60 ft."
+   ],
+   "defenses": {
+    "resistances": [],
+    "immunities": [
+     "Magical sleep"
+    ],
+    "saveNotes": [
+     "+1 to saves (Ring of Protection, included)",
+     "Advantage vs charmed"
+    ]
+   },
+   "proficiencies": {
+    "armor": "Light",
+    "weapons": "Simple, hand crossbow, longbow, longsword, rapier, shortsword",
+    "tools": "Disguise kit, Poisoner's kit, Thieves' tools",
+    "languages": "Common, Elvish, Giant, Thieves' Cant"
+   },
+   "attacks": [
+    {
+     "name": "Rapier of Warning",
+     "hit": "+7",
+     "damage": "1d8+4 piercing",
+     "notes": "Finesse, Vex"
+    },
+    {
+     "name": "Crossbow, Hand",
+     "hit": "+7",
+     "damage": "1d6+4 piercing",
+     "notes": "30/120. Bonus-action shot (Crossbow Expert)"
+    },
+    {
+     "name": "Longbow",
+     "hit": "+7",
+     "damage": "1d8+4 piercing",
+     "notes": "150/600"
+    },
+    {
+     "name": "Dagger",
+     "hit": "+7",
+     "damage": "1d4+4 piercing",
+     "notes": "Thrown 20/60"
+    },
+    {
+     "name": "Fire Bolt",
+     "hit": "+5",
+     "damage": "2d10 fire",
+     "notes": ""
+    },
+    {
+     "name": "Chill Touch",
+     "hit": "+5",
+     "damage": "2d8 necrotic",
+     "notes": ""
+    }
+   ],
+   "resources": [
+    {
+     "id": "sneak-attack",
+     "name": "Sneak Attack (once per turn)",
+     "max": 1,
+     "used": 0,
+     "reset": "turn",
+     "die": "4d6",
+     "notes": "+4d6"
+    }
+   ],
+   "spellcasting": [
+    {
+     "class": "Rogue (Arcane Trickster)",
+     "ability": "int",
+     "dc": 13,
+     "attack": 5
+    }
+   ],
+   "spellSlots": [
+    {
+     "level": 1,
+     "max": 4,
+     "used": 0
+    },
+    {
+     "level": 2,
+     "max": 2,
+     "used": 0
+    }
+   ],
+   "pactSlots": null,
+   "spells": [
+    {
+     "name": "Acid Splash",
+     "level": 0,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 13",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 211",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Chill Touch",
+     "level": 0,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "+5",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 221",
+     "notes": "D: 1Rnd, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Fire Bolt",
+     "level": 0,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "+5",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 242",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Mage Hand",
+     "level": 0,
+     "source": "Cantrip",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S",
+     "duration": "1 minute",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 256",
+     "notes": "D: 1m, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Witch Bolt",
+     "level": 1,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "+5",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 289",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Magic Missile",
+     "level": 1,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 257",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Chromatic Orb",
+     "level": 1,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "+5",
+     "time": "1A",
+     "range": "90 ft.",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 221",
+     "notes": "V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Color Spray",
+     "level": 1,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self/15 ft. Cone",
+     "components": "V,S,M",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 222",
+     "notes": "D: 1Rnd, 15 ft. Cone, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Scorching Ray",
+     "level": 2,
+     "source": "Rogue",
+     "alwaysPrepared": false,
+     "saveAtk": "+5",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 273",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    }
+   ],
+   "features": [
+    {
+     "id": "sneak-attack",
+     "name": "Sneak Attack (4d6)",
+     "src": "Rogue",
+     "act": "special",
+     "text": "Once per turn, you can deal an extra 4d6 damage to one creature you hit with an attack if you have advantage on the attack roll. The attack must use a finesse or ranged weapon. You don't need advantage if another enemy of the target is within 5 feet of it, that enemy isn't incapacitated, and you don't have disadvantage on the attack roll.",
+     "ref": "PHB 96",
+     "res": "sneak-attack"
+    },
+    {
+     "id": "cunning-action",
+     "name": "Cunning Action",
+     "src": "Rogue",
+     "act": "bonus",
+     "text": "You can take a bonus action on each of your turns to take the Dash, Disengage or Hide action.",
+     "ref": "PHB 96"
+    },
+    {
+     "id": "uncanny-dodge",
+     "name": "Uncanny Dodge",
+     "src": "Rogue",
+     "act": "reaction",
+     "text": "When an attacker that you can see hits you with an attack, you can use your reaction to halve the attack's damage against you.",
+     "ref": "PHB 96"
+    },
+    {
+     "id": "evasion",
+     "name": "Evasion",
+     "src": "Rogue",
+     "act": "passive",
+     "text": "When you are subjected to an effect that allows a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw, and only half damage if you fail.",
+     "ref": "PHB 96"
+    },
+    {
+     "id": "expertise",
+     "name": "Expertise",
+     "src": "Rogue",
+     "act": "passive",
+     "text": "Your proficiency bonus is doubled for ability checks with your chosen proficiencies (Athletics, Perception, Stealth, and one more on the sheet).",
+     "ref": "PHB 96"
+    },
+    {
+     "id": "thieves-cant",
+     "name": "Thieves' Cant",
+     "src": "Rogue",
+     "act": "passive",
+     "text": "You know thieves' cant, a secret mix of dialect, jargon and code for hiding messages in seemingly normal conversation. It takes four times longer to convey such a message than to speak the idea plainly.",
+     "ref": "PHB 96"
+    },
+    {
+     "id": "at-spellcasting",
+     "name": "Spellcasting (Arcane Trickster)",
+     "src": "Rogue · Arcane Trickster",
+     "act": "passive",
+     "text": "You cast wizard spells using Intelligence. Spell save DC 13, spell attack +5.",
+     "ref": "PHB 98"
+    },
+    {
+     "id": "mage-hand-legerdemain",
+     "name": "Mage Hand Legerdemain",
+     "src": "Rogue · Arcane Trickster",
+     "act": "bonus",
+     "text": "When you cast mage hand, you can make the spectral hand invisible, and use it to stow or retrieve objects or use thieves' tools to pick locks and disarm traps at range. You can disguise this with a Sleight of Hand check, and control the hand with your Cunning Action bonus action.",
+     "ref": "PHB 98"
+    },
+    {
+     "id": "crossbow-expert",
+     "name": "Crossbow Expert",
+     "src": "Feat",
+     "act": "bonus",
+     "text": "You ignore the loading property of crossbows you are proficient with. Being within 5 feet of a hostile creature doesn't impose disadvantage on your ranged attack rolls. When you use the Attack action and attack with a one-handed weapon, you can use a bonus action to attack with a hand crossbow you are holding.",
+     "ref": "PHB 165"
+    },
+    {
+     "id": "fey-ancestry",
+     "name": "Fey Ancestry",
+     "src": "High Elf",
+     "act": "passive",
+     "text": "You have advantage on saving throws against being charmed, and magic can't put you to sleep.",
+     "ref": "BR 23"
+    },
+    {
+     "id": "trance",
+     "name": "Trance",
+     "src": "High Elf",
+     "act": "passive",
+     "text": "You don't need to sleep. Instead you meditate semiconsciously for 4 hours a day, gaining the same benefit a human does from 8 hours of sleep.",
+     "ref": "BR 23"
+    },
+    {
+     "id": "keen-senses",
+     "name": "Keen Senses",
+     "src": "High Elf",
+     "act": "passive",
+     "text": "You have proficiency in the Perception skill.",
+     "ref": "BR 23"
+    },
+    {
+     "id": "darkvision",
+     "name": "Darkvision",
+     "src": "High Elf",
+     "act": "passive",
+     "text": "You can see in dim light within 60 feet as if it were bright light, and in darkness as if it were dim light (shades of grey only).",
+     "ref": "BR 23"
+    }
+   ],
+   "inventory": [
+    {
+     "name": "Ring of Protection",
+     "qty": 1,
+     "weight": null,
+     "attuned": true,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Diamond",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rapier of Warning",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": true,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Gold Pendant w/5 Colourful Gems",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Lucky Picks",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Red Amanatia Mushrooms",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Studded Leather",
+     "qty": 1,
+     "weight": "13 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Ornate Dagger",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Crossbow, Hand",
+     "qty": 1,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Book of Poison Recipes",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Dagger",
+     "qty": 2,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Book of Plant Recognition",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Ball Bearings (bag of 1,000)",
+     "qty": 1000,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Longbow",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Bell",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Arrows",
+     "qty": 30,
+     "weight": "1.5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Candle",
+     "qty": 5,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Crossbow Bolts",
+     "qty": 100,
+     "weight": "7.5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Case, Map or Scroll",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Backpack",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Crowbar",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Clothes, Common",
+     "qty": 1,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Thieves' Tools",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Small Knife",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Arcane Focus",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Hammer",
+     "qty": 1,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Lantern, Hooded",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Oil (flask)",
+     "qty": 2,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Piton",
+     "qty": 10,
+     "weight": "2.5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rations (1 day)",
+     "qty": 5,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rope, Hempen (50 feet)",
+     "qty": 1,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Tinderbox",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Waterskin",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Herbalism Kit",
+     "qty": 2,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Poisoner's Kit",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "String",
+     "qty": 10,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    }
+   ],
+   "notes": {
+    "personality": "",
+    "ideals": "",
+    "bonds": "",
+    "flaws": "",
+    "allies": "",
+    "organizations": "",
+    "faith": "",
+    "backstory": "",
+    "session": ""
+   },
+   "deathSaves": {
+    "successes": 0,
+    "failures": 0
+   },
+   "conditions": [],
+   "concentration": null,
+   "exhaustion": 0,
+   "heroicInspiration": false,
+   "coins": {
+    "cp": 300,
+    "sp": 301,
+    "ep": 0,
+    "gp": 632,
+    "pp": 20
+   },
+   "attacksPerAction": 1,
+   "bonusAttack": "Hand crossbow (Crossbow Expert)"
+  },
+  {
+   "schema": "mnz-party/1",
+   "id": "tilly-merrowbuck",
+   "name": "Tilly Merrowbuck",
+   "classes": [
+    {
+     "name": "Bard",
+     "level": 7,
+     "subclass": "College of Valor"
+    }
+   ],
+   "level": 7,
+   "species": "Lightfoot Halfling",
+   "background": "Entertainer",
+   "xp": 23000,
+   "alignment": "Lawful Good",
+   "size": "Small",
+   "abilities": {
+    "str": {
+     "score": 13,
+     "mod": 1,
+     "save": 1,
+     "saveProf": false
+    },
+    "dex": {
+     "score": 16,
+     "mod": 3,
+     "save": 6,
+     "saveProf": true
+    },
+    "con": {
+     "score": 15,
+     "mod": 2,
+     "save": 2,
+     "saveProf": false
+    },
+    "int": {
+     "score": 10,
+     "mod": 0,
+     "save": 0,
+     "saveProf": false
+    },
+    "wis": {
+     "score": 12,
+     "mod": 1,
+     "save": 1,
+     "saveProf": false
+    },
+    "cha": {
+     "score": 19,
+     "mod": 4,
+     "save": 7,
+     "saveProf": true
+    }
+   },
+   "profBonus": 3,
+   "ac": 17,
+   "initiative": 4,
+   "speed": {
+    "walk": 25
+   },
+   "hp": {
+    "max": 70,
+    "current": 70,
+    "temp": 0
+   },
+   "hitDice": [
+    {
+     "die": "d8",
+     "max": 7,
+     "used": 0
+    }
+   ],
+   "skills": {
+    "acrobatics": {
+     "mod": 9,
+     "ability": "dex",
+     "prof": "expert"
+    },
+    "animalHandling": {
+     "mod": 2,
+     "ability": "wis",
+     "prof": "half"
+    },
+    "arcana": {
+     "mod": 3,
+     "ability": "int",
+     "prof": "prof"
+    },
+    "athletics": {
+     "mod": 2,
+     "ability": "str",
+     "prof": "half"
+    },
+    "deception": {
+     "mod": 5,
+     "ability": "cha",
+     "prof": "half"
+    },
+    "history": {
+     "mod": 3,
+     "ability": "int",
+     "prof": "prof"
+    },
+    "insight": {
+     "mod": 2,
+     "ability": "wis",
+     "prof": "half"
+    },
+    "intimidation": {
+     "mod": 5,
+     "ability": "cha",
+     "prof": "half"
+    },
+    "investigation": {
+     "mod": 1,
+     "ability": "int",
+     "prof": "half"
+    },
+    "medicine": {
+     "mod": 4,
+     "ability": "wis",
+     "prof": "prof"
+    },
+    "nature": {
+     "mod": 1,
+     "ability": "int",
+     "prof": "half"
+    },
+    "perception": {
+     "mod": 2,
+     "ability": "wis",
+     "prof": "half"
+    },
+    "performance": {
+     "mod": 10,
+     "ability": "cha",
+     "prof": "expert"
+    },
+    "persuasion": {
+     "mod": 5,
+     "ability": "cha",
+     "prof": "half"
+    },
+    "religion": {
+     "mod": 1,
+     "ability": "int",
+     "prof": "half"
+    },
+    "sleightOfHand": {
+     "mod": 4,
+     "ability": "dex",
+     "prof": "half"
+    },
+    "stealth": {
+     "mod": 4,
+     "ability": "dex",
+     "prof": "half"
+    },
+    "survival": {
+     "mod": 2,
+     "ability": "wis",
+     "prof": "half"
+    }
+   },
+   "passive": {
+    "perception": 12,
+    "insight": 12,
+    "investigation": 11
+   },
+   "senses": [],
+   "defenses": {
+    "resistances": [],
+    "immunities": [],
+    "saveNotes": [
+     "Advantage vs frightened",
+     "Lucky: reroll natural 1s"
+    ]
+   },
+   "proficiencies": {
+    "armor": "Light, Medium, Shields",
+    "weapons": "Martial, Simple",
+    "tools": "Disguise kit, Dulcimer, Fiddle, Hand drum, Lute",
+    "languages": "Common, Halfling"
+   },
+   "attacks": [
+    {
+     "name": "Fantastical Fiddle",
+     "hit": "+7",
+     "damage": "1d8+4 piercing",
+     "notes": "1 charge. Finesse, Vex"
+    },
+    {
+     "name": "Rapier",
+     "hit": "+6",
+     "damage": "1d8+3 piercing",
+     "notes": "Finesse, Vex"
+    },
+    {
+     "name": "Shortbow",
+     "hit": "+6",
+     "damage": "1d6+3 piercing",
+     "notes": "80/320"
+    },
+    {
+     "name": "Dagger",
+     "hit": "+6",
+     "damage": "1d4+3 piercing",
+     "notes": "Thrown 20/60"
+    },
+    {
+     "name": "Sling",
+     "hit": "+6",
+     "damage": "1d4+3 bludgeoning",
+     "notes": "30/120"
+    },
+    {
+     "name": "Unarmed Strike",
+     "hit": "+4",
+     "damage": "2 bludgeoning",
+     "notes": ""
+    }
+   ],
+   "resources": [
+    {
+     "id": "bardic-inspiration",
+     "name": "Bardic Inspiration",
+     "max": 4,
+     "used": 0,
+     "reset": "short",
+     "die": "d8",
+     "notes": "Bonus action, 60 ft, 1d8. Font of Inspiration"
+    },
+    {
+     "id": "fantastical-fiddle",
+     "name": "Fantastical Fiddle charges",
+     "max": null,
+     "used": 0,
+     "reset": "dawn",
+     "die": null,
+     "notes": "Max not on sheet"
+    }
+   ],
+   "spellcasting": [
+    {
+     "class": "Bard",
+     "ability": "cha",
+     "dc": 15,
+     "attack": 7
+    }
+   ],
+   "spellSlots": [
+    {
+     "level": 1,
+     "max": 4,
+     "used": 0
+    },
+    {
+     "level": 2,
+     "max": 3,
+     "used": 0
+    },
+    {
+     "level": 3,
+     "max": 3,
+     "used": 0
+    },
+    {
+     "level": 4,
+     "max": 1,
+     "used": 0
+    }
+   ],
+   "pactSlots": null,
+   "spells": [
+    {
+     "name": "Vicious Mockery",
+     "level": 0,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 285",
+     "notes": "V",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Blade Ward",
+     "level": 0,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self",
+     "components": "V,S",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 218",
+     "notes": "D: 1Rnd, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Dancing Lights",
+     "level": 0,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 230",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Cure Wounds",
+     "level": 1,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 230",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Healing Word",
+     "level": 1,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1BA",
+     "range": "60 ft.",
+     "components": "V",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 250",
+     "notes": "V",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Dissonant Whispers",
+     "level": 1,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 234",
+     "notes": "V",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Thunderwave",
+     "level": 1,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "CON 15",
+     "time": "1A",
+     "range": "Self/15 ft. Cube",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 282",
+     "notes": "15 ft. Cube, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Lesser Restoration",
+     "level": 2,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 255",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Heat Metal",
+     "level": 2,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 250",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Shatter",
+     "level": 2,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "CON 15",
+     "time": "1A",
+     "range": "60 ft./10 ft. Sphere",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 275",
+     "notes": "10 ft. Sphere, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Cloud of Daggers",
+     "level": 2,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "60 ft./5 ft. Cube",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 222",
+     "notes": "D: 1m, 5 ft. Cube, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "See Invisibility",
+     "level": 2,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self",
+     "components": "V,S,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 274",
+     "notes": "D: 1h, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Compulsion",
+     "level": 4,
+     "source": "Bard",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 224",
+     "notes": "D: 1m, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    }
+   ],
+   "features": [
+    {
+     "id": "bardic-inspiration",
+     "name": "Bardic Inspiration (d8)",
+     "src": "Bard",
+     "act": "bonus",
+     "text": "As a bonus action, choose one creature other than yourself within 60 feet who can hear you. It gains an inspiration die (d8). Within the next 10 minutes it can add the die to one ability check, attack roll or saving throw, after seeing the roll but before knowing the outcome. Font of Inspiration: you regain all uses on a short or long rest.",
+     "ref": "PHB 53",
+     "res": "bardic-inspiration"
+    },
+    {
+     "id": "combat-inspiration",
+     "name": "Combat Inspiration",
+     "src": "Bard · College of Valor",
+     "act": "special",
+     "text": "A creature that has one of your Bardic Inspiration dice can roll it and add it to a weapon damage roll it just made. Or, when an attack roll is made against it, it can use its reaction to roll the die and add it to its AC against that attack, after seeing the roll but before knowing whether it hits.",
+     "ref": "PHB 55"
+    },
+    {
+     "id": "extra-attack",
+     "name": "Extra Attack",
+     "src": "Bard · College of Valor",
+     "act": "passive",
+     "text": "You can attack twice, instead of once, whenever you take the Attack action on your turn.",
+     "ref": "PHB 55"
+    },
+    {
+     "id": "countercharm",
+     "name": "Countercharm",
+     "src": "Bard",
+     "act": "action",
+     "text": "As an action, you start a performance that lasts until the end of your next turn. During that time, you and any friendly creatures within 30 feet who can hear you have advantage on saving throws against being frightened or charmed.",
+     "ref": "PHB 54"
+    },
+    {
+     "id": "song-of-rest",
+     "name": "Song of Rest (d6)",
+     "src": "Bard",
+     "act": "passive",
+     "text": "If you or any friendly creatures who can hear your performance regain hit points at the end of a short rest by spending Hit Dice, each of those creatures regains an extra 1d6 hit points.",
+     "ref": "PHB 54"
+    },
+    {
+     "id": "jack-of-all-trades",
+     "name": "Jack of All Trades",
+     "src": "Bard",
+     "act": "passive",
+     "text": "You can add half your proficiency bonus (+1), rounded down, to any ability check you make that doesn't already include your proficiency bonus.",
+     "ref": "PHB 54"
+    },
+    {
+     "id": "bard-spellcasting",
+     "name": "Spellcasting",
+     "src": "Bard",
+     "act": "passive",
+     "text": "You cast bard spells using Charisma. Spell save DC 15, spell attack +7. You can cast known bard spells as rituals if they have the ritual tag, and use a musical instrument as a focus.",
+     "ref": "PHB 52"
+    },
+    {
+     "id": "lucky",
+     "name": "Lucky",
+     "src": "Lightfoot Halfling",
+     "act": "special",
+     "text": "When you roll a 1 on the d20 for an attack roll, ability check or saving throw, you can reroll the die and must use the new roll.",
+     "ref": "BR 28"
+    },
+    {
+     "id": "brave",
+     "name": "Brave",
+     "src": "Lightfoot Halfling",
+     "act": "passive",
+     "text": "You have advantage on saving throws against being frightened.",
+     "ref": "BR 28"
+    },
+    {
+     "id": "halfling-nimbleness",
+     "name": "Halfling Nimbleness",
+     "src": "Lightfoot Halfling",
+     "act": "passive",
+     "text": "You can move through the space of any creature that is of a size larger than yours.",
+     "ref": "BR 28"
+    },
+    {
+     "id": "naturally-stealthy",
+     "name": "Naturally Stealthy",
+     "src": "Lightfoot Halfling",
+     "act": "passive",
+     "text": "You can attempt to hide even when you are obscured only by a creature that is at least one size larger than you.",
+     "ref": "BR 28"
+    },
+    {
+     "id": "actor",
+     "name": "Actor",
+     "src": "Feat",
+     "act": "passive",
+     "text": "You have advantage on Deception and Performance checks when trying to pass yourself off as a different person, and you can mimic the speech of another person or the sounds made by other creatures you have heard for at least 1 minute.",
+     "ref": "PHB 165"
+    }
+   ],
+   "inventory": [
+    {
+     "name": "Potion of Acid Resistance",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Lute",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Spell Scroll of Haste",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Wyvern Poison (Injury)",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Spell Scroll of Slow",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Sling Bullets",
+     "qty": 80,
+     "weight": "6 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Amulet of Empowerment",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Bedroll",
+     "qty": 2,
+     "weight": "7 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Fantastical Fiddle",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": true,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Mess Kit",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Studded Leather",
+     "qty": 1,
+     "weight": "13 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rations (1 day)",
+     "qty": 15,
+     "weight": "20 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Dagger",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rope, Hempen (50 feet)",
+     "qty": 1,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Shortbow",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Tinderbox",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Sling",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Torch",
+     "qty": 10,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rapier",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Waterskin",
+     "qty": 2,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Arrows",
+     "qty": 40,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "3x Ivory Juggling Balls",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Backpack",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Clothes, Costume",
+     "qty": 3,
+     "weight": "4 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Flute",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Pair of Bone Dice",
+     "qty": 2,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Carved Ivory Statuette",
+     "qty": 2,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Candle",
+     "qty": 5,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Healer's Kit",
+     "qty": 4,
+     "weight": "12 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Disguise Kit",
+     "qty": 1,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Amber",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Topaz",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Pearl",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Ornate Helm",
+     "qty": 0,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    }
+   ],
+   "notes": {
+    "personality": "",
+    "ideals": "",
+    "bonds": "",
+    "flaws": "",
+    "allies": "",
+    "organizations": "",
+    "faith": "",
+    "backstory": "",
+    "session": ""
+   },
+   "deathSaves": {
+    "successes": 0,
+    "failures": 0
+   },
+   "conditions": [],
+   "concentration": null,
+   "exhaustion": 0,
+   "heroicInspiration": false,
+   "coins": {
+    "cp": 300,
+    "sp": 301,
+    "ep": 0,
+    "gp": 632,
+    "pp": 20
+   },
+   "attacksPerAction": 2,
+   "bonusAttack": null
+  },
+  {
+   "schema": "mnz-party/1",
+   "id": "dorn-ironmantle",
+   "name": "Dorn Ironmantle",
+   "classes": [
+    {
+     "name": "Cleric",
+     "level": 7,
+     "subclass": "Life Domain"
+    }
+   ],
+   "level": 7,
+   "species": "Hill Dwarf",
+   "background": "Cloistered Scholar",
+   "xp": 23000,
+   "alignment": "Lawful Good",
+   "size": "Medium",
+   "abilities": {
+    "str": {
+     "score": 18,
+     "mod": 4,
+     "save": 4,
+     "saveProf": false
+    },
+    "dex": {
+     "score": 12,
+     "mod": 1,
+     "save": 1,
+     "saveProf": false
+    },
+    "con": {
+     "score": 18,
+     "mod": 4,
+     "save": 4,
+     "saveProf": false
+    },
+    "int": {
+     "score": 13,
+     "mod": 1,
+     "save": 1,
+     "saveProf": false
+    },
+    "wis": {
+     "score": 19,
+     "mod": 4,
+     "save": 7,
+     "saveProf": true
+    },
+    "cha": {
+     "score": 5,
+     "mod": -3,
+     "save": 0,
+     "saveProf": true
+    }
+   },
+   "profBonus": 3,
+   "ac": 18,
+   "initiative": 1,
+   "speed": {
+    "walk": 35
+   },
+   "hp": {
+    "max": 91,
+    "current": 91,
+    "temp": 0
+   },
+   "hitDice": [
+    {
+     "die": "d8",
+     "max": 7,
+     "used": 0
+    }
+   ],
+   "skills": {
+    "acrobatics": {
+     "mod": 1,
+     "ability": "dex",
+     "prof": "none"
+    },
+    "animalHandling": {
+     "mod": 4,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "arcana": {
+     "mod": 4,
+     "ability": "int",
+     "prof": "prof"
+    },
+    "athletics": {
+     "mod": 4,
+     "ability": "str",
+     "prof": "none"
+    },
+    "deception": {
+     "mod": -3,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "history": {
+     "mod": 4,
+     "ability": "int",
+     "prof": "prof"
+    },
+    "insight": {
+     "mod": 7,
+     "ability": "wis",
+     "prof": "prof"
+    },
+    "intimidation": {
+     "mod": -3,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "investigation": {
+     "mod": 1,
+     "ability": "int",
+     "prof": "none"
+    },
+    "medicine": {
+     "mod": 4,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "nature": {
+     "mod": 1,
+     "ability": "int",
+     "prof": "none"
+    },
+    "perception": {
+     "mod": 4,
+     "ability": "wis",
+     "prof": "none"
+    },
+    "performance": {
+     "mod": -3,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "persuasion": {
+     "mod": -3,
+     "ability": "cha",
+     "prof": "none"
+    },
+    "religion": {
+     "mod": 4,
+     "ability": "int",
+     "prof": "prof"
+    },
+    "sleightOfHand": {
+     "mod": 1,
+     "ability": "dex",
+     "prof": "none"
+    },
+    "stealth": {
+     "mod": 1,
+     "ability": "dex",
+     "prof": "none"
+    },
+    "survival": {
+     "mod": 4,
+     "ability": "wis",
+     "prof": "none"
+    }
+   },
+   "passive": {
+    "perception": 19,
+    "insight": 17,
+    "investigation": 16
+   },
+   "senses": [
+    "Darkvision 90 ft."
+   ],
+   "defenses": {
+    "resistances": [
+     "Poison"
+    ],
+    "immunities": [],
+    "saveNotes": [
+     "Advantage vs poison"
+    ]
+   },
+   "proficiencies": {
+    "armor": "Heavy, Light, Medium, Shields",
+    "weapons": "Simple, battleaxe, warhammer",
+    "tools": "Smith's tools",
+    "languages": "Common, Draconic, Dwarvish, Orc"
+   },
+   "attacks": [
+    {
+     "name": "Torm's Blessing",
+     "hit": "+8",
+     "damage": "1d8+5 bludgeoning",
+     "notes": "Versatile, Push. Can cast Sacred Flame"
+    },
+    {
+     "name": "Crossbow, Light",
+     "hit": "+4",
+     "damage": "1d8+1 piercing",
+     "notes": "80/320, Loading"
+    },
+    {
+     "name": "Unarmed Strike",
+     "hit": "+7",
+     "damage": "5 bludgeoning",
+     "notes": ""
+    }
+   ],
+   "resources": [
+    {
+     "id": "channel-divinity",
+     "name": "Channel Divinity",
+     "max": 2,
+     "used": 0,
+     "reset": "short",
+     "die": null,
+     "notes": "Turn Undead / Preserve Life (35 HP split, up to half max)"
+    },
+    {
+     "id": "moon-maiden",
+     "name": "Charm of the Moon Maiden",
+     "max": 3,
+     "used": 0,
+     "reset": "none",
+     "die": null,
+     "notes": "Moonbeam, CON DC 15. 3 charges"
+    }
+   ],
+   "spellcasting": [
+    {
+     "class": "Cleric",
+     "ability": "wis",
+     "dc": 15,
+     "attack": 7
+    }
+   ],
+   "spellSlots": [
+    {
+     "level": 1,
+     "max": 4,
+     "used": 0
+    },
+    {
+     "level": 2,
+     "max": 3,
+     "used": 0
+    },
+    {
+     "level": 3,
+     "max": 3,
+     "used": 0
+    },
+    {
+     "level": 4,
+     "max": 1,
+     "used": 0
+    }
+   ],
+   "pactSlots": null,
+   "preparedLimit": 11,
+   "spells": [
+    {
+     "name": "Sacred Flame",
+     "level": 0,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 15",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 272",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Guidance",
+     "level": 0,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 248",
+     "notes": "D: 1m, V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Spare the Dying",
+     "level": 0,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 277",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Light",
+     "level": 0,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 15",
+     "time": "1A",
+     "range": "Touch/20 ft. Sphere",
+     "components": "V,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 255",
+     "notes": "D: 1h, 20 ft. Sphere, V/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Sacred Flame",
+     "level": 0,
+     "source": "Torm's Blessing",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 15",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 272",
+     "notes": "V/S",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Guiding Bolt",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "+7",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 248",
+     "notes": "D: 1Rnd, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Inflict Wounds",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "+7",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 253",
+     "notes": "V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Shield of Faith",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1BA",
+     "range": "60 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 275",
+     "notes": "D: 10m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Create or Destroy Water",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "30 ft./30 ft. Cube",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 229",
+     "notes": "30 ft. Cube, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Bless",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 219",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Cure Wounds",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 230",
+     "notes": "V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Bane",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CHA 15",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 216",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Command",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 223",
+     "notes": "D: 1Rnd, V",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Detect Evil and Good",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self/30 ft. Sphere",
+     "components": "V,S",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 231",
+     "notes": "D: 10m, 30 ft. Sphere, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Detect Magic",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "Self/30 ft. Sphere",
+     "components": "V,S",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": true,
+     "ref": "PHB 231",
+     "notes": "D: 10m, 30 ft. Sphere, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Detect Poison and Disease",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "Self/30 ft. Sphere",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": true,
+     "ref": "PHB 231",
+     "notes": "D: 10m, 30 ft. Sphere, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Healing Word",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1BA",
+     "range": "60 ft.",
+     "components": "V",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 250",
+     "notes": "V",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Protection from Evil and Good",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 270",
+     "notes": "D: 10m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Purify Food and Drink",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "10 ft./5 ft. Sphere",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": true,
+     "ref": "PHB 270",
+     "notes": "5 ft. Sphere, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Sanctuary",
+     "level": 1,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1BA",
+     "range": "30 ft.",
+     "components": "V,S,M",
+     "duration": "1 minute",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 272",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Prayer of Healing",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "10m",
+     "range": "30 ft.",
+     "components": "V",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 267",
+     "notes": "V",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Hold Person",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 251",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Lesser Restoration",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 255",
+     "notes": "V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Spiritual Weapon",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "+7",
+     "time": "1BA",
+     "range": "60 ft.",
+     "components": "V,S",
+     "duration": "1 minute",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 278",
+     "notes": "D: 1m, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Aid",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S,M",
+     "duration": "8 hours",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 211",
+     "notes": "D: 8h, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Augury",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "11m",
+     "range": "Self",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": true,
+     "ref": "PHB 215",
+     "notes": "V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Blindness/Deafness",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CON 15",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V",
+     "duration": "1 minute",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 219",
+     "notes": "D: 1m, V",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Calm Emotions",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CHA 15",
+     "time": "1A",
+     "range": "60 ft./20 ft. Sphere",
+     "components": "V,S",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 221",
+     "notes": "D: 1m, 20 ft. Sphere, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Continual Flame",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "Until dispelled",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 227",
+     "notes": "D: Until Dispelled, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Enhance Ability",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 hour",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 237",
+     "notes": "D: 1h, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Find Traps",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 241",
+     "notes": "V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Gentle Repose",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "10 days",
+     "concentration": false,
+     "ritual": true,
+     "ref": "PHB 245",
+     "notes": "D: 10d, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Locate Object",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 256",
+     "notes": "D: 10m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Protection from Poison",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 270",
+     "notes": "D: 1h, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Silence",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "120 ft./20 ft. Sphere",
+     "components": "V,S",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": true,
+     "ref": "PHB 275",
+     "notes": "D: 10m, 20 ft. Sphere, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Warding Bond",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 287",
+     "notes": "D: 1h, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Zone of Truth",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CHA 15",
+     "time": "1A",
+     "range": "60 ft./15 ft. Sphere",
+     "components": "V,S",
+     "duration": "10 minutes",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 289",
+     "notes": "D: 10m, 15 ft. Sphere, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Searing Orb",
+     "level": 2,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CON 15 / +7",
+     "time": "1A",
+     "range": "60 ft./10 ft. Sphere",
+     "components": "S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "DDBD",
+     "notes": "10 ft. Sphere, S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Spirit Guardians",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1A",
+     "range": "Self/15 ft. Sphere",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 278",
+     "notes": "D: 10m, 15 ft. Sphere, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Mass Healing Word",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1BA",
+     "range": "60 ft.",
+     "components": "V",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 258",
+     "notes": "V",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Glyph of Warding",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 15",
+     "time": "1h",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "Until dispelled or triggered",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 245",
+     "notes": "Special: Spell Glyph (See Description)*, D: Until Dispelled or Triggered, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Animate Dead",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1m",
+     "range": "10 ft.",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 212",
+     "notes": "V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Beacon of Hope",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 217",
+     "notes": "D: 1m, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Revivify",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 272",
+     "notes": "V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Bestow Curse",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "WIS 15",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 218",
+     "notes": "D: 1m, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Clairvoyance",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "10m",
+     "range": "1 mile",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 222",
+     "notes": "D: 10m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Create Food and Water",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 229",
+     "notes": "V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Daylight",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "60 ft./60 ft. Sphere",
+     "components": "V,S",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 230",
+     "notes": "D: 1h, 60 ft. Sphere, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Dispel Magic",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "120 ft.",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 234",
+     "notes": "Special: (See Description)*, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Magic Circle",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CHA 15",
+     "time": "1m",
+     "range": "10 ft./10 ft. Cylinder",
+     "components": "V,S,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 256",
+     "notes": "D: 1h, 10 ft. Cylinder, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Meld into Stone",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "8 hours",
+     "concentration": false,
+     "ritual": true,
+     "ref": "PHB 259",
+     "notes": "D: 8h, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Protection from Energy",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Concentration, up to 1 hour",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 270",
+     "notes": "D: 1h, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Remove Curse",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 271",
+     "notes": "V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Sending",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Unlimited",
+     "components": "V,S,M",
+     "duration": "1 round",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 274",
+     "notes": "D: 1Rnd, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Speak with Dead",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "10 ft.",
+     "components": "V,S,M",
+     "duration": "10 minutes",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 277",
+     "notes": "D: 10m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Tongues",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 283",
+     "notes": "D: 1h, V/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Water Walk",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "30 ft.",
+     "components": "V,S,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": true,
+     "ref": "PHB 287",
+     "notes": "D: 1h, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Feign Death",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": true,
+     "ref": "PHB 240",
+     "notes": "D: 1h, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Purge Contamination",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1h",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "MoDr 367",
+     "notes": "V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Astral Flood",
+     "level": 3,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "DEX 15",
+     "time": "1A",
+     "range": "Self/30 ft. Cone",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "DDBD",
+     "notes": "30 ft. Cone, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Moonbeam",
+     "level": 3,
+     "source": "Charm of the Moon Maiden",
+     "alwaysPrepared": false,
+     "saveAtk": "CON 15",
+     "time": "1A",
+     "range": "120 ft./5 ft. Cylinder",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 261",
+     "notes": "3 Charges (3/3), D: 1m, 5 ft. Cylinder, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Banishment",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CHA 15",
+     "time": "1A",
+     "range": "60 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 217",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Death Ward",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S",
+     "duration": "8 hours",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 230",
+     "notes": "D: 8h, V/S",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Guardian of Faith",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": true,
+     "saveAtk": "DEX 15",
+     "time": "1A",
+     "range": "30 ft.",
+     "components": "V",
+     "duration": "8 hours",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 246",
+     "notes": "D: 8h, V",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": true,
+     "open5eKey": null
+    },
+    {
+     "name": "Control Water",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "STR 15",
+     "time": "1A",
+     "range": "300 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 227",
+     "notes": "D: 10m, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Divination",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A + 10m",
+     "range": "Self",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": true,
+     "ref": "PHB 234",
+     "notes": "V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Freedom of Movement",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "1 hour",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 244",
+     "notes": "D: 1h, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Locate Creature",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 hour",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB 256",
+     "notes": "D: 1h, V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Stone Shape",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Touch",
+     "components": "V,S,M",
+     "duration": "Instantaneous",
+     "concentration": false,
+     "ritual": false,
+     "ref": "PHB 278",
+     "notes": "V/S/M",
+     "editions": [
+      "2014",
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Aura of Life",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "--",
+     "time": "1A",
+     "range": "Self/30 ft. Emanation",
+     "components": "V",
+     "duration": "Concentration, up to 10 minutes",
+     "concentration": true,
+     "ritual": false,
+     "ref": "PHB-2024 244",
+     "notes": "D: 10m, 30 ft. Emanation, V",
+     "editions": [
+      "2024"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    },
+    {
+     "name": "Sticks to Snakes",
+     "level": 4,
+     "source": "Cleric",
+     "alwaysPrepared": false,
+     "saveAtk": "CHA 15",
+     "time": "1A",
+     "range": "90 ft.",
+     "components": "V,S,M",
+     "duration": "Concentration, up to 1 minute",
+     "concentration": true,
+     "ritual": false,
+     "ref": "DDBD",
+     "notes": "D: 1m, V/S/M",
+     "editions": [
+      "2014"
+     ],
+     "prepared": null,
+     "open5eKey": null
+    }
+   ],
+   "features": [
+    {
+     "id": "channel-divinity",
+     "name": "Channel Divinity (2 / short rest)",
+     "src": "Cleric",
+     "act": "special",
+     "text": "You can channel divine energy directly from your deity to fuel magical effects: Turn Undead or Preserve Life. You have two uses, and regain them when you finish a short or long rest.",
+     "ref": "PHB 58",
+     "res": "channel-divinity"
+    },
+    {
+     "id": "turn-undead",
+     "name": "Channel Divinity: Turn Undead",
+     "src": "Cleric",
+     "act": "action",
+     "text": "As an action, you present your holy symbol and speak a prayer censuring the undead. Each undead within 30 feet that can see or hear you must make a Wisdom saving throw (DC 15). On a failure it is turned for 1 minute or until it takes damage: it must spend its turns moving as far from you as it can and can't willingly move within 30 feet of you. Destroy Undead: undead of CR 1/2 or lower that fail are destroyed instead.",
+     "ref": "PHB 59",
+     "res": "channel-divinity"
+    },
+    {
+     "id": "preserve-life",
+     "name": "Channel Divinity: Preserve Life",
+     "src": "Cleric · Life Domain",
+     "act": "action",
+     "text": "As an action, you evoke healing energy that restores 35 hit points (five times your cleric level), divided as you choose among any creatures within 30 feet. It can't restore a creature to more than half its hit point maximum, and has no effect on undead or constructs.",
+     "ref": "PHB 60",
+     "res": "channel-divinity"
+    },
+    {
+     "id": "disciple-of-life",
+     "name": "Disciple of Life",
+     "src": "Cleric · Life Domain",
+     "act": "passive",
+     "text": "Whenever you use a spell of 1st level or higher to restore hit points to a creature, the creature regains additional hit points equal to 2 + the spell's level.",
+     "ref": "PHB 60"
+    },
+    {
+     "id": "blessed-healer",
+     "name": "Blessed Healer",
+     "src": "Cleric · Life Domain",
+     "act": "passive",
+     "text": "When you cast a spell of 1st level or higher that restores hit points to a creature other than you, you regain hit points equal to 2 + the spell's level.",
+     "ref": "PHB 60"
+    },
+    {
+     "id": "destroy-undead",
+     "name": "Destroy Undead (CR 1/2)",
+     "src": "Cleric",
+     "act": "passive",
+     "text": "When an undead fails its saving throw against your Turn Undead feature, it is instantly destroyed if its challenge rating is 1/2 or lower.",
+     "ref": "PHB 59"
+    },
+    {
+     "id": "cleric-spellcasting",
+     "name": "Spellcasting",
+     "src": "Cleric",
+     "act": "passive",
+     "text": "You prepare cleric spells using Wisdom (Wisdom modifier + cleric level = 11, plus domain spells). Spell save DC 15, spell attack +7. You can cast prepared spells as rituals if they have the ritual tag, and use a holy symbol as a focus.",
+     "ref": "PHB 58"
+    },
+    {
+     "id": "dwarven-resilience",
+     "name": "Dwarven Resilience",
+     "src": "Hill Dwarf",
+     "act": "passive",
+     "text": "You have advantage on saving throws against poison, and resistance against poison damage.",
+     "ref": "BR 20"
+    },
+    {
+     "id": "dwarven-toughness",
+     "name": "Dwarven Toughness",
+     "src": "Hill Dwarf",
+     "act": "passive",
+     "text": "Your hit point maximum increases by 1 for every level (already included).",
+     "ref": "BR 20"
+    },
+    {
+     "id": "stonecunning",
+     "name": "Stonecunning",
+     "src": "Hill Dwarf",
+     "act": "passive",
+     "text": "Whenever you make an Intelligence (History) check related to the origin of stonework, you are considered proficient and add double your proficiency bonus.",
+     "ref": "BR 20"
+    },
+    {
+     "id": "observant",
+     "name": "Observant",
+     "src": "Feat",
+     "act": "passive",
+     "text": "If you can see a creature's mouth while it is speaking a language you understand, you can read its lips. You have a +5 bonus to passive Perception and passive Investigation (already included).",
+     "ref": "PHB 168"
+    },
+    {
+     "id": "darkvision",
+     "name": "Darkvision",
+     "src": "Hill Dwarf",
+     "act": "passive",
+     "text": "You can see in dim light within 60 feet as if it were bright light, and in darkness as if it were dim light (the sheet shows 90 ft, so something extends it).",
+     "ref": "BR 20"
+    }
+   ],
+   "inventory": [
+    {
+     "name": "Handy Haversack",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Book of Dragon Lore",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Ring of Elven Grace",
+     "qty": 1,
+     "weight": null,
+     "attuned": true,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Blanket",
+     "qty": 1,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Torm's Blessing",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": true,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": "",
+     "actions": [
+      {
+       "id": "sacred-flame",
+       "name": "Sacred Flame",
+       "act": "action",
+       "text": "Cast Sacred Flame through the hammer: DEX save DC 15, 60 ft, 2d8 radiant at this level."
+      },
+      {
+       "id": "push",
+       "name": "Push",
+       "act": "special",
+       "text": "Push mastery: when you hit with the hammer, you can push a Large or smaller target up to 10 feet straight away from you."
+      }
+     ]
+    },
+    {
+     "name": "Candle",
+     "qty": 10,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Charm of the Moon Maiden",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": true,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Crowbar",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Shield",
+     "qty": 1,
+     "weight": "6 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Hammer",
+     "qty": 1,
+     "weight": "3 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Splint",
+     "qty": 1,
+     "weight": "60 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Holy Water (flask)",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Crossbow, Light",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Manacles",
+     "qty": 1,
+     "weight": "6 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Crossbow Bolts",
+     "qty": 60,
+     "weight": "4.5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Mirror, Steel",
+     "qty": 1,
+     "weight": "0.5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Ink (1 ounce bottle)",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Oil (flask)",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Parchment (one sheet)",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Piton",
+     "qty": 10,
+     "weight": "2.5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Backpack",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Rations (1 day)",
+     "qty": 5,
+     "weight": "10 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Alms Box",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Holy Symbol",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Locked Wooden Box",
+     "qty": 1,
+     "weight": "2 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Ornate Black Dragon Statue",
+     "qty": 1,
+     "weight": "20 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Tent, Two-Person",
+     "qty": 2,
+     "weight": "40 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Tinderbox",
+     "qty": 1,
+     "weight": "1 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Waterskin",
+     "qty": 1,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Stake (Wooden)",
+     "qty": 9,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Block of Incense",
+     "qty": 2,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": true,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Censer",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Vestments",
+     "qty": 1,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Gem",
+     "qty": 5,
+     "weight": "5 lb.",
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    },
+    {
+     "name": "Diamond",
+     "qty": 6,
+     "weight": null,
+     "attuned": false,
+     "magic": false,
+     "consumable": false,
+     "open5eKey": null,
+     "notes": ""
+    }
+   ],
+   "notes": {
+    "personality": "",
+    "ideals": "",
+    "bonds": "",
+    "flaws": "",
+    "allies": "",
+    "organizations": "",
+    "faith": "",
+    "backstory": "",
+    "session": ""
+   },
+   "deathSaves": {
+    "successes": 0,
+    "failures": 0
+   },
+   "conditions": [],
+   "concentration": null,
+   "exhaustion": 0,
+   "heroicInspiration": false,
+   "coins": {
+    "cp": 300,
+    "sp": 301,
+    "ep": 0,
+    "gp": 632,
+    "pp": 20
+   },
+   "attacksPerAction": 1,
+   "bonusAttack": null
+  }
+ ],
+ "log": []
+}

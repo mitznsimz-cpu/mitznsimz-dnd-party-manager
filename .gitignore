@@ -1,0 +1,5 @@
+# Your own party files, sheets and seeded builds never go in the public repo
+private/
+*.pdf
+__pycache__/
+.DS_Store
