@@ -303,7 +303,7 @@ body:not(.home) .honly{display:none!important}
 <div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
 <div class="toasts" id="toasts"></div>
 <input type="file" id="fileImg" accept="image/*" hidden>
-<input type="file" id="fileJson" accept=".json,application/json" hidden>
+<input type="file" id="fileJson" accept=".pdf,.json,application/pdf,application/json" multiple hidden>
 
 <script>
 'use strict';
@@ -311,7 +311,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.4.0';
+const APP_VERSION = '0.5.0';
 const STORAGE_NS = /*NS*/'';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -804,7 +804,7 @@ function renderHome(){
   const live = IDX.list.filter(e => !e.archived && !e.deleted).sort((a,b) => (b.updated||0) - (a.updated||0));
   const arch = IDX.list.filter(e => e.archived && !e.deleted), del = IDX.list.filter(e => e.deleted);
   $('#home').innerHTML = `<h2>Campaigns</h2>
-    <div class="cgrid">${live.map(campCard).join('')}<div class="ccard new" data-act="newcamp"><div style="font:600 18px var(--serif)">+ New campaign</div><div class="small">Empty, from a file, or with characters from another campaign</div></div></div>
+    <div class="cgrid">${live.map(campCard).join('')}<div class="ccard new" data-act="newcamp"><div style="font:600 18px var(--serif)">+ New campaign</div><div class="small">From D&amp;D Beyond PDFs, empty, or with characters from another campaign</div></div></div>
     ${arch.length ? `<h3>Archived</h3><div class="cgrid">${arch.map(campCard).join('')}</div>` : ''}
     ${del.length ? `<h3>Recently deleted</h3><div class="cgrid">${del.map(campCard).join('')}</div>` : ''}`;
 }
@@ -832,7 +832,7 @@ function newCampModal(){
     <label class="fld wide"><span>Campaign name</span><input id="ncName" placeholder="e.g. Tyranny of Dragons"></label>
     ${others.length ? `<h3>Bring characters from other campaigns (optional)</h3>${pickerHTML(others)}
       <div class="small dim" style="margin-top:4px">Copies start fresh: full HP, slots and uses reset. Notes and homebrew come along.</div>` : ''}
-  </div><div class="mfoot"><button data-act="newcampfile">Create from a file…</button><span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="docreatecamp">Create</button></div>`);
+  </div><div class="mfoot"><button data-act="newcampfile" title="Pick your party's D&amp;D Beyond PDFs, or a party/campaign .json">Create from D&amp;D Beyond PDFs…</button><span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="docreatecamp">Create</button></div>`);
   focusFirst('#ncName');
 }
 function createCampaign(st, portraits){
@@ -871,7 +871,7 @@ function addCharModal(){
   UI._others = others;
   openModal(() => `${mhead('Add a character')}<div class="mbody"><div class="list">
       <button data-act="newchar" style="text-align:left"><b>Create a new character</b><div class="small muted">Fill in the core stats yourself, for homebrew or anything not on D&amp;D Beyond. Add attacks, features, spells and items afterwards from the stat block.</div></button>
-      <button data-act="importchar" style="text-align:left"><b>Import a character file</b><div class="small muted">A character or party .json. Characters already in the party are offered as updates instead.</div></button>
+      <button data-act="importchar" style="text-align:left"><b>Import D&amp;D Beyond PDFs</b><div class="small muted">Pick one or more character-sheet PDFs (or a character .json). Characters already in the party are offered as updates instead.</div></button>
     </div>
     ${others.length ? `<h3>Copy from another campaign</h3>${pickerHTML(others)}
       <div class="row" style="margin-top:8px"><span class="grow small dim">Copies start fresh (full HP, uses reset).</span><button class="pri" data-act="docopyin">Copy selected</button></div>` : ''}
@@ -881,7 +881,7 @@ function charMenuModal(cid){
   const c = charById(cid), targets = IDX.list.filter(e => e.id !== IDX.current && !e.deleted);
   openModal(() => `${mhead(esc(c.name))}<div class="mbody"><div class="list">
       <button data-act="editcore" data-cid="${cid}" style="text-align:left"><b>✎ Edit core stats</b><div class="small muted">Name, class and level, AC, HP, speed, ability scores, save and skill proficiencies, spell slots.</div></button>
-      <button data-act="updatechar" data-cid="${cid}" style="text-align:left"><b>Update from sheet</b><div class="small muted">Load a new export of this character and review the changes. Your HP, notes and homebrew are kept.</div></button>
+      <button data-act="updatechar" data-cid="${cid}" style="text-align:left"><b>Update from sheet</b><div class="small muted">Pick this character's new D&amp;D Beyond PDF (or .json) and review the changes. Your HP, notes and homebrew are kept.</div></button>
       ${targets.length ? `<div class="row" style="padding:6px 2px"><b>Copy to campaign</b><select id="copyTo">${targets.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select><button class="small" data-act="copyout" data-cid="${cid}">Copy</button></div>` : ''}
       <button class="b-dmg" data-act="removechar" data-cid="${cid}" style="text-align:left"><b>Remove from this party</b><div class="small muted">Undo is available straight after.</div></button>
     </div></div>`);
@@ -1388,7 +1388,7 @@ function diffChar(old, nu){
       add('Limited uses', r.name, `<span class="old">${o.max ?? '?'} ${o.die || ''}</span> → <span class="new">${r.max} ${r.die || ''} (${r.reset})</span>${o.edited ? ' <span class="dim">(you edited this)</span>' : ''}`, c => { const x = resById(c, r.id); Object.assign(x, {max:r.max, reset:r.reset, die:r.die}); x.used = Math.min(x.used, r.max ?? x.used); }, !o.edited); });
   old.resources.filter(o => !o.custom && !(nu.resources||[]).some(r => r.id === o.id)).forEach(o =>
     add('Limited uses', o.name, `<span class="rem">− no longer on the sheet: ${esc(o.name)}</span>`, c => c.resources = c.resources.filter(x => x.id !== o.id), false));
-  const sk = s => slug(s.name + '-' + s.source);
+  const sk = s => s.id || slug(s.name + '-' + s.source);   // imported sheets carry their own ids
   (nu.spells||[]).forEach(s => { if (!old.spells.some(o => o.id === sk(s)))
     add('Spells', s.name, `<span class="add">+ ${esc(s.name)}</span> <span class="dim">${s.level ? ORD(s.level) + ' level' : 'cantrip'} · ${esc(s.source)}</span>`, c => c.spells.push(Object.assign({}, clone(s), {id: sk(s), prepared: c.preparedLimit ? !!s.alwaysPrepared : true}))); });
   old.spells.filter(o => !o.custom && !(nu.spells||[]).some(s => sk(s) === o.id)).forEach(o =>
@@ -1400,6 +1400,7 @@ function diffChar(old, nu){
       add('Features', f.name, o.edited ? 'the sheet differs from your edited version' : 'description or uses updated', c => Object.assign(c.features.find(x => fk(x) === fk(f)), clone(f), {edited:false}), !o.edited); });
   (old.features||[]).filter(o => !o.custom && !(nu.features||[]).some(f => fk(f) === fk(o))).forEach(o =>
     add('Features', o.name, `<span class="rem">− ${esc(o.name)}</span> <span class="dim">not on the new sheet</span>`, c => c.features = c.features.filter(x => fk(x) !== fk(o)), false));
+  delete nu.coins;
   (nu.inventory||[]).forEach(i => { const o = old.inventory.find(x => x.name === i.name);
     if (!o) add('Inventory', i.name, `<span class="add">+ ${esc(i.name)} ×${i.qty}</span>`, c => c.inventory.push(Object.assign({}, clone(i), {id: slug(i.name), notes: i.notes || ''})));
     else {
@@ -1413,27 +1414,41 @@ function diffChar(old, nu){
   return ch;
 }
 let pendingMerge = null;
+/** After creating a campaign from PDFs: what was read, and anything to check. */
+function importReport(data, title){
+  const items = data.characters.map(c => { const w = (data.warnings || {})[c.id] || [];
+    return `<div class="dgrp"><h3>${esc(c.name)} <span class="small muted">${esc(c.classes.map(k => `${k.name} ${k.level}`).join(' / '))}</span></h3>
+      <div class="small muted">${c.features.length} features · ${c.spells.length} spells · ${c.inventory.length} items · ${c.resources.length} limited uses</div>
+      ${w.length ? `<ul class="small" style="margin:4px 0 0 18px;padding:0">${w.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '<div class="small" style="color:#8fd19a">Nothing to check.</div>'}</div>`; }).join('');
+  openModal(() => `${mhead(title)}<div class="mbody diff">${items}
+    <div class="small dim" style="margin-top:8px">The party purse holds everyone's coins added together. Homebrew item rules don't come through from D&amp;D Beyond: open an item and use ✎ Edit to add them.</div></div>
+    <div class="mfoot"><button class="pri" data-act="mclose">Done</button></div>`, true);
+}
 function startMerge(data, targetId){
   if (data.campaign) data = data.campaign;
+  const warnings = data.warnings || {};
   const incoming = (data.characters ? data.characters : [data]).slice();
   if (targetId && incoming.length > 1){ const t = charById(targetId); const hit = incoming.filter(c => c.id === targetId || c.name === t.name); if (hit.length) incoming.splice(0, incoming.length, ...hit); }
   const plan = incoming.map(nu => {
     nu = normaliseChar(clone(nu));
     const old = (targetId && incoming.length === 1 ? charById(targetId) : null) || S.characters.find(c => c.id === nu.id) || S.characters.find(c => c.name === nu.name);
     if (!old) nu.id = uniqueId(S, nu.id || slug(nu.name));
-    return {nu, old, changes: old ? diffChar(old, nu) : []};
+    return {nu, old, changes: old ? diffChar(old, nu) : [], warnings: warnings[nu.id] || warnings[slug(nu.name)] || []};
   });
   pendingMerge = plan;
   openModal(() => {
+    const warnBlock = p => p.warnings.length ? `<div class="small" style="margin:4px 0 6px;color:var(--gold2)">Check after import:<ul style="margin:2px 0 0 18px;padding:0;color:var(--muted)">${p.warnings.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
     const blocks = plan.map((p, pi) => {
-      if (!p.old) return `<div class="dgrp"><h3>${esc(p.nu.name)}</h3><label><input type="checkbox" data-mnew="${pi}" checked><span class="add">New character: add to the party</span></label></div>`;
+      if (!p.old) return `<div class="dgrp"><h3>${esc(p.nu.name)} <span class="small muted">${esc(classLine(p.nu))}</span></h3><label><input type="checkbox" data-mnew="${pi}" checked><span class="add">New character: add to the party${p.nu.coins ? ' (their coins go into the party purse)' : ''}</span></label>${warnBlock(p)}</div>`;
+      if (false) return `<div class="dgrp"><h3>${esc(p.nu.name)}</h3><label><input type="checkbox" data-mnew="${pi}" checked><span class="add">New character: add to the party</span></label></div>`;
       if (!p.changes.length) return `<div class="dgrp"><h3>${esc(p.nu.name)}</h3><div class="empty">No changes.</div></div>`;
       const groups = {}; p.changes.forEach(ch => (groups[ch.group] = groups[ch.group] || []).push(ch));
-      return `<div class="dgrp"><h3>${esc(p.nu.name)} <span class="small muted">${p.changes.length} change${p.changes.length>1?'s':''}</span></h3>
+      return `<div class="dgrp"><h3>${esc(p.nu.name)} <span class="small muted">${p.changes.length} change${p.changes.length>1?'s':''}</span></h3>${warnBlock(p)}
         ${Object.entries(groups).map(([g, list]) => `<div class="small muted" style="margin:6px 0 3px">${esc(g)}</div>
           ${list.map(ch => `<label><input type="checkbox" data-mch="${ch.id}" ${ch.def ? 'checked' : ''}><span><b>${esc(ch.label)}</b>: ${ch.html}</span></label>`).join('')}`).join('')}</div>`;
     }).join('');
-    return `${mhead('Review sheet update')}<div class="mbody diff">
+    const allNew = plan.every(p => !p.old);
+    return `${mhead(allNew ? 'Add characters' : 'Review sheet update')}<div class="mbody diff">
       <div class="small muted" style="margin-bottom:8px">Ticked changes are applied. Item removals and quantity changes start unticked because the app is usually more up to date than the sheet. Undo is available afterwards.</div>
       ${blocks}</div><div class="mfoot"><button data-act="mclose">Cancel</button><button class="pri" data-act="applyMerge">Apply ticked changes</button></div>`; }, true);
 }
@@ -1444,7 +1459,9 @@ function applyMerge(){
   let n = 0;
   const plan = pendingMerge; pendingMerge = null; closeModal();
   mutate(() => plan.forEach((p, pi) => {
-    if (!p.old){ if (newOK.has(pi)){ S.characters.push(p.nu); n++; } return; }
+    if (!p.old){ if (newOK.has(pi)){ const coins = p.nu.coins; delete p.nu.coins;
+        if (coins) COINS.forEach(k => S.purse[k] += coins[k] || 0);
+        S.characters.push(p.nu); n++; } return; }
     const c = charById(p.old.id);
     p.changes.filter(ch => ticked.has(ch.id)).forEach(ch => { ch.apply(c); n++; });
   }));
@@ -1558,6 +1575,364 @@ function itemModal(cid, iid){
 /* =====================================================================
    FILE INPUTS
    ===================================================================== */
+/* DDB-PARSER START */
+/* =====================================================================
+   D&D BEYOND PDF IMPORT
+   D&D Beyond's character-sheet PDF keeps every value in a named form
+   field. pdf.js reads those fields; parseDDB turns them into a character.
+   It is a plain function over [{widgets:[{name, value}]}] (one entry per
+   page, fields in page order) so it can be tested outside the browser.
+   ===================================================================== */
+const DDB = (() => {
+  const key = s => String(s || '').toLowerCase().replace(/\s+/g, '');
+  const int = s => { const m = String(s ?? '').replace(/,/g, '').match(/[-+]?\d+/); return m ? parseInt(m[0], 10) : null; };
+  const slugify = s => String(s).toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const clean = s => String(s || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').trim();
+  const ABL = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+  const ABFULL = {str: 'strength', dex: 'dexterity', con: 'constitution', int: 'intelligence', wis: 'wisdom', cha: 'charisma'};
+  // app skill key -> [value field, proficiency field, ability field] (normalised field names)
+  const SKILLS = {acrobatics: ['acrobatics', 'acrobaticsprof', 'acrobaticsmod'], animalHandling: ['animal', 'animalhandlingprof', 'animalmod'],
+    arcana: ['arcana', 'arcanaprof', 'arcanamod'], athletics: ['athletics', 'athleticsprof', 'athleticsmod'], deception: ['deception', 'deceptionprof', 'deceptionmod'],
+    history: ['history', 'historyprof', 'historymod'], insight: ['insight', 'insightprof', 'insightmod'], intimidation: ['intimidation', 'intimidationprof', 'intimidationmod'],
+    investigation: ['investigation', 'investigationprof', 'investigationmod'], medicine: ['medicine', 'medicineprof', 'medicinemod'], nature: ['nature', 'natureprof', 'naturemod'],
+    perception: ['perception', 'perceptionprof', 'perceptionmod'], performance: ['performance', 'performanceprof', 'performancemod'], persuasion: ['persuasion', 'persuasionprof', 'persuasionmod'],
+    religion: ['religion', 'religionprof', 'religionmod'], sleightOfHand: ['sleightofhand', 'sleightofhandprof', 'sleightofhandmod'], stealth: ['stealth', 'stealthprof', 'stealthmod'],
+    survival: ['survival', 'survivalprof', 'survivalmod']};
+  const SKILL_AB = {acrobatics: 'dex', animalHandling: 'wis', arcana: 'int', athletics: 'str', deception: 'cha', history: 'int', insight: 'wis', intimidation: 'cha', investigation: 'int',
+    medicine: 'wis', nature: 'int', perception: 'wis', performance: 'cha', persuasion: 'cha', religion: 'int', sleightOfHand: 'dex', stealth: 'dex', survival: 'wis'};
+  const PROF = {'': 'none', P: 'prof', E: 'expert', H: 'half'};
+  const SUBCLASS_RE = /archetype|patron|domain|college|primal path|tradition|circle|origin|oath|conclave|subclass|sorcerous/i;
+  const SKIP_FEATURES = /^(hit points|proficiencies|ability score (increase|improvement)|expanded spell list|bonus proficienc(y|ies)|languages?|age|alignment|size|speed|creature type|core .* traits)$/i;
+  const PREPARES = {cleric: 1, druid: 1, wizard: 1, paladin: 0.5, artificer: 0.5};
+  const MAGIC_RE = /potion|scroll|\+\d|wand|staff of|rod of|ring of|cloak of|boots of|amulet|helm of|bracers|gauntlets of|belt of|gloves of|cape of|robe of|bag of holding|haversack|charm of|ioun|elixir|oil of/i;
+  const CONSUMABLE_RE = /potion|scroll|ration|arrow|bolt|bullet|needle|dart|oil|torch|candle|holy water|healer'?s kit|poison|incense|chalk|ink|paper|parchment|piton|caltrops|ball bearings/i;
+
+  function fieldsOf(pages){
+    const f = {};
+    pages.forEach((p, pi) => p.widgets.forEach(w => { const k = key(w.name); const v = w.value == null ? '' : String(w.value);
+      if (!(k in f) || (f[k] === '' && v !== '')) f[k] = v; }));
+    return f;
+  }
+  const joinBlocks = (f, prefix) => { const parts = []; for (let i = 1; i < 20; i++){ const v = f[prefix + i]; if (v === undefined) break; if (v.trim()) parts.push(v); } return parts.join('\n'); };
+  function resetOf(t){ return /short/i.test(t) ? 'short' : /long/i.test(t) ? 'long' : /dawn|day/i.test(t) ? 'dawn' : 'long'; }
+  function actOf(t){
+    if (/bonus action/i.test(t)) return 'bonus';
+    if (/reaction/i.test(t)) return 'reaction';
+    if (/no action/i.test(t)) return 'passive';
+    if (/\b1 action\b|\baction\b/i.test(t)) return 'action';
+    if (/special/i.test(t)) return 'special';
+    return null;
+  }
+  function effectOf(text){
+    let m = text.match(/regain (?:hit points equal to )?(\d+d\d+)\s*\+\s*(\d+)\s*(?:HP|hit points)/i);
+    if (m) return {type: 'heal', die: m[1], bonus: +m[2]};
+    m = text.match(/gain (\d+) temp(?:orary)? (?:HP|hit points)/i);
+    if (m) return {type: 'temp', amount: +m[1]};
+    return undefined;
+  }
+
+  /** The Actions box: === ACTIONS / BONUS ACTIONS / REACTIONS / SPECIAL === with "Name • 1 / Short Rest" entries. */
+  function parseActions(text){
+    const out = []; let sec = null, cur = null;
+    const SECS = {'actions': 'action', 'bonus actions': 'bonus', 'reactions': 'reaction', 'special': 'special', 'other': 'special', 'limited use': 'special'};
+    text.split('\n').forEach(raw => {
+      const line = raw.replace(/\s+$/, ''); if (!line.trim()) return;
+      const h = line.match(/^===\s*(.+?)\s*===$/);
+      if (h){ sec = SECS[h[1].toLowerCase()] || 'special'; cur = null; return; }
+      if (!sec) return;
+      const indented = /^\s{2,}/.test(raw);
+      // a non-indented short line without a full stop starts an entry; anything else continues the last one
+      if (!indented && line.length < 70 && !/[.!?]$/.test(line.trim()) && !/^At \d+(st|nd|rd|th) level/i.test(line.trim())){
+        if (/^standard actions$/i.test(line.trim())){ cur = null; return; }
+        const [nm, ...rest] = line.split(' • ');
+        cur = {name: nm.trim(), act: sec, uses: rest.join(' • ').trim(), text: ''}; out.push(cur);
+      } else if (cur) cur.text = (cur.text ? cur.text + ' ' : '') + line.trim();
+    });
+    return out;
+  }
+
+  /** Features & traits: === SECTION === then "* Name • SRC", description, "| usage" or "| Option • SRC" lines. */
+  function parseFeatures(text){
+    const out = []; let sec = '', cur = null, sub = null;
+    text.split('\n').forEach(raw => {
+      const line = raw.trim(); if (!line) return;
+      const h = line.match(/^===\s*(.+?)\s*===$/);
+      if (h){ sec = h[1].replace(/\s+(FEATURES|TRAITS|SPECIES TRAITS|RACIAL TRAITS)$/i, '').replace(/\b\w+/g, w => w[0] + w.slice(1).toLowerCase()); cur = sub = null; return; }
+      const star = line.match(/^\*\s*(.+?)(?:\s+•\s+(.+))?$/);
+      if (star){ cur = {name: star[1].trim(), src: sec, ref: (star[2] || '').trim(), text: '', usage: [], options: []}; sub = null; out.push(cur); return; }
+      const bar = line.match(/^\|\s*(.+)$/);
+      if (bar && cur){
+        const t = bar[1].trim();
+        const opt = t.match(/^(.+?)\s+•\s+([A-Z][A-Za-z0-9-]*(?:\s+\d+)?)$/);
+        if (opt && !/\d+\s*\/\s*(short|long)/i.test(opt[1]) && !actOf(opt[2])){ sub = {name: opt[1].trim(), ref: opt[2], text: ''}; cur.options.push(sub); return; }
+        sub = null; cur.usage.push(t); return;
+      }
+      if (sub) sub.text = (sub.text ? sub.text + ' ' : '') + line;
+      else if (cur) cur.text = (cur.text ? cur.text + ' ' : '') + line;
+    });
+    return out;
+  }
+
+  function parseSpells(pages, f, warn){
+    const rows = {}, levelOfRow = {}, slots = {}; let pact = null, level = null;
+    pages.forEach(p => p.widgets.forEach(w => {
+      const k = key(w.name), v = String(w.value || '');
+      let m;
+      if ((m = k.match(/^spellheader(\d+)$/))){ const lm = v.match(/CANTRIPS|(\d)(?:st|nd|rd|th)\s+LEVEL/i); if (lm) level = lm[1] ? +lm[1] : 0; return; }
+      if ((m = k.match(/^spellslotheader(\d+)$/))){
+        const s = v.match(/(\d+)\s+Slots?/i); if (s && level) slots[level] = +s[1];
+        const pm = v.match(/(\d+)\s+Pact/i); if (pm && level) pact = {level, max: +pm[1], used: 0, reset: 'short'};
+        return; }
+      if ((m = k.match(/^spell(prepared|name|source|savehit|castingtime|range|components|duration|page|notes)(\d+)$/))){
+        const i = +m[2]; rows[i] = rows[i] || {}; rows[i][m[1]] = v.trim();
+        if (m[1] === 'name' && level !== null) levelOfRow[i] = level; }
+    }));
+    const seen = {}, spells = [];
+    Object.keys(rows).map(Number).sort((a, b) => a - b).forEach(i => {
+      const r = rows[i]; if (!r.name) return;
+      const ritual = /\[R\]/.test(r.name), name = r.name.replace(/\s*\[R\]\s*/, '').trim();
+      const always = r.prepared === 'P' || /always prepared/i.test(r.source || '');
+      const source = (r.source || '').replace(/\s*\(Always Prepared\)/i, '').trim();
+      const ref = r.page || '', ed = /2024/.test(ref) ? '2024' : '2014';
+      const id = slugify(name + '-' + source);
+      if (seen[id]){ if (!seen[id].editions.includes(ed)) seen[id].editions.push(ed); return; }
+      const sp = {id, name, level: levelOfRow[i] ?? 0, source, alwaysPrepared: always, saveAtk: r.savehit || '--', time: r.castingtime || '', range: r.range || '',
+        components: r.components || '', duration: r.duration || '', concentration: /^concentration/i.test(r.duration || ''), ritual, ref, notes: r.notes || '', editions: [ed]};
+      seen[id] = sp; spells.push(sp);
+    });
+    return {spells, slots, pact};
+  }
+
+  function parseInventory(pages, f){
+    const rows = [];
+    pages.forEach((p, pi) => p.widgets.forEach(w => {
+      const m = key(w.name).match(/^eq(name|qty|weight)(\d+)$/); if (!m) return;
+      const i = +m[2]; rows[i] = rows[i] || {page: pi}; rows[i][m[1]] = String(w.value || '').trim();
+    }));
+    const attuned = [1, 2, 3, 4, 5].map(i => (f['attunedname' + i] || '').trim()).filter(Boolean);
+    const list = rows.filter(r => r && r.name);
+    // D&D Beyond repeats the last items of the main list at the end of the overflow page: drop those
+    const lastPage = Math.max(...list.map(r => r.page), 0), firstPage = Math.min(...list.map(r => r.page), 0);
+    const tail = lastPage > firstPage ? list.filter(r => r.page === lastPage).slice(-3) : [];
+    const items = [], notes = [];
+    list.forEach(r => {
+      const qty = int(r.qty) ?? 1, weight = r.weight && r.weight !== '--' ? r.weight : null;
+      const prev = items.find(x => x.name === r.name);
+      if (!prev){ items.push({id: slugify(r.name), name: r.name, qty, weight, _page: r.page}); return; }
+      if (prev._page !== r.page && tail.includes(r) && prev.qty === qty){ notes.push({drop: r.name}); return; }
+      prev.qty += qty; notes.push({add: r.name});
+    });
+    attuned.forEach(a => { if (!items.some(i => i.name === a)) items.push({id: slugify(a), name: a, qty: 1, weight: null}); });
+    return {items: items.map(i => { delete i._page; return Object.assign(i, {attuned: attuned.includes(i.name), magic: attuned.includes(i.name) || MAGIC_RE.test(i.name),
+      consumable: CONSUMABLE_RE.test(i.name) && !/case|quiver|pouch|kit$/i.test(i.name), open5eKey: null, notes: '', actions: []}); }), notes};
+  }
+
+  function parse(pages){
+    const f = fieldsOf(pages), warn = [];
+    const name = (f.charactername || f.charactername4 || '').trim();
+    if (!name || !('str' in f) || !('maxhp' in f)) throw new Error('This doesn\'t look like a D&D Beyond character sheet PDF.');
+    // classes: "Fighter 6 / Warlock 1"
+    const classes = (f.classlevel || '').split('/').map(s => s.trim()).filter(Boolean).map(s => { const m = s.match(/^(.*?)\s+(\d+)$/); return m ? {name: m[1].trim(), subclass: '', level: +m[2]} : {name: s, subclass: '', level: 1}; });
+    if (!classes.length){ classes.push({name: 'Adventurer', subclass: '', level: 1}); warn.push('Class and level not found'); }
+    const level = classes.reduce((t, k) => t + k.level, 0);
+    const pb = int(f.profbonus) ?? 2 + Math.floor((level - 1) / 4);
+
+    const abilities = {};
+    ABL.forEach(a => { const score = int(f[a]) ?? 10, mod = int(f[a + 'mod']) ?? Math.floor((score - 10) / 2);
+      abilities[a] = {score, mod, saveProf: /•|P|●/.test(f[a + 'prof'] || ''), save: int(f['st' + ABFULL[a]]) ?? mod}; });
+    const skills = {};
+    Object.entries(SKILLS).forEach(([k, [vk, pk, mk]]) => {
+      const abName = (f[mk] || '').trim().toLowerCase(); const ab = ABL.includes(abName) ? abName : SKILL_AB[k];
+      skills[k] = {mod: int(f[vk]) ?? abilities[ab].mod, ability: ab, prof: PROF[(f[pk] || '').trim().toUpperCase()] || 'none'}; });
+
+    const hitDice = []; (f.total || '').split('+').forEach(p => { const m = p.trim().match(/^(\d+)\s*(d\d+)$/i); if (m) hitDice.push({die: m[2].toLowerCase(), max: +m[1], used: 0}); });
+    if (!hitDice.length) warn.push('Hit dice not found');
+
+    // defences: "Resistances - Fire, ...\nImmunities - Fire"
+    const defenses = {resistances: [], immunities: [], saveNotes: []};
+    clean(f.defenses).split('\n').forEach(l => { const m = l.match(/^\s*(Resistances?|Immunities|Immunity|Vulnerabilit(?:y|ies))\s*[-–:]\s*(.+)$/i); if (!m) return;
+      const list = m[2].split(/,(?![^(]*\))|;/).map(x => x.trim()).filter(Boolean);
+      if (/^resist/i.test(m[1])) defenses.resistances.push(...mergeAnd(list)); else if (/^immun/i.test(m[1])) defenses.immunities.push(...list); });
+    clean(f.savemodifiers).split('\n').map(x => x.trim()).filter(Boolean).forEach(x => defenses.saveNotes.push(x));
+
+    const prof = {armor: '', weapons: '', tools: '', languages: ''};
+    let ps = null; clean(f.proficiencieslang).split('\n').forEach(l => { const h = l.match(/^===\s*(ARMOR|WEAPONS|TOOLS|LANGUAGES)\s*===$/i);
+      if (h){ ps = h[1].toLowerCase(); return; } if (ps && l.trim()) prof[ps === 'armor' ? 'armor' : ps] = (prof[ps] ? prof[ps] + ', ' : '') + l.trim(); });
+
+    // attacks
+    const attacks = [];
+    for (let n = 1; n <= 12; n++){
+      const nm = (f['wpnname' + (n > 1 ? n : '')] || '').trim(); if (!nm) continue;
+      attacks.push({name: nm, hit: (f['wpn' + n + 'atkbonus'] || '').trim(), damage: (f['wpn' + n + 'damage'] || '').trim().replace(/\b([A-Z][a-z]+)$/, m => m.toLowerCase()), notes: (f['wpnnotes' + n] || '').trim()});
+    }
+
+    // features, merged with the Actions box (which knows action types and uses)
+    const resources = [], features = [];
+    const addRes = (nm, max, reset, extra) => { const id = slugify(nm); let r = resources.find(x => x.id === id);
+      if (!r){ r = Object.assign({id, name: nm, max, used: 0, reset, die: null, notes: ''}, extra || {}); resources.push(r); } return r; };
+    const usesOf = t => { const m = String(t || '').match(/(\d+)\s*\/\s*(Short Rest|Long Rest|Day|Dawn|Turn)/i); return m ? {max: +m[1], reset: /turn/i.test(m[2]) ? 'turn' : resetOf(m[2])} : null; };
+    const actions = parseActions(joinBlocks(f, 'actions'));
+    const parsedFeatures = parseFeatures(joinBlocks(f, 'featurestraits'));
+    const classNames = classes.map(k => k.name.toLowerCase());
+    parsedFeatures.forEach(pf => {
+      if (SUBCLASS_RE.test(pf.name) && (pf.options.length || pf.usage.length)){
+        const sc = (pf.options[0] && pf.options[0].name) || pf.usage.find(u => !actOf(u) && !usesOf(u));
+        const cls = classes.find(k => k.name.toLowerCase() === pf.src.toLowerCase()) || classes.find(k => !k.subclass);
+        if (sc && cls && !cls.subclass) cls.subclass = sc;
+        return;   // the chooser itself isn't something to track at the table
+      }
+      if (SKIP_FEATURES.test(pf.name)) return;
+      const usage = pf.usage.join(' • ');
+      const subActs = pf.usage.map(u => u.match(/^(.+?):\s*(1 Bonus Action|1 Action|1 Reaction|Special|No Action)$/i)).filter(Boolean);
+      let act = null;
+      pf.usage.forEach(u => { if (!/:\s/.test(u)){ const a = actOf(u); if (a) act = act || a; } });
+      const uses = usesOf(usage);
+      const isClass = classNames.includes(pf.src.toLowerCase());
+      const src = isClass ? pf.src : pf.src === 'Feats' ? 'Feat' : pf.src;
+      if (pf.text || uses || act){
+        const ft = {id: slugify(pf.name), name: pf.name, src, act: act || 'passive', text: pf.text || '', ref: pf.ref};
+        if (uses) ft.res = addRes(pf.name, uses.max, uses.reset).id;
+        const eff = effectOf(pf.text); if (eff) ft.effect = eff;
+        features.push(ft);
+      }
+      pf.options.forEach(o => { if (o.text) features.push({id: slugify(pf.name + '-' + o.name), name: `${pf.name}: ${o.name}`, src, act: 'passive', text: o.text, ref: o.ref || pf.ref}); });
+      subActs.forEach(m => { const nm = m[1].trim(); if (features.some(x => x.name === nm)) return;
+        const parent = features.find(x => x.name === pf.name);
+        const shares = nm.startsWith(pf.name + ':') && parent;
+        features.push({id: slugify(nm), name: nm, src, act: actOf(m[2]) || 'special', text: shares ? `Uses ${pf.name}. ${pf.text}`.trim() : pf.text, ref: pf.ref, res: shares ? parent.res : undefined}); });
+    });
+    actions.forEach(a => {
+      const uses = usesOf(a.uses);
+      const existing = features.find(x => x.name.toLowerCase() === a.name.toLowerCase())
+        || features.find(x => a.name.toLowerCase().startsWith(x.name.toLowerCase()) && x.act === 'passive' && !x.res && a.name.length - x.name.length < 12);
+      if (existing && existing.name.toLowerCase() === a.name.toLowerCase()){
+        existing.act = a.act; if (!existing.text) existing.text = a.text;
+        if (uses && !existing.res) existing.res = addRes(existing.name, uses.max, uses.reset).id;
+        const eff = effectOf(existing.text); if (eff && !existing.effect) existing.effect = eff;
+        return;
+      }
+      const ft = {id: slugify(a.name), name: a.name, src: existing ? existing.src : '', act: a.act, text: a.text, ref: ''};
+      if (uses) ft.res = addRes(a.name, uses.max, uses.reset).id;
+      const eff = effectOf(a.text); if (eff) ft.effect = eff;
+      features.push(ft);
+    });
+    // features named "X: Y" share X's uses (Channel Divinity: Preserve Life)
+    features.forEach(ft => { if (ft.res) return; const m = ft.name.match(/^(.+?):\s/); const parent = m && features.find(x => x.name === m[1] && x.res); if (parent) ft.res = parent.res; });
+    // Sneak Attack: once per turn
+    features.forEach(ft => { if (/^sneak attack/i.test(ft.name) && !ft.res){ const d = (ft.text.match(/(\d+d6)/) || [])[1];
+      ft.res = addRes('Sneak Attack (once per turn)', 1, 'turn', {die: d || null}).id; if (d && !/\(/.test(ft.name)) ft.name += ` (${d})`; } });
+
+    // spells, with limited casts from species and items as uses
+    const {spells, slots, pact} = parseSpells(pages, f, warn);
+    spells.forEach(s => {
+      const lr = s.notes.match(/(\d+)\s*\/\s*(LR|SR)/i);
+      if (lr) addRes(`${s.name} (${s.source})`, +lr[1], lr[2].toUpperCase() === 'SR' ? 'short' : 'long');
+      const ch = s.notes.match(/(\d+)\s+Charges?(?:\s*\((\d+)\/(\d+)\))?/i);
+      if (ch) addRes(`${s.source} charges`, ch[3] ? +ch[3] : null, 'dawn');
+    });
+    attacks.forEach(a => { if (/\b\d+\s+Charges?\b/i.test(a.notes)) addRes(`${a.name} charges`, null, 'dawn'); });
+
+    const spellcasting = [];
+    const scClass = (f.spellcastingclass0 || '').split('/').map(s => s.trim()), scAb = (f.spellcastingability0 || '').split('/').map(s => s.trim().toLowerCase()),
+          scDc = (f.spellsavedc0 || '').split('/').map(s => int(s)), scAtk = (f.spellatkbonus0 || '').split('/').map(s => int(s));
+    scClass.forEach((c, i) => { if (c && ABL.includes(scAb[i])) spellcasting.push({class: c, ability: scAb[i], dc: scDc[i], attack: scAtk[i]}); });
+
+    // prepared casters: a sheet listing far more spells than can be prepared is the whole class list, so start them unticked
+    let preparedLimit;
+    const prepClass = classes.find(k => PREPARES[k.name.toLowerCase()]);
+    if (prepClass){
+      const sc = spellcasting.find(s => s.class.toLowerCase().startsWith(prepClass.name.toLowerCase())) || spellcasting[0];
+      preparedLimit = Math.max(1, (sc ? abilities[sc.ability].mod : 0) + Math.floor(prepClass.level * PREPARES[prepClass.name.toLowerCase()]));
+      const choosable = spells.filter(s => s.level > 0 && !s.alwaysPrepared && s.source.toLowerCase().startsWith(prepClass.name.toLowerCase()));
+      const fullList = choosable.length > preparedLimit;
+      spells.forEach(s => { s.prepared = s.alwaysPrepared || s.level === 0 || !choosable.includes(s) ? true : !fullList; });
+      if (fullList) warn.push(`${name} prepares spells: the sheet lists the whole ${prepClass.name.toLowerCase()} spell list, so tick the ${preparedLimit} you have prepared in Spellcasting.`);
+    } else spells.forEach(s => s.prepared = true);
+
+    const inv = parseInventory(pages, f);
+    const added = [...new Set(inv.notes.filter(n => n.add).map(n => n.add))].map(nm => `${nm} ×${inv.items.find(i => i.name === nm).qty}`);
+    const dropped = inv.notes.filter(n => n.drop).map(n => n.drop);
+    if (added.length) warn.push(`Equipment listed twice on the sheet, quantities added: ${added.join(', ')}.`);
+    if (dropped.length) warn.push(`Equipment D&D Beyond repeats on its overflow page, kept once: ${dropped.join(', ')}.`);
+    // Wall of Fire etc. from an item: give the item an action that spends its charges
+    spells.forEach(s => { const it = inv.items.find(i => i.name === s.source); if (!it) return;
+      const r = resources.find(x => x.id === slugify(`${s.source} charges`));
+      it.actions.push({id: slugify(s.name), name: s.name, act: /^1BA/.test(s.time) ? 'bonus' : /^1R/.test(s.time) ? 'reaction' : 'action', text: `Cast ${s.name} through ${it.name}. ${s.notes}`.trim(), res: r ? r.id : undefined}); });
+
+    const attacksPerAction = features.some(x => /three times|three attacks/i.test(x.text) && /extra attack/i.test(x.name)) ? 3 : features.some(x => /^extra attack/i.test(x.name)) ? 2 : 1;
+    const bonusAtkF = features.find(x => x.act === 'bonus' && /attack/i.test(x.name) && !/spell/i.test(x.name));
+    const pas = [int(f.passive1), int(f.passive2), int(f.passive3)];
+    const allies = clean(f.alliesorganizations), orgSplit = allies.split(/===\s*Organizations\s*===/i);
+    const ch = {
+      schema: 'mnz-party/1', id: slugify(name), name, classes, level, species: (f.race || '').trim(), background: (f.background || '').trim(),
+      xp: int(f.experiencepoints) || 0, alignment: (f.alignment || '').trim(), size: (f.size || 'Medium').trim() || 'Medium',
+      abilities, profBonus: pb, ac: int(f.ac) ?? 10, initiative: int(f.init) ?? abilities.dex.mod, speed: {walk: int(f.speed) ?? 30},
+      hp: {max: int(f.maxhp) ?? 1}, hitDice, skills,
+      passive: {perception: pas[0] ?? 10 + skills.perception.mod, insight: pas[1] ?? 10 + skills.insight.mod, investigation: pas[2] ?? 10 + skills.investigation.mod},
+      senses: (f.additionalsenses || '').split(/,(?![^(]*\))/).map(s => s.trim()).filter(s => s && !/^unknown\b/i.test(s)), defenses, proficiencies: prof,
+      attacks, resources, spellcasting, spellSlots: Object.keys(slots).map(Number).sort().map(l => ({level: l, max: slots[l], used: 0})), pactSlots: pact,
+      preparedLimit, spells, features, inventory: inv.items,
+      coins: {cp: int(f.cp) || 0, sp: int(f.sp) || 0, ep: int(f.ep) || 0, gp: int(f.gp) || 0, pp: int(f.pp) || 0},
+      attacksPerAction, bonusAttack: bonusAtkF ? bonusAtkF.name : null,
+      notes: {personality: clean(f.personalitytraits), ideals: clean(f.ideals), bonds: clean(f.bonds), flaws: clean(f.flaws), backstory: clean(f.backstory),
+        allies: clean(orgSplit[0].replace(/===\s*Allies\s*===/i, '')), organizations: clean(orgSplit[1] || ''), faith: clean(f.faith), appearance: clean(f.appearance),
+        additional: [clean(f.additionalnotes1), clean(f.additionalnotes2)].filter(Boolean).join('\n')},
+    };
+    // level-based slot sanity: a caster with no slots for a level they clearly have (bards print no row without spells known)
+    const full = {bard: 1, cleric: 1, druid: 1, sorcerer: 1, wizard: 1};
+    const caster = classes.length === 1 && full[classes[0].name.toLowerCase()] ? classes[0] : null;
+    if (caster){
+      const TABLE = [[2],[3],[4,2],[4,3],[4,3,2],[4,3,3],[4,3,3,1],[4,3,3,2],[4,3,3,3,1],[4,3,3,3,2],[4,3,3,3,2,1],[4,3,3,3,2,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1,1],[4,3,3,3,3,1,1,1,1],[4,3,3,3,3,2,1,1,1],[4,3,3,3,3,2,2,1,1]];
+      (TABLE[caster.level - 1] || []).forEach((n, i) => { const l = i + 1; if (!ch.spellSlots.some(s => s.level === l)){ ch.spellSlots.push({level: l, max: n, used: 0}); warn.push(`Added ${n} ${l}${['st','nd','rd'][l-1] || 'th'}-level slots: the sheet leaves the row out when no spells of that level are known.`); } });
+      ch.spellSlots.sort((a, b) => a.level - b.level);
+    }
+    resources.filter(r => r.max == null).forEach(r => warn.push(`${r.name}: the sheet doesn't say how many there are. Set the max on the card.`));
+    return {character: ch, warnings: warn};
+  }
+  /** D&D Beyond writes "Fire, Bludgeoning, Piercing, and Slashing from Nonmagical Attacks": keep the "X, Y, and Z from …" group as one entry. */
+  function mergeAnd(list){
+    const last = list.length - 1;
+    if (last >= 2 && /^and\s/i.test(list[last]) && /\bfrom\b/i.test(list[last])) return list.slice(0, last - 2).concat(list.slice(last - 2).join(', '));
+    return list;
+  }
+  return {parse, parseActions, parseFeatures};
+})();
+/* DDB-PARSER END */
+
+/* pdf.js is only fetched the first time a PDF is imported */
+const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/';
+let pdfjsReady = null;
+function loadPdfjs(){
+  return pdfjsReady = pdfjsReady || import(PDFJS + 'pdf.min.mjs')
+    .then(m => { m.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.mjs'; return m; })
+    .catch(e => { pdfjsReady = null; throw new Error('Could not load the PDF reader (are you online?)'); });
+}
+/** Read one D&D Beyond PDF into {character, warnings}. */
+async function readDDB(file){
+  const pdfjs = await loadPdfjs();
+  const task = pdfjs.getDocument({data: new Uint8Array(await file.arrayBuffer()), verbosity: 0});
+  const doc = await task.promise;
+  try {
+    const pages = [];
+    for (let i = 1; i <= doc.numPages; i++){
+      const an = await (await doc.getPage(i)).getAnnotations();
+      pages.push({widgets: an.filter(a => a.subtype === 'Widget').map(a => ({name: a.fieldName || '', value: a.fieldValue}))});
+    }
+    return DDB.parse(pages);
+  } finally { task.destroy(); }
+}
+/** Read every picked PDF; failures are reported per file and skipped. */
+async function readSheets(files){
+  toast(`Reading ${files.length} sheet${files.length > 1 ? 's' : ''}…`);
+  const characters = [], warnings = {}, failed = [];
+  for (const f of files){
+    try { const r = await readDDB(f); characters.push(r.character); warnings[r.character.id] = r.warnings; }
+    catch(e){ failed.push(`${f.name}: ${e.message}`); }
+  }
+  failed.forEach(m => toast(esc(m), true));
+  return {characters, warnings};
+}
+
 let portraitTarget = null, jsonMode = null;
 $('#fileImg').addEventListener('change', e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f || !portraitTarget) return;
@@ -1571,8 +1946,23 @@ $('#fileImg').addEventListener('change', e => {
   img.onerror = () => toast('That file could not be read as an image', true);
   img.src = url;
 });
-$('#fileJson').addEventListener('change', e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+$('#fileJson').addEventListener('change', async e => {
+  const files = [...e.target.files]; e.target.value = ''; if (!files.length) return;
+  const pdfs = files.filter(f => /\.pdf$/i.test(f.name) || f.type === 'application/pdf');
+  if (pdfs.length){
+    if (jsonMode === 'restore'){ toast('Restore needs a backup .json file', true); return; }
+    const data = await readSheets(pdfs);
+    if (!data.characters.length) return;
+    closeModal();
+    if (jsonMode === 'newcamp' || jsonMode === 'importcamp'){
+      const st = fromSeed({name: (jsonMode === 'newcamp' && UI._newName) || 'New campaign', characters: data.characters});
+      if (VIEW === 'party') flushSave();
+      openCampaign(createCampaign(st, {}));
+      importReport(data, `Created ${esc(st.name)} with ${data.characters.length} character${data.characters.length > 1 ? 's' : ''}`);
+    } else startMerge(data, jsonMode === 'update' ? UI._updateTarget : null);
+    return;
+  }
+  const f = files[0];
   f.text().then(t => {
     let d; try { d = JSON.parse(t); } catch(err){ toast('Not a valid JSON file', true); return; }
     if (jsonMode === 'restore'){
