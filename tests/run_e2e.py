@@ -101,14 +101,14 @@ with sync_playwright() as pw:
 
     # ---- homebrew editing and merge protection
     pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
-    pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]')
+    pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]'); pg.wait_for_selector('#ff_name')
     pg.fill('#ff_name', 'Shadow Step'); pg.fill('#ff_text', 'Teleport between shadows.'); pg.select_option('#ff_res', '__new'); pg.fill('#ff_newMax', '2')
-    pg.click('#modal [data-act="formsave"]')
+    pg.click('#modal [data-act="formsave"]'); pg.wait_for_selector('#scrim.open', state='hidden')
     check('homebrew bonus action appears on the card', 'Shadow Step' in ' '.join(pg.locator(f'.card[data-cid="{ROGUE}"] .chip.act-bonus').all_inner_texts()))
-    pg.click(f'.card[data-cid="{ROGUE}"] .en[data-fid="sneak-attack"]'); pg.click('#modal [data-act="editfeat"]'); pg.fill('#ff_text', 'EDITED'); pg.click('#modal [data-act="formsave"]')
-    pg.click(f'.card[data-cid="{ROGUE}"] .sh[data-k="inventory"]')
-    pg.click(f'.card[data-cid="{ROGUE}"] [data-act="additemfull"]'); pg.fill('#ff_name', 'Cloak of the Night Market'); pg.fill('#ff_desc', 'Homebrew cloak.'); pg.click('#modal [data-act="formsave"]')
-    ev(pg, "jsonMode='merge'"); pg.set_input_files('#fileJson', str(LEVELUP)); pg.wait_for_timeout(300)
+    pg.click(f'.card[data-cid="{ROGUE}"] .en[data-fid="sneak-attack"]'); pg.click('#modal [data-act="editfeat"]'); pg.wait_for_selector('#ff_name'); pg.fill('#ff_text', 'EDITED'); pg.click('#modal [data-act="formsave"]'); pg.wait_for_selector('#scrim.open', state='hidden')
+    pg.click(f'.card[data-cid="{ROGUE}"] .sh[data-k="inventory"]'); pg.wait_for_selector(f'.card[data-cid="{ROGUE}"] [data-act="additemfull"]')
+    pg.click(f'.card[data-cid="{ROGUE}"] [data-act="additemfull"]'); pg.wait_for_selector('#ff_name'); pg.fill('#ff_name', 'Cloak of the Night Market'); pg.fill('#ff_desc', 'Homebrew cloak.'); pg.click('#modal [data-act="formsave"]'); pg.wait_for_selector('#scrim.open', state='hidden')
+    ev(pg, "jsonMode='merge'"); pg.set_input_files('#fileJson', str(LEVELUP)); pg.wait_for_selector('[data-act="applyMerge"]')
     labels = pg.locator('#modal label').all_inner_texts()
     check('merge does not offer to remove your homebrew', not any('Shadow Step' in l or 'Cloak of the Night' in l for l in labels))
     sneak = ev(pg, "[...document.querySelectorAll('#modal label')].filter(l=>l.textContent.includes('Sneak Attack')).map(l=>l.querySelector('input').checked)")
@@ -116,7 +116,7 @@ with sync_playwright() as pw:
     pg.click('[data-act="applyMerge"]')
     c = ev(pg, f"charById('{ROGUE}')")
     check('level-up merge applied', c['level'] == 8 and c['hp']['max'] == 79 and any(s['name'] == 'Shield' for s in c['spells']))
-    check('homebrew survives the merge', any(f['name'] == 'Shadow Step' for f in c['features']) and any(i['name'] == 'Cloak of the Night Market' for i in c['inventory']))
+    check('homebrew survives the merge', any(f['name'] == 'Shadow Step' for f in c['features']) and any(i['name'] == 'Cloak of the Night Market' for i in c['inventory']), ([f['name'] for f in c['features'] if f.get('custom')], [i['name'] for i in c['inventory'] if i.get('custom')], [i['name'] for i in c['inventory']][-3:]))
     check('item removals default off (Bell kept)', any(i['name'] == 'Bell' for i in c['inventory']))
 
     # ---- campaigns and characters
@@ -124,7 +124,7 @@ with sync_playwright() as pw:
     pg.click('#modal label:has-text("Tilly Merrowbuck") input'); pg.click('[data-act="docreatecamp"]'); pg.wait_for_timeout(200)
     check('new campaign with a copied character', ev(pg, 'S.name') == 'One-shot' and ev(pg, 'S.characters.map(c=>c.name)') == ['Tilly Merrowbuck'])
     check('copied character starts fresh', ev(pg, f"charById('{BARD}').hp.current") == 70 and ev(pg, f"resById(charById('{BARD}'),'bardic-inspiration').used") == 0)
-    pg.click('.card.addtile'); pg.click('#modal [data-act="newchar"]')
+    pg.click('.card.addtile'); pg.click('#modal [data-act="newchar"]'); pg.wait_for_selector('#ff_name')
     pg.fill('#ff_name', 'Brakka'); pg.fill('#ff_c1', 'Barbarian'); pg.fill('#ff_l1', '5'); pg.fill('#ff_hpmax', '55'); pg.fill('#ff_ac', '15')
     for a, v in zip(['str', 'dex', 'con', 'int', 'wis', 'cha'], [18, 14, 16, 8, 12, 10]): pg.fill(f'#ff_ab_{a}', str(v))
     pg.check('#ff_sp_str'); pg.select_option('#ff_sk_intimidation', 'expert')

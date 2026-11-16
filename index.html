@@ -833,7 +833,7 @@ function newCampModal(){
     ${others.length ? `<h3>Bring characters from other campaigns (optional)</h3>${pickerHTML(others)}
       <div class="small dim" style="margin-top:4px">Copies start fresh: full HP, slots and uses reset. Notes and homebrew come along.</div>` : ''}
   </div><div class="mfoot"><button data-act="newcampfile">Create from a file…</button><span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="docreatecamp">Create</button></div>`);
-  setTimeout(() => $('#ncName') && $('#ncName').focus(), 30);
+  focusFirst('#ncName');
 }
 function createCampaign(st, portraits){
   const id = 'c' + uid();
@@ -1008,6 +1008,11 @@ function openModal(renderFn, wide){
   UI.modal = () => { $('#modal').className = 'modal' + (wide ? ' wide' : ''); $('#modal').innerHTML = renderFn(); };
   UI.modal(); $('#scrim').classList.add('open');
 }
+/** Focus the first field of a just-opened dialog, unless something in it already has focus. */
+function focusFirst(sel){
+  if ($('#modal').contains(document.activeElement)) return;
+  const el = document.querySelector(sel); if (el) el.focus();
+}
 function closeModal(){ UI.modal = null; $('#scrim').classList.remove('open'); }
 const mhead = (t, sub) => `<div class="mhead"><h2>${t}${sub ? ` <span class="small muted" style="font-family:var(--sans)">${sub}</span>` : ''}</h2><button class="ghost" data-act="mclose" title="Close (Esc)">✕</button></div>`;
 
@@ -1082,7 +1087,7 @@ function formModal(title, sub, fields, values, onSave, onDelete){
   FORM = {fields, onSave, onDelete};
   openModal(() => `${mhead(title, sub)}<div class="mbody"><div class="form">${fields.map(f => fieldHTML(f, values[f.k])).join('')}</div></div>
     <div class="mfoot">${onDelete ? `<button class="small b-dmg" data-act="formdel">Delete</button>` : ''}<span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="formsave">Save</button></div>`);
-  setTimeout(() => { const first = document.querySelector('#modal .form input, #modal .form textarea'); if (first) first.focus(); }, 30);
+  focusFirst('#modal .form input, #modal .form textarea');
 }
 function readForm(){
   const o = {};
