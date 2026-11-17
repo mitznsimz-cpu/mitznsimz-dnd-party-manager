@@ -200,6 +200,33 @@ with sync_playwright() as pw:
     check('pasted feature text fills name, type and uses', vals == ['Shadow Step', 'bonus', '__new', '3', 'long'], vals)
     pg.click('#modal [data-act="mclose"]'); pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
 
+    # ---- reference: search Open5e for anything, add it to a character
+    SPELLS = {"count": 2, "results": [
+        {"name": "Counterspell", "level": 3, "school": {"name": "Abjuration"}, "casting_time": "reaction", "range_text": "60 feet", "duration": "instantaneous", "verbal": False, "somatic": True, "desc": "You attempt to interrupt a creature in the process of casting a spell.", "document": {"key": "srd-2014", "name": "SRD 5.1"}},
+        {"name": "Counterspell", "level": 3, "school": {"name": "Abjuration"}, "casting_time": "reaction", "desc": "2024 wording.", "document": {"key": "srd-2024", "name": "SRD 5.2"}}]}
+    BAG = {"count": 1, "results": [{"name": "Bag of Holding", "rarity": {"name": "uncommon"}, "category": {"name": "Wondrous Item"}, "desc": "This bag has an interior space considerably larger than its outside dimensions.", "document": {"key": "srd-2014"}}]}
+    def fake_ref(route):
+        u = route.request.url
+        if '/spells/' in u and 'icontains=counter' in u: route.fulfill(json=SPELLS)
+        elif '/magicitems/' in u and 'icontains=bag' in u: route.fulfill(json=BAG)
+        else: route.fulfill(json={"count": 0, "results": []})
+    pg.unroute('https://api.open5e.com/**'); pg.route('https://api.open5e.com/**', fake_ref)
+    pg.click('header [data-act="reference"]'); pg.wait_for_selector('#refQ')
+    pg.type('#refQ', 'counter'); pg.wait_for_selector('#refBody [data-act="refpick"]')
+    check('reference finds a spell once, from the ruleset you play', pg.locator('#refBody [data-act="refpick"]').count() == 1 and 'SRD 5.1' in pg.inner_text('#refBody'), pg.inner_text('#refBody'))
+    pg.click('#refBody [data-act="refpick"]'); pg.click(f'#refBody [data-act="refadd"][data-cid="{BARD}"]')
+    sp = ev(pg, f"charById('{BARD}').spells.find(s => s.name === 'Counterspell')")
+    check('adding a spell from the reference fills in level, reaction and text', sp and sp['level'] == 3 and sp['time'] == '1R' and 'interrupt a creature' in sp['desc'] and sp['custom'], sp)
+    check('reference pop-up stays open and marks who has it', pg.is_visible('#refBody') and pg.locator(f'#refBody [data-act="refadd"][data-cid="{BARD}"]').is_disabled())
+    pg.click('#modal [data-act="refkind"][data-v="item"]'); pg.fill('#refQ', 'bag'); pg.wait_for_selector('#refBody [data-act="refpick"]')
+    pg.click('#refBody [data-act="refpick"]'); pg.click(f'#refBody [data-act="refadd"][data-cid="{CLERIC}"]')
+    check('adding an item from the reference', ev(pg, f"charById('{CLERIC}').inventory.some(i => i.name === 'Bag of Holding' && i.magic && i.custom)"))
+    pg.click('#modal [data-act="refkind"][data-v="cond"]'); pg.fill('#refQ', 'prone'); pg.click('#refBody [data-act="refpick"]'); pg.click(f'#refBody [data-act="togcond"][data-cid="{FIGHTER}"]')
+    check('applying a condition from the reference', 'Prone' in ev(pg, f"charById('{FIGHTER}').conditions"))
+    ev(pg, f"charById('{FIGHTER}').conditions = charById('{FIGHTER}').conditions.filter(x => x !== 'Prone'); save(); renderAll()")
+    pg.keyboard.press('Escape'); pg.wait_for_selector('#scrim.open', state='hidden')
+    pg.unroute('https://api.open5e.com/**'); pg.route('https://api.open5e.com/**', lambda r: r.abort())
+
     # ---- homebrew editing and merge protection
     pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
     pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]'); pg.wait_for_selector('#ff_name')
