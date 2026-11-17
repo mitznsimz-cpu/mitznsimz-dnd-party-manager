@@ -252,6 +252,14 @@ html[data-theme="light"] .seg button.on{background:var(--accent);color:var(--bg)
 .mbody h3{font-size:14px;color:var(--gold2);margin:12px 0 6px}
 .condgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .condgrid button{text-align:left}
+.deathsaves:not(.stable):not(.dead){flex-direction:column;align-items:stretch;gap:2px}
+.deathsaves .row{gap:12px}
+.deathsaves .dsrow{gap:4px;margin-top:4px;flex-wrap:wrap}
+.deathsaves .dsrow input{width:58px}
+.deathsaves.stable,.deathsaves.dead{display:flex;gap:8px;align-items:center}
+.card.dead{filter:grayscale(.85);opacity:.8}
+.card.dead .deathsaves{filter:none}
+.journal-entry.auto .jt{color:var(--muted);font-size:13px}
 .condcell{display:flex;gap:2px;min-width:0}
 .condcell>button:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ci{padding:2px 6px;font-size:13px;line-height:1;color:var(--muted)}
@@ -407,7 +415,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.10.0';
+const APP_VERSION = '0.11.0';
 const STORAGE_NS = /*NS*/'dev_';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -635,19 +643,27 @@ const usableSpells = c => c.spells.filter(s => s.prepared || s.level === 0);
 /** Actions granted by carried items: [{item, a}] */
 const itemActs = (c, act) => c.inventory.filter(i => i.qty > 0 && (i.actions||[]).length).flatMap(i => i.actions.filter(a => !act || a.act === act).map(a => ({item: i, a})));
 
-function damage(c, n){
-  if (!(n > 0)) return;
-  const wasZero = c.hp.current === 0;
-  let rest = n;
-  if (c.hp.temp > 0){ const t = Math.min(c.hp.temp, rest); c.hp.temp -= t; rest -= t; }
+function damage(c, n, crit){
+  if (!(n > 0) || c.dead) return;
+  const wasZero = c.hp.current === 0, before = c.hp.current, mx = hpMaxOf(c);
+  let rest = n, soaked = 0;
+  if (c.hp.temp > 0){ soaked = Math.min(c.hp.temp, rest); c.hp.temp -= soaked; rest -= soaked; }
+  const over = rest - before;   // damage left over once HP hits 0
   c.hp.current = Math.max(0, c.hp.current - rest);
-  if (wasZero){
-    c.deathSaves.failures = Math.min(3, c.deathSaves.failures + 1);
-    toast(`${esc(c.name)} takes damage while down: <b>death save failure</b> (${c.deathSaves.failures}/3)`, true);
+  autoLog(c, `${c.name} takes ${n} damage${soaked ? ` (${soaked} absorbed by temp HP)` : ''}: HP ${before} → ${c.hp.current}/${mx}.`);
+  if (rest > 0 && (wasZero ? rest : over) >= mx){
+    c.dead = true; c.deathSaves = {successes:0, failures:3};
+    toast(`<b>${esc(c.name)} is killed outright</b> (massive damage: ${wasZero ? rest : over} ≥ max HP ${mx}). Undo if that's wrong.`, true);
+    autoLog(c, `${c.name} is killed outright by massive damage.`);
+    c.concentration = null;
+  } else if (wasZero && rest > 0){
+    deathSave(c, crit ? 'crit' : 'hit');
   } else if (c.hp.current === 0){
     if (!c.conditions.includes('Unconscious')) c.conditions.push('Unconscious');
+    c.deathSaves = {successes:0, failures:0};
     toast(`<b>${esc(c.name)} is down!</b>`, true);
-    if (c.concentration){ toast(`${esc(c.name)} loses concentration on ${esc(c.concentration)}`, true); c.concentration = null; }
+    autoLog(c, `${c.name} drops to 0 HP and falls unconscious.`);
+    if (c.concentration){ toast(`${esc(c.name)} loses concentration on ${esc(c.concentration)}`, true); autoLog(c, `${c.name} loses concentration on ${c.concentration}.`); c.concentration = null; }
   }
   if (c.concentration && c.hp.current > 0){
     const dc = Math.max(10, Math.floor(n/2));
@@ -656,8 +672,35 @@ function damage(c, n){
 }
 function heal(c, n){
   if (!(n > 0)) return;
-  if (c.hp.current === 0){ c.conditions = c.conditions.filter(x => x !== 'Unconscious'); c.deathSaves = {successes:0, failures:0}; }
+  if (c.dead){ toast(`${esc(c.name)} is dead: use Revived on the card if magic brings them back.`, true); return; }
+  const before = c.hp.current, up = before === 0;
+  if (up){ c.conditions = c.conditions.filter(x => x !== 'Unconscious'); c.deathSaves = {successes:0, failures:0}; }
   c.hp.current = Math.min(hpMaxOf(c), c.hp.current + n);
+  autoLog(c, `${c.name} heals ${n}: HP ${before} → ${c.hp.current}/${hpMaxOf(c)}${up ? ', back on their feet' : ''}.`);
+}
+/** Death saves, as at the table: type the d20, or tap success/failure. 1 = two failures, 20 = up with 1 HP. */
+function deathSave(c, ev, roll){
+  if (c.dead || c.hp.current > 0) return;
+  const ds = c.deathSaves; let txt = '';
+  if (ev === 'roll'){
+    if (roll === 20){ c.hp.current = 1; c.conditions = c.conditions.filter(x => x !== 'Unconscious'); c.deathSaves = {successes:0, failures:0};
+      autoLog(c, `${c.name} rolls a natural 20 on a death save and is back up with 1 HP!`); toast(`<b>${esc(c.name)}: natural 20!</b> Back up with 1 HP.`); return; }
+    if (roll === 1){ ds.failures += 2; txt = `rolls a 1 on a death save: two failures`; }
+    else if (roll >= 10){ ds.successes++; txt = `rolls ${roll} on a death save: success`; }
+    else { ds.failures++; txt = `rolls ${roll} on a death save: failure`; }
+    ds.stable = false;
+  }
+  else if (ev === 'success'){ ds.successes++; txt = 'makes a death save'; }
+  else if (ev === 'fail'){ ds.failures++; txt = 'fails a death save'; }
+  else if (ev === 'hit'){ ds.failures++; ds.stable = false; txt = 'takes damage while down: a death save failure'; }
+  else if (ev === 'crit'){ ds.failures += 2; ds.stable = false; txt = 'takes a critical hit while down: two death save failures'; }
+  else if (ev === 'stab'){ ds.stable = true; ds.successes = 0; ds.failures = 0; autoLog(c, `${c.name} is stabilised.`); toast(`${esc(c.name)} is stable`); return; }
+  ds.successes = Math.min(3, ds.successes); ds.failures = Math.min(3, ds.failures);
+  let tail = ` (✓${ds.successes} ✗${ds.failures})`;
+  if (ds.failures >= 3){ c.dead = true; c.concentration = null; tail += '. They die'; toast(`<b>${esc(c.name)} has died.</b> Undo if that was a misclick.`, true); }
+  else if (ds.successes >= 3){ ds.stable = true; ds.successes = 0; ds.failures = 0; tail += '. Stable'; toast(`${esc(c.name)} is stable`); }
+  else toast(`${esc(c.name)} ${txt}${tail.replace(/[()]/g, '')}`, ev !== 'success' && !(ev === 'roll' && roll >= 10));
+  autoLog(c, `${c.name} ${txt}${tail}.`);
 }
 function shortRestChar(c){
   c.resources.forEach(r => { if (r.reset === 'short' || r.reset === 'turn') r.used = 0; });
@@ -667,9 +710,9 @@ function longRestChar(c){
   shortRestChar(c);
   c.resources.forEach(r => { if (r.reset === 'long' || r.reset === 'dawn') r.used = 0; });
   c.spellSlots.forEach(s => s.used = 0);
-  if (c.tmp){ ['ac', 'hpMax'].forEach(k => { if (c.tmp[k] != null && c.tmp[k + 'Long'] !== false){ c.tmp[k] = null; c.tmp[k + 'Note'] = ''; } }); }
-  c.hp.current = hpMaxOf(c); c.hp.temp = 0;
-  c.deathSaves = {successes:0, failures:0};
+  if (c.tmp){ ['ac', 'hpMax'].forEach(k => { if (c.tmp[k] != null && c.tmp[k + 'Long'] !== false){ setTmp(c, k, null, '', true, false); } }); }
+  if (!c.dead){ c.hp.current = hpMaxOf(c); c.deathSaves = {successes:0, failures:0}; }
+  c.hp.temp = 0;
   c.conditions = c.conditions.filter(x => x !== 'Unconscious');
   c.concentration = null;
   let regain = Math.max(1, Math.floor(c.hitDice.reduce((n,h) => n + h.max, 0) / 2));
@@ -714,9 +757,14 @@ function hpHTML(c){
     </div>`;
 }
 function deathHTML(c){
+  if (c.dead) return `<div class="deathsaves dead"><b>☠ Dead</b><span class="grow"></span><button class="small" data-act="revive" data-cid="${c.id}" title="Revivify, Raise Dead…">Revived (1 HP)</button></div>`;
   if (c.hp.current > 0) return '';
+  if (c.deathSaves.stable) return `<div class="deathsaves stable"><b>Stable</b><span class="small muted grow">Unconscious at 0 HP. Regains 1 HP after 1d4 hours. Damage starts the saves again.</span></div>`;
   const pips = (k, cl) => [0,1,2].map(i => `<button class="pip ${cl} ${c.deathSaves[k] > i ? 'on' : ''}" data-act="death" data-k="${k}" data-i="${i}" data-cid="${c.id}"></button>`).join('');
-  return `<div class="deathsaves"><b>Death saves</b><span>✓ ${pips('successes','s')}</span><span>✗ ${pips('failures','f')}</span></div>`;
+  return `<div class="deathsaves"><div class="row"><b>Death saves</b><span>✓ ${pips('successes','s')}</span><span>✗ ${pips('failures','f')}</span></div>
+    <div class="row dsrow"><input type="number" min="1" max="20" inputmode="numeric" placeholder="d20" data-dsin="${c.id}" aria-label="Death save roll"><button class="small pri" data-act="dsroll" data-cid="${c.id}">Roll</button>
+      <button class="small" data-act="ds" data-v="success" data-cid="${c.id}" title="Success">✓</button><button class="small" data-act="ds" data-v="fail" data-cid="${c.id}" title="Failure">✗</button>
+      <button class="small" data-act="ds" data-v="crit" data-cid="${c.id}" title="Critical hit while down: two failures">Crit ✗✗</button><button class="small" data-act="ds" data-v="stab" data-cid="${c.id}" title="Spare the Dying, a Medicine check, a healer's kit">Stabilise</button></div></div>`;
 }
 function condHTML(c){
   const chips = c.conditions.map(x => `<span class="chip cond" data-act="condinfo" data-cid="${c.id}" data-v="${esc(x)}" title="Click for rules">${esc(x)}<span class="x" data-act="rmcond" data-cid="${c.id}" data-v="${esc(x)}" title="Remove">✕</span></span>`);
@@ -772,7 +820,7 @@ function reorderHTML(c){
 function cardHTML(c){
   const open = !!UI.open[c.id];
   const sc = (c.spellcasting||[])[0];
-  return `<article class="card ${c.hp.current === 0 ? 'down' : ''} ${open && sideMode() ? 'sbon' : ''}" data-cid="${c.id}">
+  return `<article class="card ${c.hp.current === 0 ? 'down' : ''} ${c.dead ? 'dead' : ''} ${open && sideMode() ? 'sbon' : ''}" data-cid="${c.id}">
     <div class="chead">${portraitHTML(c)}
       <div class="grow" style="min-width:0">
         <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="cname grow">${esc(c.name)}</div>${reorderHTML(c)}<button class="ghost small cmenu" data-act="charmenu" data-cid="${c.id}" title="Edit, update, copy or remove">⋯</button></div>
@@ -958,7 +1006,7 @@ function allOtherChars(exceptId){
 /** A fresh copy for another campaign: same build, notes and homebrew; session state reset. */
 function freshCopy(c){
   const x = clone(c);
-  delete x.tmp; x.hp.current = x.hp.max; x.hp.temp = 0; x.deathSaves = {successes:0, failures:0}; x.conditions = []; x.concentration = null; x.exhaustion = 0;
+  delete x.tmp; delete x.dead; x.hp.current = x.hp.max; x.hp.temp = 0; x.deathSaves = {successes:0, failures:0}; x.conditions = []; x.concentration = null; x.exhaustion = 0;
   (x.spellSlots||[]).forEach(s => s.used = 0); if (x.pactSlots) x.pactSlots.used = 0;
   (x.resources||[]).forEach(r => r.used = 0); (x.hitDice||[]).forEach(h => h.used = 0);
   return x;
@@ -1495,7 +1543,8 @@ function tmpStatModal(cid, k){
 }
 function setTmp(c, k, val, note, long, raiseCur){
   c.tmp = c.tmp || {};
-  const before = hpMaxOf(c);
+  const before = hpMaxOf(c), label = k === 'ac' ? 'AC' : 'max HP', sheet = k === 'ac' ? c.ac : c.hp.max;
+  autoLog(c, val == null ? `${c.name}'s ${label} is back to ${sheet}.` : `${c.name}'s ${label} is ${val} for now${note ? ` (${note})` : ''}; sheet ${sheet}.`);
   c.tmp[k] = val; c.tmp[k + 'Note'] = note || ''; c.tmp[k + 'Long'] = long;
   if (k === 'hpMax'){ const after = hpMaxOf(c);
     if (raiseCur && after > before) c.hp.current += after - before;
@@ -1580,12 +1629,12 @@ function longRestModal(){
 /* --- journal --- */
 function entryHTML(e){
   const names = (e.chars||[]).map(id => (charById(id)||{}).name).filter(Boolean).map(n => n.split(' ')[0]);
-  return `<div class="journal-entry ${e.star ? 'star' : ''}">
+  return `<div class="journal-entry ${e.star ? 'star' : ''} ${e.auto ? 'auto' : ''}">
     <div class="jm"><span>S${e.session}</span>${e.round ? `<span>Rd ${e.round}</span>` : ''}<span>${new Date(e.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
       ${names.map(n => `<span class="chip">${esc(n)}</span>`).join('')}<span class="grow"></span>
       <button class="ghost small" data-act="jstar" data-eid="${e.id}" title="Memorable moment">${e.star ? '★' : '☆'}</button>
       <button class="ghost small" data-act="jdel" data-eid="${e.id}" title="Delete (undo available)">🗑</button></div>
-    <div class="jt">${esc(e.text)}</div></div>`;
+    <div class="jt">${e.auto ? '<span class="dim" title="Logged automatically">⚙</span> ' : ''}${esc(e.text)}</div></div>`;
 }
 /* The journal is a floating panel, not a dialog: it stays open while you use the sheets.
    Its compose box is rendered once, so typing survives everything else re-rendering. */
@@ -1615,7 +1664,7 @@ function renderJournal(full){
             <div class="row" style="margin-top:6px"><input type="number" id="jround" placeholder="round" min="1" style="width:76px" value="${esc(UI.round || '')}">
               <label class="row small"><input type="checkbox" id="jstar"> ★ memorable</label><span class="grow"></span><button class="pri" data-act="jadd">Add entry</button></div>
           </div>
-          <div class="row" style="margin:6px 0 8px"><span class="grow"></span><button class="small" data-act="newsession" id="jnewsess"></button>
+          <div class="row" style="margin:6px 0 8px"><label class="row small" title="HP changes, conditions, death saves and rests are logged for you"><input type="checkbox" data-act="jauto" ${showAuto() ? 'checked' : ''}> ⚙ auto entries</label><span class="grow"></span><button class="small" data-act="newsession" id="jnewsess"></button>
             <button class="small gold" data-act="exportmd">Export (.md)</button><button class="small gold" data-act="copymd">Copy for blog</button></div>
           <div id="jlist"></div>`}</div>`;
     placeAt(J, g.pos);
@@ -1625,9 +1674,10 @@ function renderJournal(full){
   if (UI.journalTab === 'shared') return;
   $('#jtags').innerHTML = S.characters.map(c => `<button class="${UI.tags.includes(c.id) ? 'on' : ''}" data-act="jtag" data-cid="${c.id}">${esc(c.name.split(' ')[0])}</button>`).join('');
   $('#jnewsess').textContent = `Start session ${S.session + 1}`;
-  const sessions = [...new Set(S.log.map(e => e.session))].sort((a,b) => b-a), cur = S.log.filter(e => e.session === S.session);
+  const shown = S.log.filter(e => showAuto() || !e.auto);
+  const sessions = [...new Set(shown.map(e => e.session))].sort((a,b) => b-a), cur = shown.filter(e => e.session === S.session);
   $('#jlist').innerHTML = (cur.length ? cur.slice().reverse().map(entryHTML).join('') : '<div class="empty">No entries for this session yet.</div>')
-    + (sessions.filter(s => s !== S.session).length ? `<div class="small dim">Earlier sessions: ${sessions.filter(s => s !== S.session).map(s => `S${s} (${S.log.filter(e => e.session === s).length})`).join(', ')}. All are included in the export.</div>` : '');
+    + (sessions.filter(s => s !== S.session).length ? `<div class="small dim">Earlier sessions: ${sessions.filter(s => s !== S.session).map(s => `S${s} (${shown.filter(e => e.session === s).length})`).join(', ')}. All are included in the export.</div>` : '');
 }
 // remember the journal's size after a resize from its corner
 if (window.ResizeObserver) new ResizeObserver(() => {
@@ -1641,7 +1691,7 @@ $('#modal').addEventListener('pointerdown', () => { $('#journal').style.zIndex =
 makeDraggable($('#journal'), '.jhead', {onMove: pos => { UIG.journal = Object.assign(UIG.journal || {}, {pos}); saveUIG(); }});
 function markdownLog(){
   const bySession = {};
-  S.log.forEach(e => (bySession[e.session] = bySession[e.session] || []).push(e));
+  S.log.filter(e => showAuto() || !e.auto).forEach(e => (bySession[e.session] = bySession[e.session] || []).push(e));
   let md = `# ${S.name || 'Party'}: session log\n\n`;
   Object.keys(bySession).sort((a,b) => a-b).forEach(s => {
     md += `## Session ${s}\n\n`;
@@ -1654,7 +1704,10 @@ function markdownLog(){
   if (S.sharedNotes.trim()) md += `## Party notes\n\n${S.sharedNotes}\n`;
   return md;
 }
-function logEntry(chars, text){ S.log.push({id: uid(), ts: Date.now(), session: S.session, round: parseInt(UI.round,10) || null, chars, text, star: false}); }
+function logEntry(chars, text, auto){ S.log.push({id: uid(), ts: Date.now(), session: S.session, round: parseInt(UI.round,10) || null, chars, text, star: false, auto: !!auto || undefined}); }
+/** Automatic journal entry for something that happened to a character (HP, conditions, death saves…). */
+const autoLog = (c, text) => logEntry([c.id], text, true);
+const showAuto = () => !UIG.journal || UIG.journal.auto !== false;
 
 /* --- data menu --- */
 function dataModal(){
@@ -2611,11 +2664,19 @@ document.addEventListener('click', e => {
     case 'hp': {
       const inp = document.querySelector(`[data-hpin="${d.cid}"]`); const n = parseInt(inp.value, 10);
       if (!(n > 0)){ inp.focus(); return; }
-      mutate(() => { if (d.op === 'dmg') damage(c, n); else if (d.op === 'heal') heal(c, n); else c.hp.temp = Math.max(c.hp.temp, n); });
+      mutate(() => { if (d.op === 'dmg') damage(c, n); else if (d.op === 'heal') heal(c, n);
+        else { const had = c.hp.temp; c.hp.temp = Math.max(c.hp.temp, n); autoLog(c, c.hp.temp > had ? `${c.name} gains ${n} temporary HP${had ? ` (replacing ${had})` : ''}.` : `${c.name} keeps ${had} temporary HP (${n} isn't more).`); } });
       break; }
-    case 'death': mutate(() => { const k = d.k, i = +d.i; c.deathSaves[k] = c.deathSaves[k] > i ? i : i + 1;
-      if (c.deathSaves.successes >= 3) toast(`${esc(c.name)} is stable`);
-      if (c.deathSaves.failures >= 3) toast(`<b>${esc(c.name)} has died.</b> Undo if that was a misclick.`, true); }); break;
+    case 'death': mutate(() => { const k = d.k, i = +d.i, was = c.deathSaves[k]; const now = was > i ? i : i + 1;
+      // tapping a pip: corrects the count, or counts as a save made or failed
+      if (now > was){ c.deathSaves[k] = now - 1; deathSave(c, k === 'successes' ? 'success' : 'fail'); }
+      else { c.deathSaves[k] = now; autoLog(c, `${c.name}'s death saves corrected to ✓${c.deathSaves.successes} ✗${c.deathSaves.failures}.`); } }); break;
+    case 'ds': mutate(() => deathSave(c, d.v)); break;
+    case 'dsroll': { const inp = document.querySelector(`[data-dsin="${d.cid}"]`), n = parseInt(inp.value, 10);
+      if (!(n >= 1 && n <= 20)){ inp.focus(); toast('Type the d20 you rolled (1–20)'); break; }
+      mutate(() => deathSave(c, 'roll', n)); break; }
+    case 'revive': mutate(() => { c.dead = false; c.hp.current = Math.max(1, c.hp.current); c.deathSaves = {successes:0, failures:0};
+      c.conditions = c.conditions.filter(x => x !== 'Unconscious'); autoLog(c, `${c.name} is brought back to life with ${c.hp.current} HP.`); }); break;
     case 'cond': condModal(d.cid); break;
     case 'condinfo': condInfoModal(d.cid, d.v); break;
     case 'condrule': UI._condRule = UI._condRule === d.v ? null : d.v; UI.modal(); break;
@@ -2624,7 +2685,7 @@ document.addEventListener('click', e => {
       const std = CONDITIONS.find(x => x.toLowerCase() === v.toLowerCase());
       const name = std || v;
       if (c.conditions.includes(name)){ toast(`${esc(c.name)} already has ${esc(name)}`); el.select(); break; }
-      mutate(() => { c.conditions.push(name);
+      mutate(() => { c.conditions.push(name); autoLog(c, `${c.name} is ${name}.`);
         if (!std) S.customConds = [name, ...(S.customConds || []).filter(x => x !== name)].slice(0, 12); });
       const nx = $('#condOther'); if (nx) nx.focus(); break; }
     case 'tmpstat': tmpStatModal(d.cid, d.k); break;
@@ -2634,10 +2695,12 @@ document.addEventListener('click', e => {
       toast(val == null ? 'Back to the sheet value' : `${esc(c.name)}: ${d.k === 'ac' ? 'AC' : 'max HP'} ${val} for now`); break; }
     case 'tmpclear': closeModal(); mutate(() => setTmp(c, d.k, null, '', true, false)); toast('Back to the sheet value'); break;
     case 'concinfo': concModal(d.cid); break;
-    case 'togcond': mutate(() => { const i = c.conditions.indexOf(d.v); i >= 0 ? c.conditions.splice(i,1) : c.conditions.push(d.v); }); break;
-    case 'rmcond': mutate(() => c.conditions = c.conditions.filter(x => x !== d.v)); break;
-    case 'exh': mutate(() => c.exhaustion = +d.v); break;
-    case 'dropconc': mutate(() => c.concentration = null); if (UI.modal && /Concentrating/.test($('#modal').textContent)) closeModal(); break;
+    case 'togcond': mutate(() => { const i = c.conditions.indexOf(d.v);
+      if (i >= 0){ c.conditions.splice(i,1); autoLog(c, `${c.name} is no longer ${d.v}.`); } else { c.conditions.push(d.v); autoLog(c, `${c.name} is ${d.v}.`); } }); break;
+    case 'rmcond': mutate(() => { c.conditions = c.conditions.filter(x => x !== d.v); autoLog(c, `${c.name} is no longer ${d.v}.`); }); break;
+    case 'exh': if (+d.v === c.exhaustion) break; mutate(() => { const was = c.exhaustion; c.exhaustion = +d.v;
+      autoLog(c, c.exhaustion ? `${c.name}'s exhaustion ${c.exhaustion > was ? 'rises' : 'drops'} to level ${c.exhaustion}.` : `${c.name} is no longer exhausted.`); }); break;
+    case 'dropconc': mutate(() => { if (c.concentration) autoLog(c, `${c.name} stops concentrating on ${c.concentration}.`); c.concentration = null; }); if (UI.modal && /Concentrating/.test($('#modal').textContent)) closeModal(); break;
     case 'pip': mutate(() => togglePip(c, d.kind, d.ref, +d.i)); break;
     case 'resn': mutate(() => { const r = resById(c, d.rid); r.used = Math.max(0, Math.min(r.max, r.used + +d.d)); }); break;
     case 'featinfo': featModal(d.cid, d.fid); break;
@@ -2719,6 +2782,7 @@ document.addEventListener('click', e => {
     case 'jtab': UI.journalTab = d.v; saveUI(); renderJournal(true); break;
     case 'jtag': { const k = UI.tags.indexOf(d.cid); k >= 0 ? UI.tags.splice(k, 1) : UI.tags.push(d.cid); renderJournal(false); $('#jtext') && $('#jtext').focus(); break; }
     case 'jadd': addJournal(); break;
+    case 'jauto': UIG.journal = Object.assign(UIG.journal || {}, {auto: t.checked}); saveUIG(); renderJournal(); break;
     case 'jstar': mutate(() => { const en = S.log.find(x => x.id === d.eid); en.star = !en.star; }); break;
     case 'jdel': mutate(() => S.log = S.log.filter(x => x.id !== d.eid)); toast('Entry deleted (Undo to restore)'); break;
     case 'newsession': mutate(() => { S.session++; UI.round = ''; }); toast(`Session ${S.session} started`); break;
@@ -2731,9 +2795,9 @@ document.addEventListener('click', e => {
       const amt = Math.max(0, roll + c.abilities.con.mod);
       mutate(() => { c.hitDice.find(x => x.die === d.die).used++; heal(c, amt); });
       toast(`${esc(c.name)} heals ${amt}`); break; }
-    case 'doShort': closeModal(); mutate(() => S.characters.forEach(shortRestChar)); toast('Short rest finished'); break;
+    case 'doShort': closeModal(); mutate(() => { S.characters.forEach(shortRestChar); logEntry(S.characters.map(x => x.id), 'The party takes a short rest.', true); }); toast('Short rest finished'); break;
     case 'longRest': longRestModal(); break;
-    case 'doLong': closeModal(); mutate(() => S.characters.forEach(longRestChar)); toast('Long rest finished: everyone refreshed'); break;
+    case 'doLong': closeModal(); mutate(() => { S.characters.forEach(longRestChar); logEntry(S.characters.map(x => x.id), 'The party takes a long rest.', true); }); toast('Long rest finished: everyone refreshed'); break;
     case 'ruleset': mutate(() => S.ruleset = d.v); break;
     case 'undo': undo(); break;
     case 'menu': dataModal(); break;
@@ -2883,6 +2947,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && $('#scrim').classList.contains('open')) closeModal();
   if ((e.ctrlKey || e.metaKey) && e.key === 'z' && VIEW === 'party' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){ e.preventDefault(); undo(); }
   if (e.key === 'Enter' && e.target.dataset && e.target.dataset.hpin) document.querySelector(`[data-act="hp"][data-op="dmg"][data-cid="${e.target.dataset.hpin}"]`).click();
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.dsin){ e.preventDefault(); document.querySelector(`[data-act="dsroll"][data-cid="${e.target.dataset.dsin}"]`).click(); }
   if (e.key === 'Enter' && e.target.id === 'condOther'){ e.preventDefault(); document.querySelector('[data-act="condother"]').click(); }
   if (e.key === 'Enter' && e.target.id === 'tsVal'){ e.preventDefault(); document.querySelector('[data-act="tmpsave"]').click(); }
   if (e.key === 'Enter' && e.target.dataset && e.target.dataset.newitem) document.querySelector(`[data-act="additem"][data-cid="${e.target.dataset.newitem}"]`).click();
