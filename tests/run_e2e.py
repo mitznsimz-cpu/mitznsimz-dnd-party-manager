@@ -314,6 +314,15 @@ with sync_playwright() as pw:
     check('2024 long rest gives them all back', hd() == full and 'regains' in ev(pg, "S.log[S.log.length - 1].text"), hd())
     ev(pg, "S.ruleset = '2014'; save(); renderAll()")
 
+    # ---- characteristics on the character sheet, editable
+    ev(pg, f"mutate(() => Object.assign(charById('{BARD}').notes, {{gender: 'Female', age: '22', height: \"3'2\", eyes: 'Hazel'}}))")
+    ev(pg, f"UI.open['{BARD}'] = true; UI.collapsed['{BARD}:looks'] = false; renderAll()")
+    txt = pg.inner_text('body')
+    check('characteristics section shows on the character sheet', 'CHARACTERISTICS' in txt.upper() and pg.locator(f'[data-note="bio"][data-k="age"][data-cid="{BARD}"]').first.input_value() == '22')
+    loc = pg.locator(f'[data-note="bio"][data-k="hair"][data-cid="{BARD}"]').first; loc.fill('Auburn'); pg.wait_for_timeout(50)
+    check('characteristics are editable', ev(pg, f"charById('{BARD}').notes.hair") == 'Auburn')
+    ev(pg, f"UI.open['{BARD}'] = false; renderAll()")
+
     # ---- homebrew editing and merge protection
     pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
     pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]'); pg.wait_for_selector('#ff_name')
