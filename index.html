@@ -171,6 +171,12 @@ html[data-theme="light"] .seg button.on{background:var(--accent);color:var(--bg)
 .sv .k{font-size:calc(10px*var(--fs));color:var(--muted)}
 .sv .v{font-weight:600;font-variant-numeric:tabular-nums}
 .abil{margin-bottom:4px}
+.details{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 8px}
+.details .dt{display:flex;flex-direction:column;min-width:0}
+.details .dt.wide{grid-column:span 2}
+.details .dt span{font-size:calc(10.5px*var(--fs));color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.details .dt b{font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.details .dt input{padding:2px 5px;min-width:0}
 .abil .sc{font:600 calc(17px*var(--fs))/1.1 var(--sans);font-variant-numeric:tabular-nums}
 .abil .md{font-size:calc(11.5px*var(--fs));color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.2}
 .sv.prof{border-color:var(--gold)} .sv.prof .k{color:var(--gold)}
@@ -418,7 +424,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.12.0';
+const APP_VERSION = '0.12.1';
 const STORAGE_NS = /*NS*/'';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -961,9 +967,20 @@ function statBlockHTML(c){
     ${section(c, 'inventory', 'Equipment', sbInventory(c), c.inventory.length + ' items')}
     ${section(c, 'profs', 'Proficiencies', Object.entries(c.proficiencies||{}).filter(([k]) => k !== 'languages').map(([k,v]) => `<div class="ln"><b>${k[0].toUpperCase()+k.slice(1)}</b> ${esc(v)}</div>`).join(''))}
     ${section(c, 'notes', 'My Notes', `<textarea data-note="char" data-cid="${c.id}" rows="5" placeholder="Anything about ${esc(c.name.split(' ')[0])} you want to remember…">${esc(c.myNotes)}</textarea>`)}
+    ${section(c, 'looks', 'Characteristics', charDetailsHTML(c, n), [n.gender, n.age && 'age ' + n.age].filter(Boolean).join(', ') || null)}
     ${section(c, 'bio', 'Personality &amp; Backstory', ['personality','ideals','bonds','flaws','backstory'].map(k => `<div class="small muted" style="margin-top:6px">${k[0].toUpperCase()+k.slice(1)}</div><textarea data-note="bio" data-k="${k}" data-cid="${c.id}" rows="${k === 'backstory' ? 6 : 2}">${esc(n[k]||'')}</textarea>`).join('') +
-      `<div class="ln small" style="margin-top:6px"><b>Faith</b> ${esc(n.faith||'—')} · <b>Allies</b> ${esc(n.allies||'—')} · <b>Groups</b> ${esc(n.organizations||'—')} · <b>XP</b> ${(c.xp||0).toLocaleString()}</div>`)}
+      `<div class="ln small" style="margin-top:6px"><b>Allies</b> ${esc(n.allies||'—')} · <b>Groups</b> ${esc(n.organizations||'—')} · <b>XP</b> ${(c.xp||0).toLocaleString()}</div>`)}
   </div>`;
+}
+/** Age, height, eyes… from the sheet's characteristics page, editable in place. */
+const DETAILS = [['gender','Gender'],['age','Age'],['height','Height'],['weight','Weight'],['eyes','Eyes'],['skin','Skin'],['hair','Hair'],['faith','Faith']];
+function charDetailsHTML(c, n){
+  return `<div class="details">
+    <div class="dt"><span>Alignment</span><b>${esc(c.alignment || '—')}</b></div><div class="dt"><span>Size</span><b>${esc(c.size || '—')}</b></div>
+    <div class="dt wide"><span>Background</span><b>${esc(c.background || '—')}</b></div>
+    ${DETAILS.map(([k, l]) => `<label class="dt ${k === 'faith' ? 'wide' : ''}"><span>${l}</span><input data-note="bio" data-k="${k}" data-cid="${c.id}" value="${esc(n[k] || '')}" placeholder="—"></label>`).join('')}
+  </div>
+  <div class="small muted" style="margin-top:6px">Appearance</div><textarea data-note="bio" data-k="appearance" data-cid="${c.id}" rows="3" placeholder="What they look like…">${esc(n.appearance || '')}</textarea>`;
 }
 // Sections that start collapsed so an expanded block stays scannable
 const DEFAULT_SHUT = ['traits','profs','bio','inventory'];
@@ -2544,6 +2561,8 @@ const DDB = (() => {
       attacksPerAction, bonusAttack: bonusAtkF ? bonusAtkF.name : null,
       notes: {personality: clean(f.personalitytraits), ideals: clean(f.ideals), bonds: clean(f.bonds), flaws: clean(f.flaws), backstory: clean(f.backstory),
         allies: clean(orgSplit[0].replace(/===\s*Allies\s*===/i, '')), organizations: clean(orgSplit[1] || ''), faith: clean(f.faith), appearance: clean(f.appearance),
+        gender: clean(f.gender), age: clean(f.age), height: clean(f.height), weight: clean(f.weight) && /^\d+(\.\d+)?$/.test(clean(f.weight)) ? clean(f.weight) + ' lb' : clean(f.weight),
+        eyes: clean(f.eyes), skin: clean(f.skin), hair: clean(f.hair),
         additional: [clean(f.additionalnotes1), clean(f.additionalnotes2)].filter(Boolean).join('\n')},
     };
     // level-based slot sanity: a caster with no slots for a level they clearly have (bards print no row without spells known)
