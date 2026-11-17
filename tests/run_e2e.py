@@ -168,6 +168,38 @@ with sync_playwright() as pw:
     pg.unroute('https://api.open5e.com/**'); pg.route('https://api.open5e.com/**', lambda r: r.abort())
     ev(pg, f"UI.open['{ROGUE}'] = false; UI.collapsed['{ROGUE}:inventory'] = true; renderAll()")
 
+    # ---- paste from D&D Beyond: item text read into charges, actions and spells; the full text is always kept
+    PASTED = ROOT / 'tests' / 'fixtures' / 'pasted'
+    def paste_item(cid, iid, fixture):
+        ev(pg, f"closeModal(); itemModal('{cid}', '{iid}')"); pg.wait_for_function("!document.getElementById('modal').textContent.includes('Looking up')")
+        pg.click('#modal [data-act="pasteitem"] >> nth=0'); pg.wait_for_selector('#pasteText')
+        pg.fill('#pasteText', (PASTED / fixture).read_text()); pg.click('#modal [data-act="pasteread"]'); pg.wait_for_selector('#modal [data-act="pasteapply"]')
+        found = pg.inner_text('#modal'); pg.click('#modal [data-act="pasteapply"]'); pg.wait_for_timeout(100)
+        return found, ev(pg, f"charById('{cid}').inventory.find(i => i.id === '{iid}')")
+    found, it = paste_item(ROGUE, 'lucky-picks', 'staff.txt')
+    check('paste preview lists the spells with their charge cost', 'Cast Fireball' in found and 'Spends 3 charges' in found, found[:300])
+    r = ev(pg, f"resById(charById('{ROGUE}'), charById('{ROGUE}').inventory.find(i => i.id === 'lucky-picks').res)")
+    check('paste adds a charge counter', r and r['max'] == 10 and r['reset'] == 'dawn', r)
+    fb = next((a for a in it['actions'] if a['name'] == 'Cast Fireball'), None)
+    check('spells become item actions that spend charges', fb and fb.get('cost') == 3 and fb.get('res') == it['res'], it['actions'])
+    check('pasted text is saved as the description, item marked magic and attuned', 'Staff, rare' in it['desc'] and 'fireball (3 charges)' in it['desc'] and it['magic'] and it['attuned'])
+    ev(pg, f"closeModal(); iactModal('{ROGUE}', 'lucky-picks', '{fb['id']}')"); pg.click('#modal [data-act="iactuse"]')
+    check('using a 3-charge spell spends 3 charges', ev(pg, f"resById(charById('{ROGUE}'), '{it['res']}').used") == 3)
+    found, it = paste_item(ROGUE, 'ring-of-protection', 'homebrew_lines.txt')
+    names = [a['name'] for a in it['actions']]
+    check('one-line-per-rule homebrew: bonus action and once-every-N-days action found', 'Call a Shroud of Frost' in names and any("Winter's Bite" in n for n in names), names)
+    wb = next(a for a in it['actions'] if "Winter's Bite" in a['name'])
+    wr = ev(pg, f"resById(charById('{ROGUE}'), '{wb['res']}')")
+    check('once every 7 days becomes a 1-use counter reset by hand', wr and wr['max'] == 1 and wr['reset'] == 'none' and '7 days' in wr['notes'], wr)
+    check('homebrew rules nobody can parse still end up in the description and notes', 'dual wielder feat' in it['desc'] and 'DC13 Strength' in it['notes'] and 'On a 20' in it['notes'], (it['desc'][-200:], it['notes']))
+    pg.keyboard.press('Escape')
+    pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
+    pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="action"]'); pg.wait_for_selector('#ff_text')
+    pg.fill('#ff_text', (PASTED / 'feature.txt').read_text()); pg.click('#modal [data-act="featpaste"]')
+    vals = ev(pg, "['name','act','res','newMax','newReset'].map(k => document.getElementById('ff_' + k).value)")
+    check('pasted feature text fills name, type and uses', vals == ['Shadow Step', 'bonus', '__new', '3', 'long'], vals)
+    pg.click('#modal [data-act="mclose"]'); pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
+
     # ---- homebrew editing and merge protection
     pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
     pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]'); pg.wait_for_selector('#ff_name')

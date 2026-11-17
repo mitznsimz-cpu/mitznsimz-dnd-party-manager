@@ -1,0 +1,2 @@
+Shadow Step
+When you are in dim light or darkness, as a bonus action you can teleport up to 60 feet to an unoccupied space you can see that is also in dim light or darkness. You can use this feature a number of times equal to your proficiency bonus (3), and you regain all expended uses when you finish a long rest.
