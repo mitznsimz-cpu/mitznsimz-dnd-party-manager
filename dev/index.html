@@ -393,11 +393,11 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.7.0';
+const APP_VERSION = '0.7.1';
 const STORAGE_NS = /*NS*/'dev_';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
-const K_O5E   = STORAGE_NS + 'mnzpm_o5e_cache_v1';
+const K_O5E   = STORAGE_NS + 'mnzpm_o5e_cache_v2';   // v2: exact-name matches only (v1 could cache a wrong item)
 const K_UI    = STORAGE_NS + 'mnzpm_ui_v1';
 const O5E = 'https://api.open5e.com';
 
@@ -1682,7 +1682,7 @@ function applyMerge(){
    OPEN5E LOOKUPS
    ===================================================================== */
 let O5 = {};
-try { O5 = JSON.parse(localStorage.getItem(K_O5E) || '{}'); } catch(e){}
+try { O5 = JSON.parse(localStorage.getItem(K_O5E) || '{}'); localStorage.removeItem(STORAGE_NS + 'mnzpm_o5e_cache_v1'); } catch(e){}
 function o5Save(){ try { localStorage.setItem(K_O5E, JSON.stringify(O5)); } catch(e){ O5 = {}; } }
 async function o5Get(path){ const r = await fetch(O5E + path, {headers:{Accept:'application/json'}}); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }
 const docKey = r => (r && (r.document && (r.document.key || r.document.slug))) || (r && r.document__slug) || '';
@@ -1703,7 +1703,8 @@ async function o5Find(kind, name){
   for (const a of attempts){
     try {
       const j = await o5Get(a); reached = true;
-      const res = (j.results || []).filter(r => !/search=/.test(a) || String(r.name).toLowerCase() === name.toLowerCase() || attempts.indexOf(a) === attempts.length - 1);
+      // only ever accept a result whose name matches: a fuzzy search must not hand a homebrew item someone else's rules
+      const res = (j.results || []).filter(r => sameName(r.name, name));
       data = pick(res); if (data) break;
     } catch(e){ if (/HTTP 4\d\d/.test(e.message)) reached = true; }
   }
@@ -1711,6 +1712,8 @@ async function o5Find(kind, name){
   O5[key] = {t: Date.now(), data}; o5Save();
   return data;
 }
+/** Names match ignoring case, apostrophes and punctuation ("Torm's Blessing" = "Torms blessing"). */
+const sameName = (a, b) => { const n = s => String(s || '').toLowerCase().replace(/[’'`]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); return n(a) === n(b); };
 function itemNameVariants(n){
   const v = [n];
   const a = n.replace(/\s*\+\d+$/,'').replace(/\s*\(.*?\)\s*/g,' ').trim(); if (a !== n) v.push(a);
