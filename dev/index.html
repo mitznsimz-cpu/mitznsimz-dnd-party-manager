@@ -252,6 +252,14 @@ html[data-theme="light"] .seg button.on{background:var(--accent);color:var(--bg)
 .mbody h3{font-size:14px;color:var(--gold2);margin:12px 0 6px}
 .condgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .condgrid button{text-align:left}
+.condcell{display:flex;gap:2px;min-width:0}
+.condcell>button:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ci{padding:2px 6px;font-size:13px;line-height:1;color:var(--muted)}
+.ci.on{color:var(--gold2)}
+.condrules{margin-top:12px;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:var(--bg2);font-size:13.5px;line-height:1.45;min-height:3em}
+.tmpv{color:var(--blue,#4a7bd0);font-style:italic}
+.stat.tmpset{border-style:dashed}
+.stat[data-act],.hpbar[data-act]{cursor:pointer}
 .condgrid button.on{background:var(--cond-bg);border-color:var(--cond-on)}
 .tabs{display:flex;gap:2px;padding:6px 14px 0;border-bottom:1px solid var(--line)}
 .tabs button{border:0;border-radius:7px 7px 0 0;background:transparent;color:var(--muted);padding:6px 10px}
@@ -399,7 +407,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.9.0';
+const APP_VERSION = '0.10.0';
 const STORAGE_NS = /*NS*/'dev_';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -430,6 +438,9 @@ const COND_RULES = {
   Stunned:'Incapacitated; can\'t move, and can speak only falteringly. Automatically fails Strength and Dexterity saves. Attack rolls against it have advantage.',
   Unconscious:'Incapacitated; can\'t move or speak, unaware of its surroundings. Drops what it\'s holding and falls prone. Automatically fails Strength and Dexterity saves. Attack rolls against it have advantage, and any hit from within 5 feet is a critical hit.',
 };
+/** Temporary overrides (Aid, a curse, a shield that's been shattered…): the sheet value stays underneath. */
+const acOf = c => c.tmp && c.tmp.ac != null ? c.tmp.ac : c.ac;
+const hpMaxOf = c => c.tmp && c.tmp.hpMax != null ? c.tmp.hpMax : c.hp.max;
 const EXH_2014 = ['', 'Disadvantage on ability checks', 'Speed halved', 'Disadvantage on attack rolls and saving throws', 'Hit point maximum halved', 'Speed reduced to 0', 'Death'];
 const ACT_LABEL = {action:'Action', bonus:'Bonus action', reaction:'Reaction', special:'Special', passive:'Passive trait'};
 const ORD = n => n + (['th','st','nd','rd'][(n%100-20)%10] || ['th','st','nd','rd'][n%100] || 'th');
@@ -646,7 +657,7 @@ function damage(c, n){
 function heal(c, n){
   if (!(n > 0)) return;
   if (c.hp.current === 0){ c.conditions = c.conditions.filter(x => x !== 'Unconscious'); c.deathSaves = {successes:0, failures:0}; }
-  c.hp.current = Math.min(c.hp.max, c.hp.current + n);
+  c.hp.current = Math.min(hpMaxOf(c), c.hp.current + n);
 }
 function shortRestChar(c){
   c.resources.forEach(r => { if (r.reset === 'short' || r.reset === 'turn') r.used = 0; });
@@ -656,7 +667,8 @@ function longRestChar(c){
   shortRestChar(c);
   c.resources.forEach(r => { if (r.reset === 'long' || r.reset === 'dawn') r.used = 0; });
   c.spellSlots.forEach(s => s.used = 0);
-  c.hp.current = c.hp.max; c.hp.temp = 0;
+  if (c.tmp){ ['ac', 'hpMax'].forEach(k => { if (c.tmp[k] != null && c.tmp[k + 'Long'] !== false){ c.tmp[k] = null; c.tmp[k + 'Note'] = ''; } }); }
+  c.hp.current = hpMaxOf(c); c.hp.temp = 0;
   c.deathSaves = {successes:0, failures:0};
   c.conditions = c.conditions.filter(x => x !== 'Unconscious');
   c.concentration = null;
@@ -688,11 +700,12 @@ const resetTag = r => ({short:'SR', long:'LR', dawn:'dawn', turn:'turn', none:''
    RENDER — card summary
    ===================================================================== */
 function hpHTML(c){
-  const pct = c.hp.max ? Math.max(0, Math.min(100, c.hp.current / c.hp.max * 100)) : 0;
-  const tpct = c.hp.max ? Math.min(100 - pct, c.hp.temp / c.hp.max * 100) : 0;
+  const mx = hpMaxOf(c), tmpMax = mx !== c.hp.max;
+  const pct = mx ? Math.max(0, Math.min(100, c.hp.current / mx * 100)) : 0;
+  const tpct = mx ? Math.min(100 - pct, c.hp.temp / mx * 100) : 0;
   const cls = pct <= 25 ? 'low' : pct <= 50 ? 'mid' : '';
-  return `<div class="hpbar"><div class="hpfill ${cls}" style="width:${pct}%"></div><div class="hptemp" style="left:${pct}%;width:${tpct}%"></div>
-      <div class="hptext">${c.hp.current} / ${c.hp.max}${c.hp.temp ? ` &nbsp;+${c.hp.temp} temp` : ''}</div></div>
+  return `<div class="hpbar" data-act="tmpstat" data-k="hpMax" data-cid="${c.id}" title="${tmpMax ? esc(`Temporary max HP${c.tmp.hpMaxNote ? ': ' + c.tmp.hpMaxNote : ''} (sheet ${c.hp.max}). Click to change.`) : 'Click to set a temporary max HP'}"><div class="hpfill ${cls}" style="width:${pct}%"></div><div class="hptemp" style="left:${pct}%;width:${tpct}%"></div>
+      <div class="hptext">${c.hp.current} / ${tmpMax ? `<span class="tmpv">${mx}✦</span>` : mx}${c.hp.temp ? ` &nbsp;+${c.hp.temp} temp` : ''}</div></div>
     <div class="hpctl">
       <input type="number" min="0" inputmode="numeric" placeholder="amt" data-hpin="${c.id}" aria-label="HP amount">
       <button class="b-dmg" data-act="hp" data-op="dmg" data-cid="${c.id}">Damage</button>
@@ -765,7 +778,7 @@ function cardHTML(c){
         <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="cname grow">${esc(c.name)}</div>${reorderHTML(c)}<button class="ghost small cmenu" data-act="charmenu" data-cid="${c.id}" title="Edit, update, copy or remove">⋯</button></div>
         <div class="csub">${esc(classLine(c))} · ${esc(c.species)}</div>
         <div class="stats">
-          <div class="stat ac" title="Armour Class"><div class="k">AC</div><div class="v">${c.ac}</div></div>
+          <div class="stat ac ${acOf(c) !== c.ac ? 'tmpset' : ''}" data-act="tmpstat" data-k="ac" data-cid="${c.id}" title="${acOf(c) !== c.ac ? esc(`Temporary AC${c.tmp.acNote ? ': ' + c.tmp.acNote : ''} (sheet ${c.ac}). Click to change.`) : 'Armour Class. Click to set a temporary AC'}"><div class="k">AC</div><div class="v">${acOf(c) !== c.ac ? `<span class="tmpv">${acOf(c)}✦</span>` : c.ac}</div></div>
           <div class="stat" title="Initiative"><div class="k">Init</div><div class="v">${sgn(c.initiative)}</div></div>
           <div class="stat" title="Speed"><div class="k">Spd</div><div class="v">${c.speed.walk}</div></div>
           <div class="stat" title="Passive Perception"><div class="k">PP</div><div class="v">${c.passive.perception}</div></div>
@@ -855,8 +868,8 @@ function statBlockHTML(c){
   return `<div class="sb">
     <div class="ital">${esc(c.size || '')} ${esc(c.species)}, ${esc((c.alignment||'').toLowerCase())} · ${esc(subLine(c))} · ${esc(c.background)}</div>
     <div class="rule"></div>
-    <div class="ln"><b>Armour Class</b> ${c.ac}</div>
-    <div class="ln"><b>Hit Points</b> ${c.hp.current}/${c.hp.max}${c.hp.temp ? ` (+${c.hp.temp} temp)` : ''} · <b>Hit Dice</b> ${c.hitDice.map(h => `${h.max - h.used}/${h.max}${h.die}`).join(' + ')}</div>
+    <div class="ln"><b>Armour Class</b> ${acOf(c)}${acOf(c) !== c.ac ? ` <span class="tmpv">(temporary${c.tmp.acNote ? ': ' + esc(c.tmp.acNote) : ''}; sheet ${c.ac})</span>` : ''}</div>
+    <div class="ln"><b>Hit Points</b> ${c.hp.current}/${hpMaxOf(c)}${hpMaxOf(c) !== c.hp.max ? ` <span class="tmpv">(temporary max${c.tmp.hpMaxNote ? ': ' + esc(c.tmp.hpMaxNote) : ''}; sheet ${c.hp.max})</span>` : ''}${c.hp.temp ? ` (+${c.hp.temp} temp)` : ''} · <b>Hit Dice</b> ${c.hitDice.map(h => `${h.max - h.used}/${h.max}${h.die}`).join(' + ')}</div>
     <div class="ln"><b>Speed</b> ${c.speed.walk} ft. · <b>Initiative</b> ${sgn(c.initiative)} · <b>Proficiency</b> ${sgn(c.profBonus)}</div>
     <div class="rule"></div>
     <table class="ab"><tr>${ABILS.map(a => `<th>${ABN[a]}</th>`).join('')}</tr>
@@ -904,7 +917,7 @@ function renderDock(side){
   dock.innerHTML = `<div class="dnav">${open.length > 1 ? open.map(c => `<span class="chip" data-act="dockjump" data-cid="${c.id}">${esc(c.name.split(' ')[0])}</span>`).join('') : ''}
       <span class="grow"></span><button class="small ghost" data-act="dockclose" title="Close all character sheets">Close all ✕</button></div>
     ${open.map(c => `<div class="dblk" id="dock-${c.id}"><div class="dhd">${portraitHTML(c)}<div class="grow"><div class="cname">${esc(c.name)}</div>
-        <div class="csub">${esc(classLine(c))} · HP ${c.hp.current}/${c.hp.max}${c.hp.temp ? ` (+${c.hp.temp})` : ''}</div></div>
+        <div class="csub">${esc(classLine(c))} · HP ${c.hp.current}/${hpMaxOf(c)}${c.hp.temp ? ` (+${c.hp.temp})` : ''}</div></div>
         <button class="ghost" data-act="toggle" data-cid="${c.id}" title="Close">✕</button></div>${statBlockHTML(c)}</div>`).join('')}`;
   dock.scrollTop = keep;
 }
@@ -945,7 +958,7 @@ function allOtherChars(exceptId){
 /** A fresh copy for another campaign: same build, notes and homebrew; session state reset. */
 function freshCopy(c){
   const x = clone(c);
-  x.hp.current = x.hp.max; x.hp.temp = 0; x.deathSaves = {successes:0, failures:0}; x.conditions = []; x.concentration = null; x.exhaustion = 0;
+  delete x.tmp; x.hp.current = x.hp.max; x.hp.temp = 0; x.deathSaves = {successes:0, failures:0}; x.conditions = []; x.concentration = null; x.exhaustion = 0;
   (x.spellSlots||[]).forEach(s => s.used = 0); if (x.pactSlots) x.pactSlots.used = 0;
   (x.resources||[]).forEach(r => r.used = 0); (x.hitDice||[]).forEach(h => h.used = 0);
   return x;
@@ -1461,19 +1474,50 @@ function condInfoModal(cid, name){
         : `<div class="list">${EXH_2014.slice(1).map((t, i) => `<div class="li" style="${i < c.exhaustion ? 'border-color:#a0752a' : 'opacity:.55'}"><b>${i+1}</b>&nbsp; ${t}</div>`).join('')}</div><p class="small muted">Effects are cumulative. A long rest removes one level.</p>`}
       <div class="seg" style="margin-top:8px">${[0,1,2,3,4,5,6].map(n => `<button class="${c.exhaustion===n?'on':''}" data-act="exh" data-cid="${cid}" data-v="${n}">${n}</button>`).join('')}</div></div>`;
     const on = c.conditions.includes(name);
-    return `${mhead(esc(name), esc(c.name))}<div class="mbody lookup"><div class="desc"><p>${esc(COND_RULES[name] || '')}</p></div><div class="src2">${S.ruleset} rules summary</div></div>
+    return `${mhead(esc(name), esc(c.name))}<div class="mbody lookup"><div class="desc"><p>${esc(condText(name))}</p></div><div class="src2">${S.ruleset} rules summary</div></div>
       <div class="mfoot"><button class="${on ? 'b-dmg' : 'pri'}" data-act="togcond" data-cid="${cid}" data-v="${esc(name)}">${on ? 'Remove' : 'Apply'}</button></div>`; });
 }
 function concModal(cid){
   const c = charById(cid); const s = c.spells.find(x => x.name === c.concentration);
   if (s) spellModal(cid, s.id); else openModal(() => `${mhead('Concentrating', esc(c.name))}<div class="mbody">${esc(c.concentration || '')}</div><div class="mfoot"><button class="b-dmg" data-act="dropconc" data-cid="${cid}">Drop concentration</button></div>`);
 }
+function tmpStatModal(cid, k){
+  const isAc = k === 'ac';
+  openModal(() => { const c = charById(cid), t = c.tmp || {}, base = isAc ? c.ac : c.hp.max, cur = t[k];
+    return `${mhead(isAc ? 'Temporary AC' : 'Temporary max HP', esc(c.name))}<div class="mbody">
+      <p class="small muted">${isAc ? 'For a spell, a curse or broken armour.' : 'For Aid, Heroes’ Feast, a necrotic drain…'} The sheet value (<b>${base}</b>) stays underneath and comes back when you clear this.</p>
+      <div class="form"><label class="fld"><span>${isAc ? 'AC for now' : 'Max HP for now'}</span><input id="tsVal" type="number" inputmode="numeric" value="${cur ?? ''}" placeholder="${base}"></label>
+        <label class="fld"><span>Why (optional)</span><input id="tsNote" value="${esc(t[k + 'Note'] || '')}" placeholder="${isAc ? 'Shield of Faith' : 'Aid (2nd level)'}"></label>
+        <label class="fld chk wide"><input type="checkbox" id="tsLong" ${t[k + 'Long'] === false ? '' : 'checked'}><span>Clear it on a long rest</span></label>
+        ${isAc ? '' : `<label class="fld chk wide"><input type="checkbox" id="tsCur" checked><span>When raising the max, raise current HP by the same amount (as Aid does)</span></label>`}</div></div>
+      <div class="mfoot">${cur != null ? `<button class="small" data-act="tmpclear" data-cid="${cid}" data-k="${k}">Back to ${base}</button>` : ''}<span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="tmpsave" data-cid="${cid}" data-k="${k}">Set</button></div>`; });
+  focusFirst('#tsVal');
+}
+function setTmp(c, k, val, note, long, raiseCur){
+  c.tmp = c.tmp || {};
+  const before = hpMaxOf(c);
+  c.tmp[k] = val; c.tmp[k + 'Note'] = note || ''; c.tmp[k + 'Long'] = long;
+  if (k === 'hpMax'){ const after = hpMaxOf(c);
+    if (raiseCur && after > before) c.hp.current += after - before;
+    c.hp.current = Math.max(0, Math.min(after, c.hp.current)); }
+}
+const condText = n => COND_RULES[n] || 'Your own condition. Keep its details in the character notes or the journal.';
 function condModal(cid){
-  openModal(() => { const c = charById(cid); return `${mhead('Conditions', esc(c.name))}
-    <div class="mbody"><div class="condgrid">${CONDITIONS.map(x => `<button class="${c.conditions.includes(x)?'on':''}" data-act="togcond" data-cid="${cid}" data-v="${x}" title="${esc(COND_RULES[x])}">${x}</button>`).join('')}</div>
-      <h3>Exhaustion</h3><div class="seg">${[0,1,2,3,4,5,6].map(n => `<button class="${c.exhaustion===n?'on':''}" data-act="exh" data-cid="${cid}" data-v="${n}">${n}</button>`).join('')}</div>
-      <div class="small dim" style="margin-top:8px">Hover a condition for its rules, or click its chip on the card.</div>
-    </div><div class="mfoot"><button class="pri" data-act="mclose">Done</button></div>`; });
+  UI._condRule = null;
+  floatModal(() => { const c = charById(cid), rule = UI._condRule;
+    const custom = c.conditions.filter(x => !CONDITIONS.includes(x));
+    const recent = (S.customConds || []).filter(x => !c.conditions.includes(x));
+    const cell = (x, on) => `<div class="condcell"><button class="${on ? 'on' : ''}" data-act="togcond" data-cid="${cid}" data-v="${esc(x)}">${esc(x)}</button><button class="ghost ci ${rule === x ? 'on' : ''}" data-act="condrule" data-v="${esc(x)}" title="Rules">ⓘ</button></div>`;
+    return `${mhead('Conditions', esc(c.name))}
+    <div class="mbody"><div class="condgrid">${CONDITIONS.map(x => cell(x, c.conditions.includes(x))).join('')}</div>
+      <h3>Other</h3>
+      ${custom.length || recent.length ? `<div class="condgrid" style="margin-bottom:6px">${custom.map(x => cell(x, true)).join('')}${recent.map(x => cell(x, false)).join('')}</div>` : ''}
+      <div class="row"><input id="condOther" class="grow" placeholder="Anything else: Hexed, Slowed, Marked by the Hunter…" autocomplete="off"><button data-act="condother" data-cid="${cid}">+ Add</button></div>
+      <h3>Exhaustion <button class="ghost ci ${rule === 'Exhaustion' ? 'on' : ''}" data-act="condrule" data-v="Exhaustion" title="Rules">ⓘ</button></h3><div class="seg">${[0,1,2,3,4,5,6].map(n => `<button class="${c.exhaustion===n?'on':''}" data-act="exh" data-cid="${cid}" data-v="${n}">${n}</button>`).join('')}</div>
+      <div class="condrules">${rule ? `<b>${esc(rule)}</b> ${rule === 'Exhaustion'
+          ? (S.ruleset === '2024' ? 'Each level gives −2 to D20 Tests and −5 ft speed. Level 6 is death. A long rest removes one level.' : EXH_2014.slice(1).map((t, i) => `${i + 1}: ${t}`).join(' · ') + '. Cumulative; a long rest removes one level.')
+          : esc(condText(rule))}` : '<span class="muted">Tap ⓘ to read a condition’s rules here.</span>'}</div>
+    </div><div class="mfoot"><span class="small dim">${S.ruleset} rules</span><span class="grow"></span><button class="pri" data-act="mclose">Done</button></div>`; });
 }
 function castModal(cid, sid){
   floatModal(() => {
@@ -1519,7 +1563,7 @@ function shortRestModal(){
   openModal(() => `${mhead('Short rest')}<div class="mbody">
     <div class="muted small" style="margin-bottom:8px">Roll hit dice at the table, type the roll and press Spend. The CON modifier is added for you.</div>
     ${S.characters.map(c => `<div class="li" style="margin-bottom:4px;flex-wrap:wrap">
-      <div class="grow"><b>${esc(c.name)}</b> <span class="muted small">HP ${c.hp.current}/${c.hp.max} · CON ${sgn(c.abilities.con.mod)}</span>
+      <div class="grow"><b>${esc(c.name)}</b> <span class="muted small">HP ${c.hp.current}/${hpMaxOf(c)} · CON ${sgn(c.abilities.con.mod)}</span>
         <div class="small">${c.hitDice.map(h => `${h.die}: ${h.max - h.used}/${h.max}`).join(' · ')}</div></div>
       ${c.hitDice.map(h => `<span class="row"><input type="number" min="1" style="width:56px" placeholder="${h.die}" data-hdroll="${c.id}|${h.die}"><button ${h.max - h.used ? '' : 'disabled'} data-act="spendhd" data-cid="${c.id}" data-die="${h.die}">Spend ${h.die}</button></span>`).join('')}
     </div>`).join('')}
@@ -1648,7 +1692,7 @@ function diffChar(old, nu){
   if (!same(old.classes, nu.classes)) add('Core', 'Classes', `<span class="old">${esc(classLine(old))}</span> → <span class="new">${esc(classLine(nu))} (${esc(subLine(nu))})</span>`, c => c.classes = clone(nu.classes));
   SCALARS.forEach(([p,l]) => { const a = getp(old,p), b = getp(nu,p);
     if (b !== undefined && !same(a,b)) add('Core', l, `<span class="old">${esc(a ?? '—')}</span> → <span class="new">${esc(b)}</span>`, c => {
-      if (p === 'hp.max'){ const d = b - c.hp.max; c.hp.max = b; c.hp.current = Math.max(0, Math.min(b, c.hp.current + Math.max(0,d))); }
+      if (p === 'hp.max'){ const d = b - c.hp.max; c.hp.max = b; c.hp.current = Math.max(0, Math.min(hpMaxOf(c), c.hp.current + Math.max(0,d))); }
       else setp(c, p, clone(b)); }); });
   ABILS.forEach(a => { const A = old.abilities[a], B = nu.abilities[a];
     if (!same(A,B)) add('Abilities & saves', ABFULL[a], `<span class="old">${A.score} (${sgn(A.mod)}), save ${sgn(A.save)}</span> → <span class="new">${B.score} (${sgn(B.mod)}), save ${sgn(B.save)}${B.saveProf ? ' ●' : ''}</span>`, c => c.abilities[a] = clone(B)); });
@@ -2574,6 +2618,21 @@ document.addEventListener('click', e => {
       if (c.deathSaves.failures >= 3) toast(`<b>${esc(c.name)} has died.</b> Undo if that was a misclick.`, true); }); break;
     case 'cond': condModal(d.cid); break;
     case 'condinfo': condInfoModal(d.cid, d.v); break;
+    case 'condrule': UI._condRule = UI._condRule === d.v ? null : d.v; UI.modal(); break;
+    case 'condother': { const el = $('#condOther'), v = el.value.trim().replace(/\s+/g, ' ');
+      if (!v){ el.focus(); break; }
+      const std = CONDITIONS.find(x => x.toLowerCase() === v.toLowerCase());
+      const name = std || v;
+      if (c.conditions.includes(name)){ toast(`${esc(c.name)} already has ${esc(name)}`); el.select(); break; }
+      mutate(() => { c.conditions.push(name);
+        if (!std) S.customConds = [name, ...(S.customConds || []).filter(x => x !== name)].slice(0, 12); });
+      const nx = $('#condOther'); if (nx) nx.focus(); break; }
+    case 'tmpstat': tmpStatModal(d.cid, d.k); break;
+    case 'tmpsave': { const raw = $('#tsVal').value.trim(), note = $('#tsNote').value.trim(), long = $('#tsLong').checked, raise = $('#tsCur') ? $('#tsCur').checked : false;
+      const val = raw === '' ? null : Math.max(d.k === 'ac' ? 0 : 1, Math.round(+raw));
+      closeModal(); mutate(() => setTmp(c, d.k, val, note, long, raise));
+      toast(val == null ? 'Back to the sheet value' : `${esc(c.name)}: ${d.k === 'ac' ? 'AC' : 'max HP'} ${val} for now`); break; }
+    case 'tmpclear': closeModal(); mutate(() => setTmp(c, d.k, null, '', true, false)); toast('Back to the sheet value'); break;
     case 'concinfo': concModal(d.cid); break;
     case 'togcond': mutate(() => { const i = c.conditions.indexOf(d.v); i >= 0 ? c.conditions.splice(i,1) : c.conditions.push(d.v); }); break;
     case 'rmcond': mutate(() => c.conditions = c.conditions.filter(x => x !== d.v)); break;
@@ -2824,6 +2883,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && $('#scrim').classList.contains('open')) closeModal();
   if ((e.ctrlKey || e.metaKey) && e.key === 'z' && VIEW === 'party' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){ e.preventDefault(); undo(); }
   if (e.key === 'Enter' && e.target.dataset && e.target.dataset.hpin) document.querySelector(`[data-act="hp"][data-op="dmg"][data-cid="${e.target.dataset.hpin}"]`).click();
+  if (e.key === 'Enter' && e.target.id === 'condOther'){ e.preventDefault(); document.querySelector('[data-act="condother"]').click(); }
+  if (e.key === 'Enter' && e.target.id === 'tsVal'){ e.preventDefault(); document.querySelector('[data-act="tmpsave"]').click(); }
   if (e.key === 'Enter' && e.target.dataset && e.target.dataset.newitem) document.querySelector(`[data-act="additem"][data-cid="${e.target.dataset.newitem}"]`).click();
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && e.target.id === 'jtext'){ e.preventDefault(); addJournal(); }
 });
