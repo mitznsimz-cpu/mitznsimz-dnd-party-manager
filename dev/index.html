@@ -371,6 +371,7 @@ body:not(.home) .honly{display:none!important}
   <button class="ponly purse-chip" data-act="purse" title="Party purse"></button>
   <button class="ponly" data-act="checks" title="Compare saves and skills across the party">Party Checks</button>
   <button class="ponly" data-act="journal" title="Combat log and party notes">Journal</button>
+  <button class="ponly" data-act="reference" title="Look up any spell, item or condition (Open5e) and add it to a character">📖 Reference</button>
   <button class="ponly" data-act="shortRest">Short Rest</button>
   <button class="ponly" data-act="longRest">Long Rest</button>
   <button class="ponly" data-act="expandAll" id="expandBtn">Expand all</button>
@@ -398,7 +399,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.8.0';
+const APP_VERSION = '0.9.0';
 const STORAGE_NS = /*NS*/'dev_';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -1827,6 +1828,91 @@ function o5ItemHTML(d){
       ${d.weight ? `<span class="k">Weight</span><span>${esc(d.weight)}</span>` : ''}${d.cost ? `<span class="k">Cost</span><span>${esc(d.cost)}</span>` : ''}</div>
     <div class="desc">${md(d.desc)}</div><div class="src2">Open5e · ${esc((d.document && (d.document.name || d.document.display_name)) || d.document__title || docKey(d))}</div>`;
 }
+/* =====================================================================
+   REFERENCE — look anything up on Open5e (not just what the party has),
+   read it in a floating pop-up, and add it to a character from there.
+   ===================================================================== */
+const REF = {kind: 'spell', q: '', results: [], busy: false, err: '', sel: null, seq: 0};
+let refTimer = null;
+function refModal(){
+  floatModal(() => `${mhead('📖 Reference', S.ruleset + ' rules · Open5e')}<div class="mbody lookup">
+    <div class="row" style="gap:8px;margin-bottom:8px"><span class="seg">${[['spell','Spells'],['item','Items'],['cond','Conditions']].map(([k, l]) => `<button class="${REF.kind === k ? 'on' : ''}" data-act="refkind" data-v="${k}">${l}</button>`).join('')}</span>
+      <input id="refQ" class="grow" placeholder="${REF.kind === 'cond' ? 'Filter conditions…' : 'Type a name, e.g. ' + (REF.kind === 'spell' ? 'counterspell' : 'bag of holding')}" value="${esc(REF.q)}" autocomplete="off"></div>
+    <div id="refBody">${refBodyHTML()}</div></div>`, true);
+  const q = $('#refQ'); if (q){ q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+}
+const refRedraw = () => { const b = document.getElementById('refBody'); if (b) b.innerHTML = refBodyHTML(); };
+function refBodyHTML(){
+  if (REF.sel) return refDetailHTML();
+  if (REF.kind === 'cond'){
+    const list = [...CONDITIONS, 'Exhaustion'].filter(n => n.toLowerCase().includes(REF.q.toLowerCase()));
+    return `<div class="list">${list.map(n => `<div class="li"><div class="nm" data-act="refpick" data-v="${esc(n)}">${esc(n)}<div class="meta">${esc((COND_RULES[n] || 'Levels 1–6, cumulative. A long rest removes one level.').slice(0, 90))}…</div></div></div>`).join('')}</div>`;
+  }
+  if (REF.q.trim().length < 2) return '<div class="empty">Type at least two letters. Results come from Open5e, so this needs a connection; anything you open is cached for offline use.</div>';
+  if (REF.busy) return '<div class="empty">Searching Open5e…</div>';
+  if (REF.err) return `<div class="empty">Open5e unavailable (${esc(REF.err)}).</div>`;
+  if (!REF.results.length) return `<div class="empty">Nothing on Open5e called “${esc(REF.q)}”. Homebrew? Add it to a character with ✎ or 📋 Paste from D&amp;D Beyond.</div>`;
+  return `<div class="list">${REF.results.map((r, i) => `<div class="li"><div class="nm" data-act="refpick" data-v="${i}">${esc(r.name)}<div class="meta">${esc(refSub(r))}</div></div></div>`).join('')}</div>`;
+}
+function refSub(r){
+  if (REF.kind === 'spell'){ const lv = r.level ?? r.level_int; const school = r.school && (r.school.name || r.school) || '';
+    return [lv ? ORD(lv) + ' level' : lv === 0 ? 'Cantrip' : '', school, docLabel(r)].filter(Boolean).join(' · '); }
+  const rar = r.rarity && (r.rarity.name || r.rarity) || '', cat = r.category && (r.category.name || r.category) || r.type || '';
+  return [cat, rar, docLabel(r)].filter(Boolean).join(' · ');
+}
+const docLabel = r => (r.document && (r.document.display_name || r.document.name)) || r.document__title || docKey(r);
+async function refSearch(){
+  const q = REF.q.trim(), seq = ++REF.seq;
+  if (REF.kind === 'cond' || q.length < 2){ REF.results = []; REF.busy = false; refRedraw(); return; }
+  REF.busy = true; REF.err = ''; refRedraw();
+  const e = encodeURIComponent(q);
+  const bases = REF.kind === 'spell' ? ['/v2/spells/'] : ['/v2/items/', '/v2/magicitems/'];
+  const ql0 = q.toLowerCase();
+  // name filter first; if that isn't supported or finds nothing, the general search, keeping only names that contain what you typed
+  const one = async base => { let j = null;
+    try { j = await o5Get(`${base}?name__icontains=${e}&limit=40`); } catch(err){ j = null; }
+    if (j && (j.results || []).length) return j;
+    const s = await o5Get(`${base}?search=${e}&limit=50`);
+    return {results: (s.results || []).filter(r => String(r.name || '').toLowerCase().includes(ql0))}; };
+  const got = await Promise.allSettled(bases.map(one));
+  if (seq !== REF.seq) return;   // a newer search has started
+  REF.busy = false;
+  const all = got.filter(g => g.status === 'fulfilled').flatMap(g => g.value.results || []);
+  if (!all.length && got.every(g => g.status === 'rejected')){ REF.err = 'offline or blocked'; REF.results = []; refRedraw(); return; }
+  // one entry per name, from the ruleset you play
+  const byName = {}; all.forEach(r => { const k = r.name.toLowerCase(); (byName[k] = byName[k] || []).push(r); });
+  const ql = q.toLowerCase();
+  REF.results = Object.values(byName).map(pick).sort((a, b) => (b.name.toLowerCase().startsWith(ql) - a.name.toLowerCase().startsWith(ql)) || a.name.localeCompare(b.name)).slice(0, 30);
+  refRedraw();
+}
+function refDetailHTML(){
+  const d = REF.sel, back = `<div class="row" style="margin-bottom:6px"><button class="small" data-act="refback">← Results</button><b class="grow" style="font-size:16px">${esc(d.name)}</b></div>`;
+  const chars = S.characters;
+  if (REF.kind === 'cond') return `${back}<div class="desc"><p>${esc(COND_RULES[d.name] || '')}</p></div>
+    ${d.name === 'Exhaustion' ? '<p class="small muted">Set a character’s exhaustion level from the condition button on their card.</p>' : `<h3>Apply to</h3><div class="row">${chars.map(c => `<button class="small ${c.conditions.includes(d.name) ? 'on' : ''}" data-act="togcond" data-cid="${c.id}" data-v="${esc(d.name)}">${c.conditions.includes(d.name) ? '✓ ' : ''}${esc(c.name.split(' ')[0])}</button>`).join('')}</div>`}`;
+  const has = c => REF.kind === 'spell' ? c.spells.some(s => sameName(s.name, d.name)) : c.inventory.some(i => sameName(i.name, d.name));
+  const lv = d.level ?? d.level_int, ct = String(d.casting_time || '').replace(/_/g, ' ');
+  const spellTop = REF.kind !== 'spell' ? '' : `<div class="meta"><span class="k">Level</span><span>${lv ? ORD(lv) + ' level' : 'Cantrip'}${d.ritual ? ' · ritual' : ''}${d.concentration ? ' · concentration' : ''}</span>
+    ${ct ? `<span class="k">Casting time</span><span>${esc(ct)}</span>` : ''}${d.range_text || d.range ? `<span class="k">Range</span><span>${esc(d.range_text || d.range)}</span>` : ''}${d.duration ? `<span class="k">Duration</span><span>${esc(d.duration)}</span>` : ''}</div>`;
+  return `${back}${spellTop}${REF.kind === 'spell' ? o5SpellHTML(d) : o5ItemHTML(d)}
+    <h3>Add to</h3><div class="row">${chars.map(c => `<button class="small" data-act="refadd" data-cid="${c.id}" ${has(c) ? 'disabled title="Already has it"' : ''}>${has(c) ? '✓ ' : '+ '}${esc(c.name.split(' ')[0])}</button>`).join('')}</div>
+    <p class="small muted">${REF.kind === 'spell' ? 'Adds it to their spell list, prepared, with the full text so it works offline.' : 'Adds one to their inventory. Open it there to add actions or charges.'}</p>`;
+}
+const CAST_TIME = t => { t = String(t || '').toLowerCase(); return /bonus/.test(t) ? '1BA' : /reaction/.test(t) ? '1R' : /^1?\s*min|1minute/.test(t) ? '1m' : /10\s*min/.test(t) ? '10m' : /8\s*h/.test(t) ? '8h' : /1?\s*h(ou)?r/.test(t) ? '1h' : '1A'; };
+function refAdd(c){
+  const d = REF.sel;
+  if (REF.kind === 'spell'){
+    const comps = [d.verbal && 'V', d.somatic && 'S', d.material && 'M'].filter(Boolean).join(',') || d.components || '';
+    const lv = d.level ?? d.level_int ?? 0;
+    c.spells.push({id: slug(d.name + '-reference') + '-' + uid().slice(0, 3), name: d.name, level: lv, time: CAST_TIME(d.casting_time), range: d.range_text || (d.range ? d.range + ' ft.' : ''),
+      duration: d.duration || '', concentration: !!d.concentration, ritual: !!d.ritual, components: comps, saveAtk: '--', source: 'Reference', ref: docLabel(d), alwaysPrepared: false, prepared: true,
+      desc: [d.desc, d.higher_level && '**At higher levels.** ' + d.higher_level].filter(Boolean).join('\n\n'), notes: '', custom: true});
+  } else {
+    const rar = d.rarity && (d.rarity.name || d.rarity) || '';
+    c.inventory.push({id: slug(d.name) + '-' + uid().slice(0, 4), name: d.name, qty: 1, weight: d.weight ? String(d.weight) : null, magic: !!rar && !/mundane/i.test(rar), attuned: false, consumable: /potion|scroll/i.test(d.name + ' ' + (d.category && (d.category.name || d.category) || '')),
+      desc: '', notes: '', actions: [], open5eKey: d.key || null, custom: true});
+  }
+}
 function spellModal(cid, sid){
   const c = charById(cid), s = c.spells.find(x => x.id === sid);
   const st = {data: undefined, err: null};
@@ -2564,6 +2650,11 @@ document.addEventListener('click', e => {
       mutate(() => { S.purse[k] += n * +d.d; if (note) logEntry([], `${+d.d > 0 ? 'Gained' : 'Spent'} ${n} ${k}: ${note}`); }); break; }
     case 'checks': checksModal(); break;
     case 'journal': toggleJournal(); break;
+    case 'reference': refModal(); break;
+    case 'refkind': REF.kind = d.v; REF.sel = null; REF.results = []; refModal(); refSearch(); break;
+    case 'refpick': REF.sel = REF.kind === 'cond' ? {name: d.v} : REF.results[+d.v]; refRedraw(); break;
+    case 'refback': REF.sel = null; refRedraw(); break;
+    case 'refadd': { const nm = REF.sel.name; mutate(() => refAdd(c)); refRedraw(); toast(`${esc(nm)} added to ${esc(c.name)}`); break; }
     case 'jclose': toggleJournal(false); break;
     case 'jmin': UIG.journal = Object.assign(UIG.journal || {}, {min: !(UIG.journal && UIG.journal.min)}); saveUIG(); renderJournal(true); break;
     case 'jtab': UI.journalTab = d.v; saveUI(); renderJournal(true); break;
@@ -2715,7 +2806,9 @@ $('#grid').addEventListener('drop', e => {
 });
 document.addEventListener('focusin', e => { if (e.target.dataset && e.target.dataset.note) snap(); });
 document.addEventListener('input', e => {
-  const t = e.target, d = t.dataset; if (!d || !d.note) return;
+  const t = e.target, d = t.dataset;
+  if (t.id === 'refQ'){ REF.q = t.value; REF.sel = null; clearTimeout(refTimer); if (REF.kind === 'cond') refRedraw(); else refTimer = setTimeout(refSearch, 300); return; }
+  if (!d || !d.note) return;
   const c = d.cid ? charById(d.cid) : null;
   if (d.note === 'char') c.myNotes = t.value;
   if (d.note === 'bio'){ c.notes = c.notes || {}; c.notes[d.k] = t.value; }
