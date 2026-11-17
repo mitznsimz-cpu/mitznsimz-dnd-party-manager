@@ -148,6 +148,26 @@ with sync_playwright() as pw:
     pg.keyboard.press('Escape')
     check('cards say "Character sheet"', 'Character sheet' in pg.inner_text(f'.card[data-cid="{FIGHTER}"] .sbtoggle'))
 
+    # ---- lookups never borrow another item's rules (Open5e's fuzzy search returning 'Acid')
+    ACID = {"count": 1, "results": [{"name": "Acid", "desc": "When you take the Attack action, you can replace one of your attacks with throwing a vial of Acid.", "document": {"key": "srd-2024"}}]}
+    RING = {"count": 1, "results": [{"name": "Ring of Protection", "desc": "You gain a +1 bonus to AC and saving throws.", "document": {"key": "srd-2014"}}]}
+    def fake_open5e(route):
+        u = route.request.url
+        if 'search=' in u: route.fulfill(json=ACID)                            # fuzzy search: always some unrelated item
+        elif 'iexact=Ring%20of%20Protection' in u: route.fulfill(json=RING)
+        else: route.fulfill(json={"count": 0, "results": []})
+    pg.unroute('https://api.open5e.com/**'); pg.route('https://api.open5e.com/**', fake_open5e)
+    ev(pg, f"UI.open['{ROGUE}'] = true; UI.collapsed['{ROGUE}:inventory'] = false; renderAll()")
+    pg.click(f'.card[data-cid="{ROGUE}"] .sb .nm[data-iid="lucky-picks"]'); pg.wait_for_function("!document.getElementById('modal').textContent.includes('Looking up')")
+    txt = pg.inner_text('#modal')
+    check('homebrew item does not pick up another item\'s rules', 'vial of Acid' not in txt and 'Not found on Open5e' in txt, txt[:200])
+    pg.keyboard.press('Escape')
+    pg.click(f'.card[data-cid="{ROGUE}"] .sb .nm[data-iid="ring-of-protection"]'); pg.wait_for_function("!document.getElementById('modal').textContent.includes('Looking up')")
+    check('a real SRD item still gets its description', '+1 bonus to AC' in pg.inner_text('#modal'))
+    pg.keyboard.press('Escape')
+    pg.unroute('https://api.open5e.com/**'); pg.route('https://api.open5e.com/**', lambda r: r.abort())
+    ev(pg, f"UI.open['{ROGUE}'] = false; UI.collapsed['{ROGUE}:inventory'] = true; renderAll()")
+
     # ---- homebrew editing and merge protection
     pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
     pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]'); pg.wait_for_selector('#ff_name')
