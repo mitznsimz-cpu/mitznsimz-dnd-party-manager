@@ -1,0 +1,7 @@
+This curved blade was quenched in the frozen lakes of the north. Frost creeps along its edge.
+This is a +1 weapon and its attacks count as magical for overcoming resistances.
+As a bonus action you can call a shroud of frost that coils around the blade. Once called this blade deals an extra 1d6 cold damage each time it hits for the duration (1 round).
+When you attack a creature with this weapon and roll a 20 on the attack roll, that target takes an extra 1D8 slashing damage.
+If a creature hit by this blade is reduced to less than half its maximum hit points it becomes restrained by ice until the end of its next turn unless it succeeds on a DC13 Strength save.
+If your character has the dual wielder feat then the damage dealt using the off-hand attack is now 1d6 slashing damage in place of the standard 1d4 slashing damage.
+Once every 7 days you can unleash the Winter's Bite. This allows you to take the magic action instead of attacking and cast Cone of Cold

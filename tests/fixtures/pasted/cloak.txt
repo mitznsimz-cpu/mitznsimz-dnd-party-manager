@@ -1,0 +1,5 @@
+Cloak of Quiet Steps
+Wondrous item, uncommon
+While wearing this cloak, you have advantage on Dexterity (Stealth) checks.
+
+Fade. You can use a bonus action to become invisible until the start of your next turn. You can use this property twice, and you regain all expended uses when you finish a long rest.

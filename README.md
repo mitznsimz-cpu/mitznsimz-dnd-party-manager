@@ -14,6 +14,7 @@ No install, no account. It runs entirely in your browser and keeps everything on
 - **Character sheets** – open any character's full sheet: abilities, skills, senses, actions, bonus actions, reactions, special and limited uses, traits, spellcasting, equipment, notes and backstory. On a laptop they open in a side panel; several can be open at once.
 - **Details everywhere** – tap a spell, item, feature or condition for its details in a pop-up you can drag anywhere (it doesn't block the page), with **Use** / **Cast** buttons that spend the right slot, charge or use. Spells and items are looked up on [Open5e](https://open5e.com).
 - **Homebrew** – add or edit features, actions, limited uses, attacks, spells and items (with their own actions and charges) for anything your character sheet doesn't export properly.
+- **Paste from D&D Beyond** – copy an item's text from D&D Beyond (homebrew included) and paste it into the item pop-up. The app finds the charges and how they come back, the actions, bonus actions and reactions it gives, spells cast from it with their charge cost, and bonuses worth a reminder. You tick what to add. The full text is always kept as the item's description. Feature text pasted into the feature form fills in the type and uses the same way.
 - **Rests** – short rest with hit-dice spending (type your roll), long rest for the whole party in one click.
 - **Party purse** – one shared purse with per-person shares and spending notes.
 - **Party checks** – every save and skill for the whole party side by side, best highlighted.
@@ -35,6 +36,7 @@ Everything is stored in your browser (`localStorage`). Nothing is uploaded and t
 | `tools/build.py` | Builds `index.html` and `dev/index.html` from the source. |
 | `tools/ddb_harness.mjs` | Runs the app's D&D Beyond parser on PDFs from the command line (development). |
 | `tools/ddb_tables.py` | Older reference parser for D&D Beyond PDF text. |
+| `tests/run_paste_reader.mjs` | Unit checks for the paste reader, run with node against `tests/fixtures/pasted/` (invented items). |
 | `tests/run_e2e.py` | End-to-end browser tests (Playwright + Chrome) against an anonymised test party. |
 | `tests/run_pdf_import.py` | Browser test of PDF import, using your own sheets in `private/sheets/` (skipped if there are none). |
 | `tests/fixtures/party.json` | The anonymised test party. |
@@ -46,6 +48,7 @@ Everything is stored in your browser (`localStorage`). Nothing is uploaded and t
 ```sh
 python3 tools/build.py          # writes index.html and dev/index.html
 python3 tests/run_e2e.py        # needs: pip install playwright, and Chrome
+node tests/run_paste_reader.mjs
 ```
 
 A private build with your own party embedded as starter data:
@@ -58,7 +61,7 @@ python3 tools/build.py --seed private/party.json --out private/party_manager.htm
 
 D&D Beyond's character-sheet PDF keeps every value in a named form field. The app loads [pdf.js](https://mozilla.github.io/pdf.js/) from jsDelivr the first time you import, reads those fields in your browser and builds the character. Nothing is uploaded.
 
-What it can't know, it tells you after the import: how many charges a homebrew item has, which spells a cleric or wizard has prepared (the sheet lists the whole class list), and any equipment lines it tidied up. Homebrew item rules aren't in the PDF either; add them with ✎ Edit on the item.
+What it can't know, it tells you after the import: how many charges a homebrew item has, which spells a cleric or wizard has prepared (the sheet lists the whole class list), and any equipment lines it tidied up. Homebrew item rules aren't in the PDF either: copy them from D&D Beyond and use 📋 Paste from D&D Beyond in the item pop-up, or type them in with ✎ Edit.
 
 ## Data format and the merge
 

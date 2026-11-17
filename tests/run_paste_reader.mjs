@@ -1,0 +1,24 @@
+// Unit checks for the paste reader, run straight from the app source:  node tests/run_paste_reader.mjs
+import fs from 'fs';
+const src = fs.readFileSync(new URL('../src/party_manager.html', import.meta.url), 'utf8');
+const PASTE = new Function(src.slice(src.indexOf('/* PASTE-READER START */'), src.indexOf('/* PASTE-READER END */')) + '\nreturn PASTE;')();
+const fx = f => fs.readFileSync(new URL('./fixtures/pasted/' + f, import.meta.url), 'utf8');
+let fails = 0; const check = (name, ok, d) => { console.log((ok ? 'PASS ' : 'FAIL ') + name + (ok ? '' : '  ' + JSON.stringify(d))); if (!ok) fails++; };
+let r = PASTE.parseItem(fx('glaive.txt'));
+check('glaive: name, type, rarity', r.name === 'Ember Glaive' && r.category === 'Weapon (Glaive)' && r.rarity === 'very rare', r);
+check('glaive: 3 charges at dawn, wall of fire for 1', r.charges.max === 3 && r.charges.reset === 'dawn' && r.spells[0].name === 'Wall of Fire' && r.spells[0].cost === 1, r);
+check('glaive: reaction found', r.actions.some(a => a.name === 'Burning Riposte' && a.act === 'reaction'), r.actions);
+r = PASTE.parseItem(fx('staff.txt'));
+check('staff: name kept (not mistaken for a type line)', r.name === 'Staff of Cinders' && r.category === 'Staff', r);
+check('staff: three spells with costs', JSON.stringify(r.spells.map(s => [s.name, s.cost])) === JSON.stringify([['Burning Hands', 1], ['Fireball', 3], ['Wall of Fire', 4]]), r.spells);
+r = PASTE.parseItem(fx('hammer.txt'));
+check('hammer: once-per-dawn bonus action', r.actions.some(a => a.name === 'Radiant Strike' && a.act === 'bonus' && a.uses && a.uses.max === 1 && a.uses.reset === 'dawn'), r.actions);
+r = PASTE.parseItem(fx('cloak.txt'));
+check('cloak: twice per long rest', r.actions.some(a => a.name === 'Fade' && a.uses && a.uses.max === 2 && a.uses.reset === 'long'), r.actions);
+r = PASTE.parseItem(fx('homebrew_lines.txt'), 'Frostbite Saber');
+check('homebrew lines: 2 actions only (a feat note is not an action)', r.actions.length === 2, r.actions.map(a => a.name));
+check('homebrew lines: once every 7 days', r.actions.some(a => a.uses && a.uses.every === 'once every 7 days'), r.actions);
+check('homebrew lines: every line kept', r.desc.length === 7, r.desc.length);
+const f = PASTE.parseFeature(fx('feature.txt'));
+check('feature: name, bonus action, PB uses per long rest', f.name === 'Shadow Step' && f.act === 'bonus' && f.uses.max === 3 && f.uses.reset === 'long', f);
+console.log(fails ? `\n${fails} failed` : '\nall passed'); process.exit(fails ? 1 : 0);

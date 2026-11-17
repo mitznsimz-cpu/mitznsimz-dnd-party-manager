@@ -350,6 +350,11 @@ body:not(.home) .honly{display:none!important}
 .addrow{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 2px}
 .addrow span{font-size:12px;color:var(--muted);cursor:pointer;border-bottom:1px dashed var(--dim)}
 .addrow span:hover{color:var(--gold2);border-color:var(--gold)}
+.pchk{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.pchk input{margin-top:3px;flex:none}
+.pchk .tag{font-weight:400}
+#pasteText{width:100%;font-family:inherit}
+.pastehint{margin:0 0 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .tag.hb{border-color:var(--green);color:var(--green2)}
 @media (max-width:560px){.form{grid-template-columns:1fr}}
 .foot{padding:10px 14px 20px;color:var(--dim);font-size:12px;text-align:center}
@@ -393,7 +398,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.7.1';
+const APP_VERSION = '0.8.0';
 const STORAGE_NS = /*NS*/'';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -1238,13 +1243,13 @@ function iactModal(cid, iid, aid){
   floatModal(() => {
     const c = charById(cid), it = c.inventory.find(x => x.id === iid), a = it && (it.actions||[]).find(x => x.id === aid);
     if (!a) return mhead('Not found');
-    const r = a.res ? resById(c, a.res) : null, left = r && r.max != null ? r.max - r.used : null;
+    const r = a.res ? resById(c, a.res) : null, left = r && r.max != null ? r.max - r.used : null, cost = a.cost || 1;
     return `${mhead('⚔ ' + esc(a.name), esc(it.name))}<div class="mbody lookup">
       <div class="meta"><span class="k">Type</span><span>${ACT_LABEL[a.act] || a.act}</span><span class="k">From</span><span class="link" data-act="iteminfo" data-cid="${cid}" data-iid="${iid}">${esc(it.name)}</span>
         ${r ? `<span class="k">Charges</span><span class="row">${pipsHTML(c, r, 'res', r.id)} <span class="muted small">${r.max == null ? 'set the max' : `${left}/${r.max} left`}</span></span>` : ''}</div>
       <div class="desc"><p>${esc(a.text)}</p></div></div>
       <div class="mfoot">${editBtn('editiact', `data-cid="${cid}" data-iid="${iid}" data-aid="${aid}"`)}<span class="grow"></span>
-        ${r ? `<label class="row small"><input type="checkbox" id="featLog"> Add to journal</label><button class="pri" data-act="iactuse" data-cid="${cid}" data-iid="${iid}" data-aid="${aid}" ${left === 0 ? 'disabled' : ''}>Use ${r.max != null ? '(spend a charge)' : ''}</button>` : ''}</div>`; });
+        ${r ? `<label class="row small"><input type="checkbox" id="featLog"> Add to journal</label><button class="pri" data-act="iactuse" data-cid="${cid}" data-iid="${iid}" data-aid="${aid}" ${left != null && left < cost ? 'disabled' : ''}>Use ${r.max != null ? `(spend ${cost === 1 ? 'a charge' : cost + ' charges'})` : ''}</button>` : ''}</div>`; });
 }
 /* =====================================================================
    EDITING — one generic form, used for every kind of homebrew entry.
@@ -1260,9 +1265,9 @@ function fieldHTML(f, v){
   else inp = `<input id="${id}" type="${f.type === 'number' ? 'number' : 'text'}" value="${esc(v ?? '')}" placeholder="${esc(f.ph||'')}">`;
   return `<label class="fld ${f.type === 'check' ? 'chk' : ''} ${f.wide || f.type === 'textarea' ? 'wide' : ''}">${f.type === 'check' ? inp + `<span>${esc(f.label)}</span>` : `<span>${esc(f.label)}</span>${inp}`}${f.hint ? `<small class="dim">${esc(f.hint)}</small>` : ''}</label>`;
 }
-function formModal(title, sub, fields, values, onSave, onDelete){
+function formModal(title, sub, fields, values, onSave, onDelete, extra){
   FORM = {fields, onSave, onDelete};
-  openModal(() => `${mhead(title, sub)}<div class="mbody"><div class="form">${fields.map(f => fieldHTML(f, values[f.k])).join('')}</div></div>
+  openModal(() => `${mhead(title, sub)}<div class="mbody">${extra || ''}<div class="form">${fields.map(f => fieldHTML(f, values[f.k])).join('')}</div></div>
     <div class="mfoot">${onDelete ? `<button class="small b-dmg" data-act="formdel">Delete</button>` : ''}<span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="formsave">Save</button></div>`);
   focusFirst('#modal .form input, #modal .form textarea');
 }
@@ -1302,7 +1307,8 @@ function editFeature(cid, fid, act){
       const res = applyRes(c, v, v.name);
       if (f){ Object.assign(f, {name:v.name, act:v.act, src:v.src, text:v.text, res, effect}); if (!f.custom) f.edited = true; }
       else c.features.push({id: slug(v.name) + '-' + uid().slice(0,3), name:v.name, act:v.act, src:v.src || 'Homebrew', text:v.text, res, effect, custom:true}); },
-    f ? () => { c.features = c.features.filter(x => x !== f); } : null);
+    f ? () => { c.features = c.features.filter(x => x !== f); } : null,
+    `<div class="pastehint small muted">Copied it from D&amp;D Beyond? Paste it into “What it does”, then <button class="small" data-act="featpaste">📋 Read pasted text</button> to fill in the type and uses.</div>`);
 }
 function editResource(cid, rid){
   const c = charById(cid), r = rid ? resById(c, rid) : null;
@@ -1350,7 +1356,7 @@ function editItem(cid, iid){
   formModal(it ? 'Edit item' : 'Add item', esc(c.name), [
     {k:'name', label:'Name', wide:true}, {k:'qty', label:'Quantity', type:'number'}, {k:'weight', label:'Weight', ph:'5 lb.'},
     {k:'magic', label:'Magic', type:'check'}, {k:'attuned', label:'Attuned', type:'check'}, {k:'consumable', label:'Consumable', type:'check'},
-    {k:'desc', label:'Description (homebrew rules text)', type:'textarea', rows:6},
+    {k:'desc', label:'Description (homebrew rules text)', type:'textarea', rows:8, hint:'Paste the full text from D&D Beyond here to keep it. Use “📋 Paste from D&D Beyond” in the item pop-up to have actions and charges read from it too.'},
     ...resFields(c, 'Charges')],
     it ? Object.assign({}, it, {res: it.res || '', desc: it.desc || ''}) : {qty:1, newReset:'dawn'},
     v => { if (!v.name) return;
@@ -1372,6 +1378,78 @@ function editItemAction(cid, iid, aid){
       else (it.actions = it.actions || []).push({id: slug(v.name) + '-' + uid().slice(0,3), name:v.name, act:v.act, text:v.text, res}); },
     a ? () => { it.actions = it.actions.filter(x => x !== a); } : null);
 }
+/* ---------- Paste from D&D Beyond: read copied item text, preview, apply ---------- */
+let PASTED = null;
+const RESET_WORD = {dawn:'at dawn', short:'on a short or long rest', long:'on a long rest', turn:'each turn', none:'by hand'};
+function pasteItemModal(cid, iid){
+  const c = charById(cid), it = c.inventory.find(x => x.id === iid);
+  PASTED = {cid, iid, text: '', r: null};
+  openModal(() => {
+    const r = PASTED.r;
+    if (!r) return `${mhead('📋 Paste from D&D Beyond', esc(it.name))}<div class="mbody">
+      <p class="small muted">On D&amp;D Beyond, open the item, select its text (name down to the end of the description), copy it and paste it here. Homebrew is fine: whatever the reader can't turn into actions or charges is still kept as the item's description.</p>
+      <textarea id="pasteText" rows="12" placeholder="Paste the item text here…">${esc(PASTED.text)}</textarea></div>
+      <div class="mfoot"><span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="pasteread">Read it</button></div>`;
+    const curRes = it.res ? resById(c, it.res) : null;
+    const have = new Set((it.actions || []).map(a => a.name.toLowerCase()));
+    // an action already on the item under this name, or one that names the same thing ("Wall of Fire" vs "Invoke Bel's Vengence (Wall of Fire)")
+    const like = nm => { const l = nm.toLowerCase(), core = l.replace(/^cast /, '');
+      const hit = (it.actions || []).find(a => { const e = a.name.toLowerCase(); return e === l || e.replace(/^cast /, '') === core || (e.length > 3 && l.includes(e)) || (core.length > 3 && e.includes(core)); });
+      return hit ? hit.name : null; };
+    const dupNote = nm => { const h = like(nm); return h ? `<b>${h.toLowerCase() === nm.toLowerCase() ? 'Already on the item' : `Looks like “${esc(h)}”, already on the item`}.</b> ` : ''; };
+    const ck = (id, label, sub, on = true, dis = false) => `<label class="pchk"><input type="checkbox" id="${id}" ${on && !dis ? 'checked' : ''} ${dis ? 'disabled' : ''}><span><b>${label}</b>${sub ? `<div class="small muted">${sub}</div>` : ''}</span></label>`;
+    const typeLine = [r.category, r.rarity, r.attunement && `(${r.attunement})`].filter(Boolean).join(', ').replace(', (', ' (');
+    const usesTxt = u => u ? (u.every ? `${u.every}: a 1-use counter you reset by hand` : `${u.max}/${RESET_WORD[u.reset] || u.reset}`) : '';
+    return `${mhead('📋 What the reader found', esc(it.name))}<div class="mbody">
+      ${r.name && r.name.toLowerCase() !== it.name.toLowerCase() ? `<p class="small muted">Pasted text is for <b>${esc(r.name)}</b>. It will still go on ${esc(it.name)}.</p>` : ''}
+      <h3>Description</h3>
+      ${ck('pk_desc', it.desc ? 'Replace the description with the pasted text' : 'Save the pasted text as the description', esc(r.desc.length + ' paragraph' + (r.desc.length === 1 ? '' : 's')) + (typeLine ? ' · ' + esc(typeLine) : '') + (r.meta.length ? ' · ' + esc(r.meta.join(' · ')) : ''))}
+      ${r.rarity || r.attunement ? ck('pk_magic', 'Mark as magic' + (r.attunement ? ' and attuned' : ''), '', !it.magic || (r.attunement && !it.attuned)) : ''}
+      ${r.charges ? `<h3>Charges</h3>${ck('pk_charges', `${r.charges.max} charges, back ${RESET_WORD[r.charges.reset] || r.charges.reset}`, (r.charges.regain ? 'Regains ' + esc(r.charges.regain) + '. ' : '') + (curRes ? `Updates the existing counter “${esc(curRes.name)}”.` : 'Adds a charge counter with pips.'))}` : ''}
+      ${r.actions.length || r.spells.length ? '<h3>Actions it gives</h3>' : ''}
+      ${r.actions.map((a, i) => ck('pk_a' + i, `⚔ ${esc(a.name)} <span class="tag">${ACT_LABEL[a.act]}</span>`, (a.charges ? 'Uses the item’s charges. ' : a.uses ? 'Limited: ' + esc(usesTxt(a.uses)) + '. ' : '') + dupNote(a.name) + esc(a.text.slice(0, 110)) + (a.text.length > 110 ? '…' : ''), !like(a.name))).join('')}
+      ${r.spells.map((s, i) => { const nm = 'Cast ' + s.name; return ck('pk_s' + i, `✨ ${esc(nm)} <span class="tag">${ACT_LABEL[s.act]}</span>`, (s.cost ? `Spends ${s.cost} charge${s.cost === 1 ? '' : 's'}.` : 'No charge cost.') + ' ' + dupNote(nm), !like(nm)); }).join('')}
+      ${r.reminders.length ? `<h3>Worth remembering</h3><div class="small">${r.reminders.map(x => `<div>• ${esc(x)}</div>`).join('')}</div>${ck('pk_rem', 'Add these to my notes on the item', 'The app can’t apply bonuses to your attacks or AC by itself, so these are reminders.', true)}` : ''}
+      ${!r.actions.length && !r.spells.length && !r.charges ? '<p class="small muted">No actions or charges found. The full text will still be saved as the description, so you can read it in the pop-up and add an action by hand.</p>' : ''}
+    </div><div class="mfoot"><button data-act="pasteback">← Back to the text</button><span class="grow"></span><button data-act="mclose">Cancel</button><button class="pri" data-act="pasteapply">Add to item</button></div>`;
+  }, true);
+  focusFirst('#pasteText');
+}
+function applyPaste(sel){
+  const c = charById(PASTED.cid), it = c.inventory.find(x => x.id === PASTED.iid), r = PASTED.r;
+  const newRes = (name, max, reset, notes) => { let id = slug(name); while (resById(c, id)) id += '-' + uid().slice(0, 2);
+    c.resources.push({id, name, max, used: 0, reset, die: null, notes: notes || '', custom: true}); return id; };
+  if (sel.desc){
+    const typeLine = [r.category, r.rarity, r.attunement && `(${r.attunement})`].filter(Boolean).join(', ').replace(', (', ' (');
+    it.desc = [typeLine && `*${typeLine}*`, r.meta.length && r.meta.join(' · '), ...r.desc].filter(Boolean).join('\n\n');
+  }
+  if (sel.magic){ it.magic = true; if (r.attunement) it.attuned = true; }
+  let chargeId = it.res && resById(c, it.res) ? it.res : null;
+  if (r.charges && sel.charges){
+    const note = r.charges.regain ? 'Regains ' + r.charges.regain : '';
+    if (chargeId){ const cr = resById(c, chargeId); Object.assign(cr, {max: r.charges.max, reset: r.charges.reset, notes: cr.notes || note}); cr.used = Math.min(cr.used, cr.max); if (!cr.custom) cr.edited = true; }
+    else { chargeId = newRes(it.name + ' charges', r.charges.max, r.charges.reset, note); it.res = chargeId; }
+  }
+  it.actions = it.actions || [];
+  const addAct = o => it.actions.push(Object.assign({id: slug(o.name) + '-' + uid().slice(0, 3)}, o));
+  r.actions.forEach((a, i) => { if (!sel['a' + i]) return;
+    const res = a.charges ? chargeId || undefined : a.uses ? newRes(`${a.name} (${it.name})`, a.uses.max, a.uses.reset, a.uses.every ? `Usable ${a.uses.every}. Reset it by hand.` : '') : undefined;
+    addAct({name: a.name, act: a.act, text: a.text, res}); });
+  r.spells.forEach((s, i) => { if (!sel['s' + i]) return;
+    addAct({name: 'Cast ' + s.name, act: s.act, text: `Cast ${s.name} from ${it.name}${s.cost ? ` by spending ${s.cost} charge${s.cost === 1 ? '' : 's'}` : ''}. Open the spell from the Reference or the spell list for its full text.`, res: s.cost ? chargeId || undefined : undefined, cost: s.cost || undefined}); });
+  if (sel.rem && r.reminders.length){ const add = r.reminders.filter(x => !(it.notes || '').includes(x)); if (add.length) it.notes = [(it.notes || '').trim(), ...add].filter(Boolean).join('\n'); }
+  if (!it.custom) it.edited = true;
+}
+/** In the feature form: read text pasted into "What it does" and fill in the type, name and uses. */
+function featPasteFill(){
+  const t = document.getElementById('ff_text'); if (!t || !t.value.trim()){ toast('Paste the feature text into “What it does” first'); return; }
+  const r = PASTE.parseFeature(t.value), set = (k, v) => { const el = document.getElementById('ff_' + k); if (el && v != null) el.value = v; };
+  if (r.name && !document.getElementById('ff_name').value.trim()) set('name', r.name);
+  set('text', r.text); set('act', r.uses && r.act === 'passive' ? 'special' : r.act);
+  if (r.uses){ set('res', '__new'); set('newMax', r.uses.max); set('newReset', r.uses.reset); }
+  toast(`Read: ${ACT_LABEL[r.act] || r.act}${r.uses ? `, ${r.uses.max} use${r.uses.max === 1 ? '' : 's'} per ${r.uses.reset === 'short' ? 'short rest' : r.uses.reset === 'long' ? 'long rest' : r.uses.reset}` : ''}. Check it and Save.`);
+}
+
 const editBtn = (act, attrs) => `<button class="small" data-act="${act}" ${attrs}>✎ Edit</button>`;
 
 function condInfoModal(cid, name){
@@ -1769,11 +1847,11 @@ function itemModal(cid, iid){
   floatModal(() => `${mhead(esc(it.name), esc(c.name))}<div class="mbody lookup">
     <div class="meta"><span class="k">Carried</span><span>×${it.qty}${it.weight ? ' · ' + esc(it.weight) : ''}${it.attuned ? ' · attuned' : ''}${it.custom ? ' <span class="tag hb">yours</span>' : it.edited ? ' <span class="tag hb">edited</span>' : ''}</span>
       ${it.res && resById(c, it.res) ? `<span class="k">Charges</span><span class="row">${pipsHTML(c, resById(c, it.res), 'res', it.res)}</span>` : ''}</div>
-    ${it.desc ? `<div class="desc">${md(it.desc)}</div>` : ''}
+    ${it.desc ? `<div class="desc">${md(it.desc)}</div>` : `<div class="row small" style="margin:6px 0"><button class="small" data-act="pasteitem" data-cid="${cid}" data-iid="${iid}">📋 Paste from D&amp;D Beyond</button><span class="muted">for homebrew or anything Open5e doesn't know</span></div>`}
     ${!st.done ? '<div class="empty">Looking up on Open5e…</div>' : st.err ? (it.desc ? '' : `<div class="empty">Open5e unavailable (${esc(st.err)}).</div>`) : (st.data || !it.desc ? o5ItemHTML(st.data) : '')}
     <h3>Actions from this item</h3>
     ${(it.actions||[]).length ? `<div class="list">${it.actions.map(a => `<div class="li"><div class="nm" data-act="iactinfo" data-cid="${cid}" data-iid="${iid}" data-aid="${a.id}">⚔ ${esc(a.name)} <span class="tag">${ACT_LABEL[a.act]}</span>${a.res ? ' <span class="tag a">charges</span>' : ''}<div class="meta">${esc(a.text.slice(0,90))}</div></div></div>`).join('')}</div>` : '<div class="empty">None yet. Add any action, bonus action or reaction this item gives, and it appears on the character sheet and on the card.</div>'}
-    <div class="addrow"><span data-act="addiact" data-cid="${cid}" data-iid="${iid}">+ Add an action, bonus action or reaction</span></div>
+    <div class="addrow"><span data-act="addiact" data-cid="${cid}" data-iid="${iid}">+ Add an action, bonus action or reaction</span> <span data-act="pasteitem" data-cid="${cid}" data-iid="${iid}">📋 Paste from D&amp;D Beyond</span></div>
     <h3>My notes</h3><textarea data-note="item" data-cid="${cid}" data-iid="${iid}" rows="4" placeholder="Charges, what it does, where you found it…">${esc(it.notes)}</textarea>
     <div class="row" style="margin-top:8px">
       <label class="row small"><input type="checkbox" data-act="itemflag" data-k="attuned" data-cid="${cid}" data-iid="${iid}" ${it.attuned ? 'checked' : ''}> Attuned</label>
@@ -1788,6 +1866,170 @@ function itemModal(cid, iid){
 /* =====================================================================
    FILE INPUTS
    ===================================================================== */
+/* PASTE-READER START */
+/* =====================================================================
+   PASTE FROM D&D BEYOND
+   Reads text copied from a D&D Beyond item (or feature) page and finds
+   what the app can use: type, rarity, attunement, charges and how they
+   come back, the actions/bonus actions/reactions it gives, spells cast
+   from it (with their charge cost), and bonuses to remind you about.
+   Plain functions over a string, so they can be tested outside a browser.
+   ===================================================================== */
+const PASTE = (() => {
+  const WORDNUM = {one: 1, once: 1, two: 2, twice: 2, three: 3, thrice: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12};
+  const n = s => { s = String(s || '').toLowerCase(); return /^\d+$/.test(s) ? +s : WORDNUM[s] ?? null; };
+  const NUM = '(\\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)';
+  const titleCase = s => s.replace(/\b([a-z])([a-z']*)/g, (m, a, b) => /^(of|the|and|or|to|in|on|a|an|from|with)$/.test(a + b) ? a + b : a.toUpperCase() + b).replace(/^./, c => c.toUpperCase());
+  const META = /^(item tags?|tags|proficiency|attack type|damage( type)?|range|properties|weight|cost|notes|type|rarity|source|base item|requires attunement|attunement|mastery)\s*:?\s*$/i;
+  const META_INLINE = /^(item tags?|proficiency|attack type|damage( type)?|range|properties|weight|cost|base item|source|mastery)\s*:\s*(.*)$/i;
+  // "Weapon (glaive), very rare (requires attunement)": the rarity is required, so "Staff of Cinders" stays a name
+  const TYPE_RE = /^(weapon|armou?r|wondrous item|ring|rod|staff|wand|potion|scroll|ammunition|shield|wondrous|instrument)\b([^,]*?),\s*(common|uncommon|rare|very rare|legendary|artifact|varies|unknown rarity)\s*(\((requires attunement[^)]*)\))?\s*$/i;
+
+  /** How something comes back: dawn, a short rest, a long rest. */
+  function resetIn(t){
+    if (/dawn|daily|each day|per day/i.test(t)) return 'dawn';
+    if (/short (or long )?rest/i.test(t)) return 'short';
+    if (/long rest/i.test(t)) return 'long';
+    return null;
+  }
+  /** Action type a sentence describes. */
+  function actIn(t){
+    if (/\bbonus action\b/i.test(t)) return 'bonus';
+    if (/\b(use )?(your|a) reaction\b|\bas a reaction\b/i.test(t)) return 'reaction';
+    if (/\b(use|take|as) an action\b|\bas an action\b|\bmagic action\b|\bthe utilize action\b/i.test(t)) return 'action';
+    return null;
+  }
+  /** Limited uses that aren't charges: "once used, … until the next dawn", "twice per long rest", "a number of times equal to your proficiency bonus (3)". */
+  function usesIn(t){
+    let m = t.match(new RegExp(`can use (?:this|it|the|that)?\\s*(?:property|feature|ability|trait)?\\s*${NUM.replace('one|', 'one|once|twice|thrice|')}\\b(?:\\s+times?)?`, 'i'))
+         || t.match(new RegExp(`\\b${NUM} times? (?:per|each|a) (?:day|dawn|short rest|long rest)`, 'i'))
+         || t.match(/number of times equal to [^(.]*\((\d+)\)/i);
+    const every = t.match(new RegExp(`once every ${NUM} (days?|weeks?|hours?)`, 'i'));
+    if (every) return {max: 1, reset: 'none', every: `once every ${n(every[1])} ${every[2]}`};
+    const max = m ? n(m[1]) : (/can't be used again until|cannot be used again until|can't use (?:it|this \w+) again until|once per (day|dawn|short rest|long rest)|once used,/i.test(t) ? 1 : null);
+    if (max == null) return null;
+    return {max, reset: resetIn(t) || 'long'};
+  }
+  /** "As a bonus action you can invoke a wreath of fire that…" -> "Invoke a Wreath of Fire". */
+  function nameFrom(text, itemName, act){
+    const m = text.match(/\byou can (?:use (?:a|an|your) (?:bonus )?(?:action|reaction) to )?([a-z][a-z' ]+?)(?=\s+(?:that|which|to|and|for|on|at|in|until|while|when|so)\b|[.,;(]|$)/i)
+           || text.match(/\bto ([a-z][a-z' ]+?)(?=[.,;(]|$)/i);
+    let words = m ? m[1].trim().split(/\s+/) : [];
+    if (words.length && /^(the|a|an)$/i.test(words[words.length - 1])) words.pop();
+    if (words.length > 6) words = words.slice(0, 6);
+    // keep proper names as written ("invoke Bel's Vengence")
+    const nm = words.length ? words.map((w, i) => /^[A-Z]/.test(w) ? w : i && /^(of|the|a|an|and|or|to|in|on|from|with)$/.test(w) ? w : w[0].toUpperCase() + w.slice(1)).join(' ') : '';
+    return nm || `${itemName} (${{action: 'action', bonus: 'bonus action', reaction: 'reaction'}[act]})`;
+  }
+  /** Only wording that GRANTS an action counts for items ("the weapon's bonus action is now 1d8" changes one, it doesn't give one). */
+  function grantIn(t){
+    if (/\bas a bonus action\b|\buse (?:a|your) bonus action\b|\bbonus action to\b/i.test(t)) return 'bonus';
+    if (/\buse your reaction\b|\bas a reaction\b|\breaction to\b/i.test(t)) return 'reaction';
+    if (/\bas an action\b|\buse an action\b|\b(?:take|use) the magic action\b|\bas a magic action\b|\btake an action\b|\bthe utilize action\b/i.test(t)) return 'action';
+    return null;
+  }
+  const sentences = p => p.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [p];
+
+  /** Paragraphs from pasted text, with D&D Beyond's "Name. Text" headings pulled out. */
+  function paragraphs(text){
+    const lines = String(text || '').replace(/\r/g, '').split('\n').map(l => l.replace(/\s+/g, ' ').trim());
+    const out = []; let cur = [];
+    const flush = () => { if (cur.length){ out.push(cur.join(' ')); cur = []; } };
+    // each line is its own paragraph, unless it was wrapped mid-sentence (next line starts in lower case)
+    lines.forEach((l, i) => { if (!l){ flush(); return; } cur.push(l); const next = lines[i + 1] || '';
+      if (!next || /^[A-Z0-9*•(]/.test(next) || /[.!?:)]$/.test(l)) flush(); });
+    flush();
+    // D&D Beyond copies often put each sentence-paragraph on its own line without blank lines between them
+    return out.flatMap(p => p.split(/(?<=[.!?])\s+(?=[A-Z][A-Za-z' ]{1,40}\.\s)/));
+  }
+
+  function parseItem(text, knownName){
+    const paras = paragraphs(text);
+    const res = {name: '', category: '', rarity: '', attunement: '', meta: [], desc: [], charges: null, actions: [], spells: [], reminders: []};
+    // header lines: name, type line, and the item card's label/value pairs
+    let i = 0;
+    const rawLines = String(text || '').replace(/\r/g, '').split('\n').map(l => l.trim()).filter(Boolean);
+    if (rawLines.length && !TYPE_RE.test(rawLines[0]) && rawLines[0].length < 60 && !/[.!?]$/.test(rawLines[0])) res.name = rawLines[0];
+    const skip = new Set(); if (res.name) skip.add(res.name);
+    for (let k = 0; k < rawLines.length; k++){
+      const l = rawLines[k];
+      const tm = l.match(TYPE_RE);
+      if (tm && !res.category){ res.category = titleCase((tm[1] + (tm[2] || '')).trim()); res.rarity = (tm[3] || '').toLowerCase(); res.attunement = tm[5] || ''; skip.add(l); continue; }
+      const mi = l.match(META_INLINE); if (mi){ if (mi[3] && mi[3] !== '--') res.meta.push(`${titleCase(mi[1])}: ${mi[3]}`); skip.add(l); continue; }
+      if (META.test(l)){ const v = rawLines[k + 1]; if (v && !META.test(v) && v.length < 60 && !/[.!?]$/.test(v)){ if (v !== '--') res.meta.push(`${titleCase(l.replace(/:$/, ''))}: ${v}`); skip.add(v); k++; } skip.add(l); continue; }
+    }
+    const body = paras.filter(p => !skip.has(p) && !META.test(p) && !TYPE_RE.test(p) && !(res.name && p === res.name)
+      && !rawLines.some(l => skip.has(l) && p === l));
+    // strip header lines glued into the first paragraph (when there were no blank lines)
+    const cleanBody = body.map(p => { let q = p; skip.forEach(s => { if (q.startsWith(s + ' ')) q = q.slice(s.length + 1); }); return q; }).filter(Boolean);
+    res.desc = cleanBody;
+    const all = cleanBody.join(' ');
+    const itemName = res.name || knownName || 'the item';
+
+    // charges
+    const cm = all.match(new RegExp(`has ${NUM} charges?`, 'i')) || all.match(new RegExp(`${NUM} charges? (?:remaining|left)?\\s*(?:\\(\\d+/\\d+\\))`, 'i'));
+    if (cm){
+      const regain = all.match(/regains? ([^.]*?)(?:expended )?charges?[^.]*?(daily at dawn|at dawn|each dawn|when you finish a (?:short|long) rest|after a (?:short|long) rest|each day)/i)
+                  || all.match(/regains? (all|[\dd+ ]+?) (?:of its )?(?:expended )?charges?[^.]*/i);
+      res.charges = {max: n(cm[1]), reset: regain ? (resetIn(regain[0]) || 'dawn') : (resetIn(all) || 'dawn'), regain: regain ? regain[0].replace(/^regains?\s*/i, '').trim() : ''};
+    }
+
+    // spells cast from it: "expend 1 charge to cast X", "cast one of the following spells: a (1 charge), b (3 charges)"
+    const listM = all.match(/cast one of the following spells[^:]*:\s*([^.]+)\./i);
+    if (listM){
+      listM[1].replace(/\bor\b/g, ',').split(',').map(s => s.trim()).filter(Boolean).forEach(s => {
+        const m = s.match(/^(?:and\s+)?([a-z' -]+?)\s*\((\d+) charges?(?:[^)]*)\)/i) || s.match(/^(?:and\s+)?([a-z' -]+?)\s*\((?:at will|no charges?)\)/i);
+        if (m) res.spells.push({name: titleCase(m[1].trim()), cost: m[2] ? +m[2] : 0, act: 'action'});
+      });
+    }
+    sentences(all).forEach(s => {
+      const m = s.match(new RegExp(`(?:expend|spend|use)s? ${NUM}(?: or more)? (?:of its )?charges? to cast (?:the )?([a-z' -]+?)(?: spell)?(?:\\s*\\(|\\s+from|\\s+at|\\s+with|,|\\.|$)`, 'i'));
+      if (m && !/one of the following/i.test(s)){ const nm = titleCase(m[2].trim()); if (!res.spells.some(x => x.name === nm)) res.spells.push({name: nm, cost: n(m[1]) || 1, act: actIn(s) || 'action'}); }
+    });
+    const known = all.match(/you know the ([a-z' -]+?) cantrip/i);
+    if (known) res.reminders.push(`Grants the ${titleCase(known[1])} cantrip: add it with "+ Spell" on the character sheet if it isn't there.`);
+
+    // named properties ("Radiant Strike. As a bonus action…") and unnamed ones that use an action type
+    cleanBody.forEach(p => {
+      const head = p.match(/^([A-Z][A-Za-z'’ -]{1,40})\.\s+(.+)$/);
+      const name = head ? head[1].trim() : '';
+      const text = head ? head[2] : p;
+      const act = grantIn(text);
+      if (!act || /\bin place of\b/i.test(text)) return;
+      if (res.spells.length && /\bto cast\b|following spells/i.test(text) && !/\bbonus action\b|\breaction\b/i.test(text.replace(/to cast[^.]*\./i, ''))) return;   // already covered as spells
+      const uses = usesIn(text), usesCharges = /\bcharges?\b/i.test(text) && !!res.charges;
+      const castM = text.match(/\bcast (?:the )?([A-Z][A-Za-z'’]*(?: (?:of |the )?[A-Z][A-Za-z'’]*)*)/);
+      res.actions.push({name: name || nameFrom(text, itemName, act) + (castM && !name ? ` (${castM[1]})` : ''), act, text: p, uses: usesCharges ? null : uses, charges: usesCharges});
+    });
+
+    // reminders for things the app can't apply by itself
+    const atk = all.match(/\+(\d) bonus to attack and damage rolls/i); if (atk) res.reminders.push(`+${atk[1]} to attack and damage rolls: check the attack line on the card includes it.`);
+    const ac = all.match(/\+(\d) bonus to (?:armou?r class|AC)(?: and saving throws)?/i); if (ac) res.reminders.push(`+${ac[1]} bonus to AC${/saving throws/i.test(ac[0]) ? ' and saving throws' : ''}: check the AC${/saving throws/i.test(ac[0]) ? ' and saves' : ''} include it.`);
+    const plusW = all.match(/\bis a \+(\d) (?:weapon|magic weapon)/i); if (plusW && !atk) res.reminders.push(`+${plusW[1]} weapon: check the attack line on the card includes +${plusW[1]} to hit and damage.`);
+    sentences(all).forEach(s => {
+      const ex = s.match(/extra (\d+d\d+) (\w+) damage/i);
+      if (ex) res.reminders.push(`${/roll a 20|critical/i.test(s) ? 'On a 20: e' : /once invoked|for the duration|while/i.test(s) ? 'While active: e' : 'E'}xtra ${ex[1].toLowerCase()} ${ex[2]} damage.`);
+      if (/in place of/i.test(s)) res.reminders.push(s.trim().replace(/\s+/g, ' '));
+      const sv = s.match(/\b(?:DC ?(\d+) (\w+) sav(?:e|ing throw)|(\w+) saving throw \(DC ?(\d+)\))/i);
+      if (sv && !/cast|spell/i.test(s) && !/charges?/i.test(s)) res.reminders.push(`Rider: ${s.trim().replace(/\s+/g, ' ')}`);
+    });
+    if (/advantage on/i.test(all)){ const adv = all.match(/advantage on ([^.]+?)(?:\.|,| while| when)/i); if (adv) res.reminders.push(`Advantage on ${adv[1]}.`); }
+    return res;
+  }
+
+  /** A pasted feature: what kind of action it is and how often it can be used. */
+  function parseFeature(text){
+    const lines = String(text || '').replace(/\r/g, '').split('\n').map(l => l.trim());
+    let name = '';
+    const first = lines.findIndex(Boolean);
+    if (first >= 0 && lines.slice(first + 1).some(Boolean) && lines[first].length < 60 && !/[.!?:]$/.test(lines[first])){ name = lines[first]; lines.splice(first, 1); }
+    const body = paragraphs(lines.join('\n')).join('\n\n');
+    return {name, text: body, act: actIn(body) || 'passive', uses: usesIn(body)};
+  }
+  return {parseItem, parseFeature};
+})();
+/* PASTE-READER END */
+
 /* DDB-PARSER START */
 /* =====================================================================
    D&D BEYOND PDF IMPORT
@@ -2257,9 +2499,10 @@ document.addEventListener('click', e => {
     case 'resinfo': resModal(d.cid, d.rid); break;
     case 'iactinfo': iactModal(d.cid, d.iid, d.aid); break;
     case 'iactuse': { const it = c.inventory.find(x => x.id === d.iid), a = it.actions.find(x => x.id === d.aid), r = resById(c, a.res);
-      if (r.max != null && r.max - r.used <= 0){ toast('No charges left', true); break; }
+      const cost = a.cost || 1;
+      if (r.max != null && r.max - r.used < cost){ toast(cost === 1 ? 'No charges left' : `Needs ${cost} charges`, true); break; }
       const logIt = $('#featLog') && $('#featLog').checked; closeModal();
-      mutate(() => { if (r.max != null) r.used++; if (logIt) logEntry([c.id], `${c.name} uses ${it.name}: ${a.name}.`); });
+      mutate(() => { if (r.max != null) r.used += cost; if (logIt) logEntry([c.id], `${c.name} uses ${it.name}: ${a.name}.`); });
       toast(`${esc(c.name)}: ${esc(a.name)}${r.max != null ? ` · ${r.max - r.used} charge${r.max - r.used === 1 ? '' : 's'} left` : ''}`); break; }
     case 'editfeat': editFeature(d.cid, d.fid); break;
     case 'addfeat': editFeature(d.cid, null, d.v); break;
@@ -2277,6 +2520,13 @@ document.addEventListener('click', e => {
       if (nameField && !v.name){ document.getElementById('ff_name').focus(); toast('Give it a name first'); break; }
       const fn = FORM.onSave; closeModal(); mutate(() => fn(v)); toast('Saved'); break; }
     case 'formdel': { const fn = FORM.onDelete; closeModal(); mutate(fn); toast('Deleted (Undo to restore)'); break; }
+    case 'pasteitem': pasteItemModal(d.cid, d.iid); break;
+    case 'pasteread': { const t = $('#pasteText').value; if (!t.trim()){ toast('Paste the text first'); break; }
+      PASTED.text = t; const it = charById(PASTED.cid).inventory.find(x => x.id === PASTED.iid); PASTED.r = PASTE.parseItem(t, it.name); UI.modal(); break; }
+    case 'pasteback': PASTED.r = null; UI.modal(); focusFirst('#pasteText'); break;
+    case 'pasteapply': { const sel = {}; document.querySelectorAll('#modal input[id^="pk_"]').forEach(el => { sel[el.id.slice(3)] = el.checked && !el.disabled; });
+      const {cid, iid} = PASTED; closeModal(); mutate(() => applyPaste(sel)); toast('Added from the pasted text'); itemModal(cid, iid); break; }
+    case 'featpaste': featPasteFill(); break;
     case 'iactdel': closeModal(); mutate(() => { const it = c.inventory.find(x => x.id === d.iid); it.actions = it.actions.filter(x => x.id !== d.aid); }); toast('Action removed (Undo to restore)'); break;
     case 'atkinfo': atkModal(d.cid, +d.i); break;
     case 'usefeat': { const f = c.features.find(x => x.id === d.fid); const logIt = $('#featLog') && $('#featLog').checked;

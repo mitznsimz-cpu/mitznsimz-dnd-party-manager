@@ -1,0 +1,7 @@
+Hammer of the Dawnwarden
+Weapon (warhammer), rare (requires attunement by a cleric or paladin)
+You have a +1 bonus to attack and damage rolls made with this magic weapon.
+
+You know the sacred flame cantrip while holding it.
+
+Radiant Strike. As a bonus action, you can make the hammer flare with light. The next time you hit with it before the end of your turn, the target takes an extra 2d8 radiant damage. Once used, this property can't be used again until the next dawn.
