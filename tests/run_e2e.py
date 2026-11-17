@@ -294,6 +294,26 @@ with sync_playwright() as pw:
     pg.click('#journal [data-act="jclose"]')
     ev(pg, f"mutate(() => longRestChar(charById('{F}')))")
 
+    # ---- hit dice on the card: spend with a typed roll, correct with pips, long rest gives them back
+    R = ROGUE
+    hd = lambda: ev(pg, f"charById('{R}').hitDice.map(h => h.max - h.used)")
+    full = hd(); die = ev(pg, f"charById('{R}').hitDice[0].die"); con = ev(pg, f"charById('{R}').abilities.con.mod")
+    check('hit dice show on the card', pg.locator(f'.card[data-cid="{R}"] .hdrow').count() == len(full))
+    ev(pg, f"mutate(() => damage(charById('{R}'), 20))"); hp0 = ev(pg, f"charById('{R}').hp.current")
+    pg.click(f'.card[data-cid="{R}"] .hdrow [data-act="hdinfo"]'); pg.wait_for_selector('#modal [data-hdroll]')
+    pg.fill('#modal [data-hdroll]', '5'); pg.press('#modal [data-hdroll]', 'Enter')
+    check('spending a hit die heals roll + CON and uses the die', ev(pg, f"charById('{R}').hp.current") == hp0 + 5 + con and hd()[0] == full[0] - 1, (hp0, ev(pg, f"charById('{R}').hp.current"), hd()))
+    check('the spend is logged with the roll', f'{die} hit die: rolled 5' in ev(pg, "S.log[S.log.length - 1].text"), ev(pg, "S.log[S.log.length - 1].text"))
+    pg.keyboard.press('Escape')
+    pg.click(f'.card[data-cid="{R}"] .hdrow .pip.avail >> nth=0')
+    check('tapping a hit-die pip corrects the count, logged', hd()[0] == full[0] - 2 and 'hit dice set to' in ev(pg, "S.log[S.log.length - 1].text"))
+    ev(pg, f"S.ruleset = '2014'; charById('{R}').hitDice.forEach(h => h.used = h.max); mutate(() => longRestChar(charById('{R}')))")
+    total = sum(full)
+    check('2014 long rest gives back half the hit dice', sum(hd()) == max(1, total // 2), hd())
+    ev(pg, f"S.ruleset = '2024'; charById('{R}').hitDice.forEach(h => h.used = h.max); mutate(() => longRestChar(charById('{R}')))")
+    check('2024 long rest gives them all back', hd() == full and 'regains' in ev(pg, "S.log[S.log.length - 1].text"), hd())
+    ev(pg, "S.ruleset = '2014'; save(); renderAll()")
+
     # ---- homebrew editing and merge protection
     pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
     pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]'); pg.wait_for_selector('#ff_name')
