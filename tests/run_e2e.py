@@ -323,6 +323,34 @@ with sync_playwright() as pw:
     check('characteristics are editable', ev(pg, f"charById('{BARD}').notes.hair") == 'Auburn')
     ev(pg, f"UI.open['{BARD}'] = false; renderAll()")
 
+    # ---- casting at higher levels shows the worked-out effect; pills show uses left; logging on by default
+    HWTXT = {"count": 1, "results": [{"name": "Healing Word", "level": 1, "desc": "A creature of your choice that you can see within range regains hit points equal to 1d4 + your spellcasting ability modifier.", "higher_level": "When you cast this spell using a spell slot of 2nd level or higher, the healing increases by 1d4 for each slot level above 1st.", "document": {"key": "srd-2014"}}]}
+    pg.unroute('https://api.open5e.com/**'); pg.route('https://api.open5e.com/**', lambda r: r.fulfill(json=HWTXT) if 'Healing' in r.request.url else r.fulfill(json={"count": 0, "results": []}))
+    ev(pg, "O5 = {}"); hw = ev(pg, f"charById('{BARD}').spells.find(s => s.name === 'Healing Word').id")
+    cha = ev(pg, f"charById('{BARD}').abilities.cha.mod")
+    ev(pg, f"spellModal('{BARD}', '{hw}')"); pg.wait_for_function("document.getElementById('modal').textContent.includes('3d4')")
+    rows = pg.inner_text('#modal')
+    check('spell pop-up works out each slot level', f'1d4 + {cha} healing' in rows and f'3d4 + {cha} healing' in rows and f'4d4 + {cha} healing' in rows, rows[:400])
+    used3 = ev(pg, f"charById('{BARD}').spellSlots.find(s => s.level === 3).used")
+    pg.click('#modal [data-act="docast"][data-lvl="3"]')
+    check('casting at 3rd spends a 3rd-level slot', ev(pg, f"charById('{BARD}').spellSlots.find(s => s.level === 3).used") == used3 + 1)
+    last = ev(pg, "S.log[S.log.length - 1]")
+    check('the cast is logged with the level and effect, by default', last['auto'] and f'Healing Word at 3rd level' in last['text'] and f'3d4 + {cha} healing' in last['text'], last)
+    pg.unroute('https://api.open5e.com/**'); pg.route('https://api.open5e.com/**', lambda r: r.abort())
+    sw = ev(pg, f"charById('{FIGHTER}').features.find(f => /Second Wind/.test(f.name))")
+    if sw and sw.get('res'):
+        pg.click(f'.card[data-cid="{FIGHTER}"] .chip[data-fid="{sw["id"]}"]'); pg.wait_for_selector('#featLog')
+        check('use pop-up has Add to journal ticked', pg.is_checked('#featLog'))
+        if pg.locator('#effRoll').count(): pg.fill('#effRoll', '6')
+        pg.click('#modal [data-act="usefeat"]')
+        chip = pg.locator(f'.card[data-cid="{FIGHTER}"] .chip[data-fid="{sw["id"]}"]')
+        r = ev(pg, f"resById(charById('{FIGHTER}'), '{sw['res']}')")
+        check('the pill shows uses left, and greys out when spent', ('○' in chip.inner_text()) and (('spent' in chip.get_attribute('class')) == (r['max'] - r['used'] == 0)), (chip.inner_text(), chip.get_attribute('class'), r))
+        check('the use is logged', 'Second Wind' in ev(pg, "S.log[S.log.length - 1].text"))
+    else:
+        check('fighter has Second Wind with uses (fixture)', False, sw)
+    ev(pg, f"mutate(() => {{ longRestChar(charById('{FIGHTER}')); longRestChar(charById('{BARD}')); }})")
+
     # ---- homebrew editing and merge protection
     pg.click(f'.card[data-cid="{ROGUE}"] [data-act="toggle"]')
     pg.click(f'.card[data-cid="{ROGUE}"] .addrow [data-act="addfeat"][data-v="bonus"]'); pg.wait_for_selector('#ff_name')

@@ -160,6 +160,13 @@ html[data-theme="light"] .seg button.on{background:var(--accent);color:var(--bg)
 .chip.add{border-style:dashed;color:var(--muted);background:transparent}
 .chip .x{opacity:.6;padding-left:2px} .chip .x:hover{opacity:1;color:var(--text)}
 .chip.item{background:var(--bg5)}
+.chip .cp{font-size:.82em;letter-spacing:-1px;color:var(--gold2);margin-left:2px}
+.chip .cp .u{color:var(--dim,var(--muted));opacity:.7}
+.chip.spent{opacity:.5;text-decoration:line-through;text-decoration-color:var(--muted)}
+.chip.spent .cp{text-decoration:none}
+.castrow{display:grid;grid-template-columns:2.6em 1fr auto auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--line)}
+.castrow .eff{min-width:0}
+.castrow.up .eff{color:var(--gold2)}
 .chip.act-bonus{border-color:var(--green)} .chip.act-reaction{border-color:var(--amber)} .chip.act-action{border-color:var(--red)}
 .qa{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;align-items:start;font-size:calc(12px*var(--fs))}
 .qa .lab{color:var(--muted);font-size:calc(10.5px*var(--fs));text-transform:uppercase;letter-spacing:.5px;padding-top:3px}
@@ -424,7 +431,7 @@ body:not(.home) .honly{display:none!important}
    MitzNSimz Party Manager — prototype
    Single file, vanilla JS, no build. Data lives in localStorage.
    ===================================================================== */
-const APP_VERSION = '0.12.1';
+const APP_VERSION = '0.13.0';
 const STORAGE_NS = /*NS*/'';   // build sets '' for production, 'dev_' for the dev copy
 const K_STATE = STORAGE_NS + 'mnzpm_state_v1';
 const K_IMG   = STORAGE_NS + 'mnzpm_portraits_v1';
@@ -817,12 +824,21 @@ function usesHTML(c){
   });
   return `<div><div class="sect">Limited uses</div><div class="uses">${hdRowsHTML(c)}${rows.join('')}</div></div>`;
 }
+/** Uses left on a pill: ●●○ for a few, "3/10" for many; a spent pill greys out. */
+function usesLeft(c, rid, cost){
+  const r = rid ? resById(c, rid) : null; if (!r || r.max == null) return null;
+  const left = Math.max(0, r.max - r.used), usable = cost > 1 ? Math.floor(left / cost) : left;
+  const html = r.max <= 6 ? `<span class="cp">${'●'.repeat(left)}<span class="u">${'○'.repeat(r.max - left)}</span></span>` : `<span class="cp">${left}/${r.max}</span>`;
+  return {left: usable, max: r.max, html};
+}
 /** Bonus actions and reactions at a glance: features + usable spells with that casting time. */
 function quickHTML(c){
   const line = (act, label) => {
-    const fs = c.features.filter(f => f.act === act).map(f => `<span class="chip act-${act}" data-act="featinfo" data-cid="${c.id}" data-fid="${f.id}">${esc(f.name.replace(/ \(.*\)$/,''))}</span>`);
+    const fs = c.features.filter(f => f.act === act).map(f => { const u = usesLeft(c, f.res);
+      return `<span class="chip act-${act} ${u && u.left === 0 ? 'spent' : ''}" data-act="featinfo" data-cid="${c.id}" data-fid="${f.id}" ${u ? `title="${u.left}/${u.max} left"` : ''}>${esc(f.name.replace(/ \(.*\)$/,''))}${u ? u.html : ''}</span>`; });
     const ss = usableSpells(c).filter(s => actOfSpell(s) === act && act !== 'action').map(s => `<span class="chip act-${act}" data-act="spellinfo" data-cid="${c.id}" data-sid="${s.id}">✦ ${esc(s.name)}</span>`);
-    const is = itemActs(c, act).map(({item, a}) => `<span class="chip item act-${act}" data-act="iactinfo" data-cid="${c.id}" data-iid="${item.id}" data-aid="${a.id}" title="From ${esc(item.name)}">⚔ ${esc(a.name)}</span>`);
+    const is = itemActs(c, act).map(({item, a}) => { const u = usesLeft(c, a.res, a.cost);
+      return `<span class="chip item act-${act} ${u && u.left === 0 ? 'spent' : ''}" data-act="iactinfo" data-cid="${c.id}" data-iid="${item.id}" data-aid="${a.id}" title="From ${esc(item.name)}${u ? ` · ${u.left}/${u.max} left` : ''}">⚔ ${esc(a.name)}${u ? u.html : ''}</span>`; });
     const all = fs.concat(is, ss);
     return all.length ? `<span class="lab">${label}</span><span class="chips">${all.join('')}</span>` : '';
   };
@@ -1315,7 +1331,7 @@ function featModal(cid, fid){
       ${eff && eff.type === 'temp' ? `<button class="b-tmp" data-act="usefeat" data-cid="${cid}" data-fid="${fid}">Gain ${eff.amount} temp HP</button>` : ''}
       ${eff && eff.type === 'heal' ? `<button class="b-heal" data-act="usefeat" data-cid="${cid}" data-fid="${fid}" ${r && left === 0 ? 'disabled' : ''}>Use &amp; heal</button>` : ''}
       ${r && !(eff && eff.type === 'heal') ? `<button class="pri" data-act="usefeat" data-cid="${cid}" data-fid="${fid}" ${left === 0 ? 'disabled' : ''}>Use${left === 0 ? ' (none left)' : ''}</button>` : ''}
-      <label class="row small"><input type="checkbox" id="featLog"> Add to journal</label>
+      ${r || eff ? '<label class="row small"><input type="checkbox" id="featLog" checked> Add to journal</label>' : ''}
     </div>`; });
 }
 function resModal(cid, rid){
@@ -1347,7 +1363,7 @@ function iactModal(cid, iid, aid){
         ${r ? `<span class="k">Charges</span><span class="row">${pipsHTML(c, r, 'res', r.id)} <span class="muted small">${r.max == null ? 'set the max' : `${left}/${r.max} left`}</span></span>` : ''}</div>
       <div class="desc"><p>${esc(a.text)}</p></div></div>
       <div class="mfoot">${editBtn('editiact', `data-cid="${cid}" data-iid="${iid}" data-aid="${aid}"`)}<span class="grow"></span>
-        ${r ? `<label class="row small"><input type="checkbox" id="featLog"> Add to journal</label><button class="pri" data-act="iactuse" data-cid="${cid}" data-iid="${iid}" data-aid="${aid}" ${left != null && left < cost ? 'disabled' : ''}>Use ${r.max != null ? `(spend ${cost === 1 ? 'a charge' : cost + ' charges'})` : ''}</button>` : ''}</div>`; });
+        ${r ? `<label class="row small"><input type="checkbox" id="featLog" checked> Add to journal</label><button class="pri" data-act="iactuse" data-cid="${cid}" data-iid="${iid}" data-aid="${aid}" ${left != null && left < cost ? 'disabled' : ''}>Use ${r.max != null ? `(spend ${cost === 1 ? 'a charge' : cost + ' charges'})` : ''}</button>` : ''}</div>`; });
 }
 /* =====================================================================
    EDITING — one generic form, used for every kind of homebrew entry.
@@ -1603,22 +1619,6 @@ function condModal(cid){
           ? (S.ruleset === '2024' ? 'Each level gives −2 to D20 Tests and −5 ft speed. Level 6 is death. A long rest removes one level.' : EXH_2014.slice(1).map((t, i) => `${i + 1}: ${t}`).join(' · ') + '. Cumulative; a long rest removes one level.')
           : esc(condText(rule))}` : '<span class="muted">Tap ⓘ to read a condition’s rules here.</span>'}</div>
     </div><div class="mfoot"><span class="small dim">${S.ruleset} rules</span><span class="grow"></span><button class="pri" data-act="mclose">Done</button></div>`; });
-}
-function castModal(cid, sid){
-  floatModal(() => {
-    const c = charById(cid), s = c.spells.find(x => x.id === sid);
-    const opts = [];
-    if (s.level === 0) opts.push(`<button data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="free">Cast (cantrip)</button>`);
-    c.spellSlots.filter(x => x.level >= s.level && s.level > 0).forEach(x => opts.push(`<button ${x.max - x.used ? '' : 'disabled'} data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="slot" data-lvl="${x.level}">${ORD(x.level)}-level slot <span class="dim">(${x.max - x.used} left)</span></button>`));
-    if (c.pactSlots && s.level > 0 && s.level <= c.pactSlots.level) opts.push(`<button ${c.pactSlots.max - c.pactSlots.used ? '' : 'disabled'} data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="pact">Pact slot (${ORD(c.pactSlots.level)}) <span class="dim">(${c.pactSlots.max - c.pactSlots.used} left)</span></button>`);
-    c.resources.filter(r => r.name.toLowerCase().includes(s.name.toLowerCase()) || r.name.toLowerCase().includes(String(s.source).toLowerCase()))
-      .forEach(r => opts.push(`<button ${r.max == null || r.max - r.used ? '' : 'disabled'} data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="res" data-rid="${r.id}">Use ${esc(r.name)} ${r.max != null ? `<span class="dim">(${r.max - r.used} left)</span>` : ''}</button>`));
-    if (s.level > 0) opts.push(`<button data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="free">Free cast (scroll, item, feature)</button>`);
-    return `${mhead('Cast ' + esc(s.name), esc(c.name))}<div class="mbody">
-      <div class="muted small" style="margin-bottom:8px">${s.level ? ORD(s.level) + ' level' : 'Cantrip'} · ${esc(fmtTime(s.time))} · ${esc(s.range)} · ${esc(s.duration)}</div>
-      <div class="list">${opts.join('')}</div>
-      ${s.concentration ? `<div class="small" style="margin-top:8px;color:var(--blue2)">Concentration: casting sets it${c.concentration ? `, and drops <b>${esc(c.concentration)}</b>` : ''}.</div>` : ''}
-      <label class="row small" style="margin-top:10px"><input type="checkbox" id="castLog"> Add to journal</label></div>`; });
 }
 function checksModal(){
   floatModal(() => {
@@ -2057,6 +2057,41 @@ function refAdd(c){
       desc: '', notes: '', actions: [], open5eKey: d.key || null, custom: true});
   }
 }
+const charLevelOf = c => (c.classes || []).reduce((t, k) => t + (k.level || 0), 0) || c.level || 1;
+function castModOf(c, s){
+  const sc = (c.spellcasting || []).find(x => String(s.source || '').toLowerCase().includes(String(x.class).toLowerCase())) || (c.spellcasting || [])[0];
+  return sc ? c.abilities[sc.ability].mod : 0;
+}
+const avgTxt = e => e && e.avg != null && e.avg > 0 && /d\d/.test(e.text) ? ` <span class="dim">avg ${Math.round(e.avg * 10) / 10}</span>` : '';
+/** The "Cast" block in a spell pop-up: one row per slot level you have, with what the spell does at that level. */
+function castBlockHTML(c, s, text){
+  const mod = castModOf(c, s), cl = charLevelOf(c), cid = c.id, sid = s.id;
+  const conc = s.concentration ? `<div class="small" style="margin-top:6px;color:var(--blue2)">Concentration: casting sets it${c.concentration && c.concentration !== s.name ? `, and drops <b>${esc(c.concentration)}</b>` : ''}.</div>` : '';
+  const logBox = `<label class="row small" style="margin-top:8px"><input type="checkbox" id="castLog" checked> Add to journal</label>`;
+  const btn = (how, lvl, label, left, eff, extra) => `<button class="small ${left === 0 ? '' : 'pri'}" ${left === 0 ? 'disabled' : ''} data-act="docast" data-cid="${cid}" data-sid="${sid}" data-how="${how}" ${lvl ? `data-lvl="${lvl}"` : ''} ${extra || ''} data-eff="${esc(eff ? eff.text : '')}">${label}</button>`;
+  if (s.level === 0){
+    const e = UPCAST.at(text, 0, 0, mod, cl);
+    const next = [5, 11, 17].find(x => x > cl);
+    return `<h3>Cast</h3><div class="castrow"><b>Cantrip</b><span class="eff">${e ? esc(e.text) + avgTxt(e) : '<span class="muted">No slot needed.</span>'}${e && next && UPCAST.scales(text, 0) ? ` <span class="small dim">(goes up at level ${next})</span>` : ''}</span><span></span>${btn('free', 0, 'Cast', null, e)}</div>${conc}${logBox}`;
+  }
+  const levels = c.spellSlots.filter(x => x.max > 0).map(x => x.level);
+  if (c.pactSlots && c.pactSlots.max) levels.push(c.pactSlots.level);
+  const top = Math.max(s.level, ...levels);
+  const scales = UPCAST.scales(text, s.level), rows = [];
+  for (let L = s.level; L <= Math.min(9, top); L++){
+    const sl = c.spellSlots.find(x => x.level === L && x.max > 0), pact = c.pactSlots && c.pactSlots.max && c.pactSlots.level === L ? c.pactSlots : null;
+    if (!sl && !pact) continue;
+    const e = UPCAST.at(text, s.level, L, mod, cl);
+    const effTxt = e ? esc(e.text) + avgTxt(e) : L === s.level ? '<span class="muted">See the description.</span>' : '<span class="muted">Same effect</span>';
+    rows.push(`<div class="castrow ${L > s.level && scales ? 'up' : ''}"><b>${ORD(L)}</b><span class="eff">${effTxt}</span>
+      <span class="small muted sl">${sl ? `${sl.max - sl.used}/${sl.max}` : ''}</span>
+      <span class="row" style="gap:4px">${sl ? btn('slot', L, 'Cast', sl.max - sl.used, e) : ''}${pact ? btn('pact', L, 'Pact slot', pact.max - pact.used, e, `title="${pact.max - pact.used}/${pact.max} pact slots left"`) : ''}</span></div>`);
+  }
+  const resBtns = c.resources.filter(r => r.name.toLowerCase().includes(s.name.toLowerCase()))   // e.g. "Misty Step (Fey Touched)"
+    .map(r => btn('res', 0, `Use ${esc(r.name)}${r.max != null ? ` <span class="dim">(${r.max - r.used} left)</span>` : ''}`, r.max == null ? null : r.max - r.used, UPCAST.at(text, s.level, s.level, mod, cl), `data-rid="${r.id}"`));
+  return `<h3>Cast at</h3>${rows.length ? rows.join('') : '<div class="empty">No spell slots for this level.</div>'}
+    <div class="row" style="margin-top:6px;gap:6px">${resBtns.join('')}${btn('free', 0, 'Free cast <span class="dim">(scroll, item, feature)</span>', null, UPCAST.at(text, s.level, s.level, mod, cl)).replace('class="small pri"', 'class="small"')}</div>${conc}${logBox}`;
+}
 function spellModal(cid, sid){
   const c = charById(cid), s = c.spells.find(x => x.id === sid);
   const st = {data: undefined, err: null};
@@ -2066,8 +2101,9 @@ function spellModal(cid, sid){
       ${s.saveAtk && s.saveAtk !== '--' ? `<span class="k">Save / attack</span><span>${esc(s.saveAtk)}</span>` : ''}
       <span class="k">Source</span><span>${esc(s.source)} · ${esc(s.ref)}${s.custom ? ' <span class="tag hb">yours</span>' : s.edited ? ' <span class="tag hb">edited</span>' : ''}</span>${s.notes ? `<span class="k">Sheet notes</span><span>${esc(s.notes)}</span>` : ''}</div>
     ${s.desc ? `<div class="desc">${md(s.desc)}</div>` : ''}
+    ${castBlockHTML(charById(cid), s, [s.desc, st.data && st.data.desc, st.data && st.data.higher_level].filter(Boolean).join(' '))}
     ${st.data === undefined ? (st.err ? (s.desc ? '' : `<div class="empty">Open5e unavailable (${esc(st.err)}). Sheet details shown.</div>`) : '<div class="empty">Looking up on Open5e…</div>') : (st.data || !s.desc ? o5SpellHTML(st.data) : '')}
-  </div><div class="mfoot">${editBtn('editspell', `data-cid="${cid}" data-sid="${sid}"`)}<span class="grow"></span>${s.level > 0 || s.concentration ? `<button class="pri" data-act="cast" data-cid="${cid}" data-sid="${sid}">Cast…</button>` : ''}</div>`);
+  </div><div class="mfoot">${editBtn('editspell', `data-cid="${cid}" data-sid="${sid}"`)}<span class="grow"></span></div>`);
   const live = UI.modal;
   o5Find('spell', s.name).then(d => { st.data = d; }).catch(e => { st.err = e.message; }).finally(() => { if (UI.modal === live) live(); });
 }
@@ -2096,6 +2132,96 @@ function itemModal(cid, iid){
 /* =====================================================================
    FILE INPUTS
    ===================================================================== */
+/* UPCAST START */
+/* =====================================================================
+   SPELL SCALING
+   Reads a spell's text (sheet, Open5e, or yours) and works out what it
+   does at each slot level, or at the character's level for cantrips:
+   "1d4 + your spellcasting ability modifier … increases by 1d4 for each
+   slot level above 1st" -> at 3rd: 3d4 + 4 healing (avg 11.5).
+   ===================================================================== */
+const UPCAST = (() => {
+  const DT = 'acid|bludgeoning|cold|fire|force|lightning|necrotic|piercing|poison|psychic|radiant|slashing|thunder';
+  const W2N = {one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10};
+  const num = s => /^\d+$/.test(s) ? +s : W2N[String(s).toLowerCase()] || null;
+  const MOD = '(?:\\s*(?:\\+|plus)\\s*(your spellcasting (?:ability )?modifier|\\d+))?';
+  const clean = t => String(t || '').replace(/\*+/g, '').replace(/\s+/g, ' ');
+
+  /** The spell's main roll: damage or healing, with its dice and any flat or ability bonus. */
+  function mainRoll(t){
+    const cands = [];
+    const push = (m, kind, nI, dI, bI, typeI) => m && cands.push({at: m.index, kind, n: +m[nI], d: +m[dI], bonus: m[bI] ? (/\d/.test(m[bI]) ? +m[bI] : 'mod') : 0, type: typeI ? (m[typeI] || '').toLowerCase() : ''});
+    push(t.match(new RegExp(`(\\d+)d(\\d+)${MOD}\\s+(${DT}) damage`, 'i')), 'damage', 1, 2, 3, 4);
+    push(t.match(new RegExp(`(${DT}) damage equal to (\\d+)d(\\d+)${MOD}`, 'i')), 'damage', 2, 3, 4, 1);
+    push(t.match(new RegExp(`regains?[^.]{0,60}?(?:equal to|of)\\s+(\\d+)d(\\d+)${MOD}`, 'i')), 'healing', 1, 2, 3);
+    push(t.match(new RegExp(`(\\d+)d(\\d+)${MOD}\\s+(?:hit points|healing)`, 'i')), 'healing', 1, 2, 3);
+    push(t.match(new RegExp(`(\\d+)d(\\d+)${MOD}\\s+temporary hit points`, 'i')), 'temporary HP', 1, 2, 3);
+    if (!cands.length){ const m = t.match(new RegExp(`(\\d+)d(\\d+)${MOD}\\s+damage`, 'i')); push(m, 'damage', 1, 2, 3); }
+    // Aid style: "hit point maximum and current hit points increase by 5"
+    if (!cands.length){ const m = t.match(/hit point maximum(?: and current hit points)? increases? by (\d+)/i); if (m) cands.push({at: m.index, kind: 'more max HP and current HP', n: 0, d: 0, bonus: +m[1], type: ''}); }
+    // flat healing or temp HP ("gain 5 temporary hit points")
+    if (!cands.length){ const m = t.match(/(\d+) temporary hit points/i); if (m) cands.push({at: m.index, kind: 'temporary HP', n: 0, d: 0, bonus: +m[1], type: ''}); }
+    return cands.sort((a, b) => a.at - b.at)[0] || null;
+  }
+  /** "1d8 for each slot level above 2nd", "2d4 for every two slot levels above 2nd", "5 for each slot level above 2nd". */
+  function slotStep(t){
+    const m = t.match(/increases? by (?:an additional )?(\d+)(?:d(\d+))? for (?:each|every) (two |2 )?(?:spell )?(?:slot )?levels? above (?:the )?(\d)/i);
+    if (m) return {n: +m[1], d: m[2] ? +m[2] : 0, every: m[3] ? 2 : 1, above: +m[4]};
+    return null;
+  }
+  /** "one more dart", "one additional creature", "an additional ray" per slot level. */
+  function countStep(t){
+    const m = t.match(/(?:one|an) (?:more|additional) ([a-z]+)(?: [a-z]+)? for each (?:spell )?slot level above (?:the )?(\d)/i)
+           || t.match(/target (?:one|an) additional ([a-z]+) for each (?:spell )?slot level above (?:the )?(\d)/i);
+    return m ? {noun: m[1].replace(/s$/, ''), above: +m[2]} : null;
+  }
+  /** Base count for the thing that multiplies: "three glowing darts", "three rays". */
+  function baseCount(t, noun){
+    const m = t.match(new RegExp(`\\b(one|two|three|four|five|\\d+) (?:[a-z]+ ){0,2}${noun}s?\\b`, 'i'));
+    return m ? num(m[1]) : null;
+  }
+  /** Cantrips: dice at 5th/11th/17th character level, and Eldritch Blast style extra beams. */
+  function cantripAt(t, lvl){
+    const tier = lvl >= 17 ? 3 : lvl >= 11 ? 2 : lvl >= 5 ? 1 : 0;
+    const dice = t.match(/increases? by (\d+)d(\d+) when you reach (?:5th level|level 5|character level 5)/i);
+    const beams = /(two|2) beams at (?:5th level|level 5)/i.test(t);
+    return {tier, diceStep: dice ? +dice[1] : 0, beams: beams ? tier + 1 : null};
+  }
+  const avgOf = (n, d, b) => n * (d + 1) / 2 + b;
+  const fmt = (n, d, b) => [n && d ? `${n}d${d}` : '', b ? (n && d ? (b < 0 ? `− ${-b}` : `+ ${b}`) : String(b)) : ''].filter(Boolean).join(' ');
+
+  /**
+   * What the spell does when cast at `slot` (or for a cantrip, at character level `charLevel`).
+   * Returns {text, avg, extra} or null when the text has no roll to scale.
+   */
+  function at(text, spellLevel, slot, mod, charLevel){
+    const t = clean(text), r = mainRoll(t); if (!r && !countStep(t)) return null;
+    let n = r ? r.n : 0; const d = r ? r.d : 0, b = r ? (r.bonus === 'mod' ? mod : r.bonus) : 0;
+    let extra = '', perEach = false;
+    if (spellLevel === 0){
+      const c = cantripAt(t, charLevel || 1);
+      if (c.diceStep) n += c.diceStep * c.tier;
+      if (c.beams) extra = `${c.beams} beam${c.beams === 1 ? '' : 's'}, each`, perEach = true;
+    } else {
+      const s = slotStep(t);
+      let flat = 0;
+      if (s && slot > s.above){ const k = Math.floor((slot - s.above) / s.every); if (s.d) n += s.n * k; else flat = s.n * k; }
+      const cs = countStep(t);
+      if (cs){ const base = baseCount(t, cs.noun) || 1, k = Math.max(0, slot - cs.above), cnt = base + k;
+        extra = /creature|target|humanoid|beast|undead|willing/i.test(cs.noun) ? `${cnt} ${cs.noun}${cnt === 1 ? '' : 's'}` : `${cnt} ${cs.noun}s, each`; perEach = /each$/.test(extra); }
+      if (!r) return {text: extra.replace(/, each$/, ''), avg: null, extra};
+      const total = b + flat;
+      return {text: (extra ? extra + ' ' : '') + `${fmt(n, d, total)} ${r.kind === 'damage' ? (r.type ? r.type + ' damage' : 'damage') : r.kind}`.trim(), avg: n && d ? avgOf(n, d, total) * (perEach ? (parseInt(extra) || 1) : 1) : total, extra};
+    }
+    if (!r) return null;
+    return {text: (extra ? extra + ' ' : '') + `${fmt(n, d, b)} ${r.kind === 'damage' ? (r.type ? r.type + ' damage' : 'damage') : r.kind}`, avg: avgOf(n, d, b) * (perEach ? (parseInt(extra) || 1) : 1), extra};
+  }
+  /** Does the spell get better with higher slots (or levels)? */
+  const scales = (text, spellLevel) => { const t = clean(text); return spellLevel === 0 ? !!(cantripAt(t, 5).diceStep || /beams at/i.test(t)) : !!(slotStep(t) || countStep(t)); };
+  return {at, scales, mainRoll: t => mainRoll(clean(t))};
+})();
+/* UPCAST END */
+
 /* PASTE-READER START */
 /* =====================================================================
    PASTE FROM D&D BEYOND
@@ -2688,7 +2814,7 @@ function useFeature(c, f, logIt){
   }
   if (eff && eff.type === 'temp'){ c.hp.temp = Math.max(c.hp.temp, eff.amount); msg += ` (+${eff.amount} temp HP)`; }
   if (r && r.max != null){ if (r.max - r.used <= 0){ toast('None left', true); return false; } r.used++; }
-  if (logIt) logEntry([c.id], msg + '.');
+  if (logIt) logEntry([c.id], msg + (r && r.max != null ? ` (${r.max - r.used}/${r.max} left)` : '') + '.', true);
   toast(esc(msg));
   return true;
 }
@@ -2759,7 +2885,7 @@ document.addEventListener('click', e => {
       const cost = a.cost || 1;
       if (r.max != null && r.max - r.used < cost){ toast(cost === 1 ? 'No charges left' : `Needs ${cost} charges`, true); break; }
       const logIt = $('#featLog') && $('#featLog').checked; closeModal();
-      mutate(() => { if (r.max != null) r.used += cost; if (logIt) logEntry([c.id], `${c.name} uses ${it.name}: ${a.name}.`); });
+      mutate(() => { if (r.max != null) r.used += cost; if (logIt) logEntry([c.id], `${c.name} uses ${it.name}: ${a.name}${r.max != null ? ` (${r.max - r.used}/${r.max} left)` : ''}.`, true); });
       toast(`${esc(c.name)}: ${esc(a.name)}${r.max != null ? ` · ${r.max - r.used} charge${r.max - r.used === 1 ? '' : 's'} left` : ''}`); break; }
     case 'editfeat': editFeature(d.cid, d.fid); break;
     case 'addfeat': editFeature(d.cid, null, d.v); break;
@@ -2793,18 +2919,20 @@ document.addEventListener('click', e => {
     case 'prep': mutate(() => { c.spells.find(x => x.id === d.sid).prepared = t.checked; }); break;
     case 'spellinfo': spellModal(d.cid, d.sid); break;
     case 'iteminfo': itemModal(d.cid, d.iid); break;
-    case 'cast': castModal(d.cid, d.sid); break;
+    case 'cast': spellModal(d.cid, d.sid); break;
     case 'docast': {
       const s = c.spells.find(x => x.id === d.sid); const logIt = $('#castLog') && $('#castLog').checked;
       let how = '';
+      const eff = d.eff || '', up = (d.how === 'slot' || d.how === 'pact') && +d.lvl > s.level;
       mutate(() => {
         if (d.how === 'slot'){ const sl = c.spellSlots.find(x => x.level === +d.lvl); sl.used++; how = `${ORD(sl.level)}-level slot`; }
-        if (d.how === 'pact'){ c.pactSlots.used++; how = 'pact slot'; }
+        if (d.how === 'pact'){ c.pactSlots.used++; how = `${ORD(c.pactSlots.level)}-level pact slot`; }
         if (d.how === 'res'){ const r = resById(c, d.rid); if (r.max != null) r.used++; how = r.name; }
-        if (s.concentration){ if (c.concentration && c.concentration !== s.name) toast(`${esc(c.name)} drops ${esc(c.concentration)}`); c.concentration = s.name; }
-        if (logIt) logEntry([c.id], `${c.name} casts ${s.name}${how ? ` (${how})` : ''}.`);
+        if (d.how === 'free' && s.level > 0) how = 'no slot';
+        if (s.concentration){ if (c.concentration && c.concentration !== s.name){ toast(`${esc(c.name)} drops ${esc(c.concentration)}`); autoLog(c, `${c.name} stops concentrating on ${c.concentration}.`); } c.concentration = s.name; }
+        if (logIt) logEntry([c.id], `${c.name} casts ${s.name}${up ? ` at ${ORD(+d.lvl)} level` : ''}${how ? ` (${how})` : ''}${eff ? `: ${eff}` : ''}.`, true);
       });
-      closeModal(); toast(`${esc(c.name)} casts <b>${esc(s.name)}</b>${how ? ` · ${esc(how)}` : ''}`);
+      closeModal(); toast(`${esc(c.name)} casts <b>${esc(s.name)}</b>${up ? ` at ${ORD(+d.lvl)}` : ''}${eff ? ` · ${esc(eff)}` : ''}`);
       break; }
     case 'qty': mutate(() => { const i = c.inventory.find(x => x.id === d.iid); i.qty = Math.max(0, i.qty + +d.d); }); break;
     case 'additem': { const ni = document.querySelector(`[data-newitem="${d.cid}"]`), nq = document.querySelector(`[data-newqty="${d.cid}"]`);
