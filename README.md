@@ -16,6 +16,8 @@ No install, no account. It runs entirely in your browser and keeps everything on
 - **Homebrew** – add or edit features, actions, limited uses, attacks, spells and items (with their own actions and charges) for anything your character sheet doesn't export properly.
 - **Hit dice** – shown on each card as pips. Tap the name to spend one: type your roll and CON is added. Tap a pip to correct the count. A long rest gives back half (2014) or all (2024). Everything is logged.
 - **Text size** – Standard, Large (default), Larger or Largest, in 🎨 Appearance.
+- **Cast at any level** – a spell's pop-up lists every slot level you can cast it at and what it does there ("3rd: 3d4 + 4 healing, avg 11.5"). It reads the spell text, so it also handles extra darts, rays or targets, and cantrips at your character level. Cast spends that slot and logs the effect.
+- **Uses on the card** – feature and item pills show uses left (●●○), and grey out when spent.
 - **Death saves** – at 0 HP, type the d20 you rolled (1 = two failures, 20 = back up with 1 HP) or tap ✓/✗. There are also buttons for a critical hit while down and for Stabilise. Damage while down counts as a failure, and massive damage kills outright. Dead characters grey out until Revived.
 - **Automatic journal entries** – damage, healing, temp HP, conditions, exhaustion, concentration, temporary AC/max HP, death saves and rests are logged for you (marked ⚙) as a reference for write-ups. Untick “⚙ auto entries” to hide them from the journal and the export.
 - **Temporary AC and max HP** – click AC or the HP bar on a card to set a value for now (Aid, Shield of Faith, a curse). The sheet value stays underneath, the card marks it with ✦, and a long rest clears it unless you say otherwise.

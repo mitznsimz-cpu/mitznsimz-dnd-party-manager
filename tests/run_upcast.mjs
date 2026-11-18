@@ -1,0 +1,30 @@
+// Unit checks for spell scaling (cast at higher levels, cantrips by character level):  node tests/run_upcast.mjs
+// Spell texts are SRD 5.1 / 5.2 wording (CC-BY-4.0).
+import fs from 'fs';
+const src = fs.readFileSync(new URL('../src/party_manager.html', import.meta.url), 'utf8');
+const U = new Function(src.slice(src.indexOf('/* UPCAST START */'), src.indexOf('/* UPCAST END */')) + '\nreturn UPCAST;')();
+let fails = 0; const check = (name, got, want) => { const ok = got === want; console.log((ok ? 'PASS ' : 'FAIL ') + name + (ok ? '' : `  got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`)); if (!ok) fails++; };
+const t = (txt, lvl, slot, mod = 4, cl = 1) => (U.at(txt, lvl, slot, mod, cl) || {}).text;
+const HW = "A creature of your choice that you can see within range regains hit points equal to 1d4 + your spellcasting ability modifier. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the healing increases by 1d4 for each slot level above 1st.";
+check('Healing Word at 1st', t(HW, 1, 1), '1d4 + 4 healing');
+check('Healing Word at 3rd', t(HW, 1, 3), '3d4 + 4 healing');
+const CW24 = "A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier. Using a Higher-Level Spell Slot. The healing increases by 2d8 for each spell slot level above 1.";
+check('Cure Wounds (2024 wording) at 2nd', t(CW24, 1, 2, 3), '4d8 + 3 healing');
+const FB = "A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one. At Higher Levels. When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3rd.";
+check('Fireball at 5th', t(FB, 3, 5), '10d6 fire damage');
+const MM = "You create three glowing darts of magical force. A dart deals 1d4 + 1 force damage to its target. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the spell creates one more dart for each slot level above 1st.";
+check('Magic Missile at 3rd: more darts', t(MM, 1, 3), '5 darts, each 1d4 + 1 force damage');
+const SW = "On a hit, the target takes force damage equal to 1d8 + your spellcasting ability modifier. At Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d8 for every two slot levels above the 2nd.";
+check('Spiritual Weapon at 3rd: no change yet', t(SW, 2, 3), '1d8 + 4 force damage');
+check('Spiritual Weapon at 4th', t(SW, 2, 4), '2d8 + 4 force damage');
+const FBOLT = "On a hit, the target takes 1d10 fire damage. This spell's damage increases by 1d10 when you reach 5th level (2d10), 11th level (3d10), and 17th level (4d10).";
+check('Fire Bolt at character level 7', t(FBOLT, 0, 0, 4, 7), '2d10 fire damage');
+check('Fire Bolt at character level 11', t(FBOLT, 0, 0, 4, 11), '3d10 fire damage');
+const EB = "On a hit, the target takes 1d10 force damage. The spell creates more than one beam when you reach higher levels: two beams at 5th level, three beams at 11th level, and four beams at 17th level.";
+check('Eldritch Blast at level 7', t(EB, 0, 0, 4, 7), '2 beams, each 1d10 force damage');
+const HP = "Choose a humanoid that you can see within range. At Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, you can target one additional humanoid for each slot level above 2nd.";
+check('Hold Person at 4th: more targets', t(HP, 2, 4), '3 humanoids');
+const AID = "Each target's hit point maximum and current hit points increase by 5 for the duration. At Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, a target's hit points increase by an additional 5 for each slot level above 2nd.";
+check('Aid at 4th', t(AID, 2, 4), '15 more max HP and current HP');
+check('a spell that does not scale says so', U.scales("Choose a creature. It is charmed.", 1), false);
+console.log(fails ? `\n${fails} failed` : '\nall passed'); process.exit(fails ? 1 : 0);
